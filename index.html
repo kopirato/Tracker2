@@ -4,92 +4,187 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Selelo Business Smart Tracker</title>
+
+<!-- Styles -->
 <style>
 :root{
-  --accent:#1e88e5; --good:#4caf50; --danger:#ff5252; --card:#ffffffee;
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --text:#111;
+  --muted:#6b7280;
+  --accent:#1e88e5;
+  --good:#16a34a;
+  --danger:#ef4444;
+  --glass: rgba(255,255,255,0.85);
 }
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
-  margin:0;font-family:Inter, "Segoe UI", system-ui, Arial, sans-serif;
-  background: url('wallpaper.png') center/cover no-repeat fixed;
+  margin:0;
+  font-family:Inter, "Segoe UI", system-ui, Arial, sans-serif;
+  color:var(--text);
+  background: url('2.png') center/cover no-repeat fixed;
   -webkit-font-smoothing:antialiased;
-  color:#111;
+  -moz-osx-font-smoothing:grayscale;
 }
+
+/* dark theme */
+body.dark{
+  --bg:#0f1724;
+  --card:#0b1220;
+  --text:#e6eef8;
+  --muted:#9aa7bb;
+  --glass: rgba(10,14,20,0.65);
+  background: #0b1220;
+}
+
+/* overlay & container */
 .overlay{
   min-height:100vh;
-  background:rgba(255,255,255,0.95);
-  backdrop-filter:blur(3px);
-  padding:18px;
+  background: linear-gradient(rgba(255,255,255,0.86), rgba(255,255,255,0.74));
+  padding:22px;
 }
+body.dark .overlay{
+  background: linear-gradient(rgba(6,10,15,0.75), rgba(6,10,15,0.75));
+}
+
 .app{
-  max-width:1100px;margin:18px auto;padding:18px;border-radius:12px;
-  background:linear-gradient(#ffffffcc,#fafafa);
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  max-width:1150px;
+  margin:16px auto;
+  padding:18px;
+  border-radius:14px;
+  background: var(--glass);
+  box-shadow: 0 12px 40px rgba(2,6,23,0.18);
+  backdrop-filter: blur(6px);
 }
-.header{display:flex;align-items:center;gap:14px;justify-content:center}
-.logo{width:84px;height:84px;object-fit:contain;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
-h1{margin:0;font-size:20px;text-align:center}
-.controls{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
-button{cursor:pointer;border:0;padding:10px 14px;border-radius:10px;font-weight:700}
+
+/* Header */
+.header{
+  display:flex;
+  gap:18px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.header-left{display:flex;gap:14px;align-items:center}
+.logo{
+  width:92px;height:92px;object-fit:cover;border-radius:12px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.18);
+  border:4px solid rgba(255,255,255,0.6);
+}
+body.dark .logo{border:4px solid rgba(255,255,255,0.06)}
+.title-block h1{margin:0;font-size:20px}
+.title-block p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.header-right{display:flex;gap:10px;align-items:center}
+
+/* header badges */
+.badges{display:flex;gap:8px;align-items:center}
+.badge{
+  background:linear-gradient(135deg,var(--accent),#3db3ff);
+  color:white;padding:8px 10px;border-radius:10px;font-weight:700;box-shadow:0 6px 18px rgba(30,136,229,0.18);
+  font-size:13px;
+}
+.badge.small{padding:6px 8px;font-size:12px;font-weight:600; background:transparent;color:var(--muted);box-shadow:none}
+
+/* controls */
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+button{cursor:pointer;border:0;padding:9px 12px;border-radius:10px;font-weight:700}
 .btn-accent{background:var(--accent);color:#fff}
 .btn-primary{background:var(--good);color:#fff}
 .btn-danger{background:var(--danger);color:#fff}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-top:14px}
-@media(max-width:980px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
-label{display:block;margin-top:8px;font-weight:600;color:#333}
-input,select,textarea{width:100%;padding:9px;border-radius:8px;border:1px solid #ddd;font-size:14px;margin-top:6px}
-textarea{min-height:72px;resize:vertical}
-.small{font-size:13px;color:#555;margin-top:6px}
+.link-download{color:var(--accent);text-decoration:none;font-weight:700}
+
+/* layout */
+.grid{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:8px}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
+.card h2, .card h3{margin:0 0 8px 0}
+
+/* form */
+label{display:block;margin-top:8px;font-weight:700;color:var(--muted);font-size:13px}
+input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;background:transparent;font-size:14px;margin-top:6px;color:var(--text)}
+textarea{min-height:70px;resize:vertical}
+.small{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* stats */
 .dashboard{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.stat{flex:1;padding:10px;border-radius:8px;background:#fff;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.04)}
-.stat h4{margin:0;font-size:13px;color:#666}
-.stat p{margin:8px 0 0;font-size:18px;font-weight:800}
+.stat{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fafafa);text-align:center;box-shadow:0 8px 20px rgba(2,6,23,0.04)}
+body.dark .stat{background:linear-gradient(180deg,#071226,#071226)}
+
+/* table */
 .table-wrap{overflow:auto;margin-top:12px}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden}
-thead th{padding:10px;background:#fafafa;border-bottom:1px solid #eee;text-align:left;font-size:13px}
-tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px;border-radius:8px;overflow:hidden}
+thead th{padding:10px;background:#f7f9fc;border-bottom:1px solid #eef2f6;text-align:left}
+tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
 .action-btn{padding:6px 8px;border-radius:6px;border:0;font-weight:700}
+
+/* filter row */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.filter-row > *{min-width:120px;flex:1}
-.budget-alert{color:var(--danger);font-weight:800;text-align:center;margin-top:8px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center}
-.modal .inner{width:94%;max-width:520px;background:#fff;padding:16px;border-radius:10px}
-.receipt-content img{max-width:120px}
-.footer{margin-top:14px;text-align:center;color:#444;font-size:13px}
-.canvas{background:#fff;border-radius:8px;padding:8px;margin-top:12px}
-.link-download{color:var(--accent);text-decoration:none;font-weight:700;margin-left:6px}
-@media print{body *{visibility:hidden} .printable, .printable *{visibility:visible} .printable{position:fixed;left:0;top:0;width:100%}}
-.show-hide{position:relative}
-.show-hide button{position:absolute;right:8px;top:8px;padding:6px 8px;font-size:12px}
+.filter-row > *{min-width:110px;flex:1}
+
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,0.5);z-index:999;align-items:center;justify-content:center}
+.modal .inner{width:96%;max-width:520px;background:var(--card);padding:16px;border-radius:10px}
+.modal .inner h3{margin-top:0}
+
+/* receipt printable */
+@media print{
+  body *{visibility:hidden}
+  .printable, .printable *{visibility:visible}
+  .printable{position:fixed;left:0;top:0;width:100%}
+}
+
+/* footer */
+.footer{margin-top:14px;text-align:center;color:var(--muted);font-size:13px}
+
+/* small helpers */
+.row{display:flex;gap:8px}
+.col{flex:1}
+.center{text-align:center}
 </style>
 </head>
 <body>
   <div class="overlay">
     <div class="app" role="application" aria-label="Selelo Business Smart Tracker">
 
-      <div class="header">
-        <img src="11.png" alt="Logo" class="logo" onerror="this.style.display='none'">
-        <div>
-          <h1>Selelo Business Smart Tracker</h1>
-          <div class="small">Upload <strong>logo.png</strong>, <strong>wallpaper.png</strong>, <strong>stamp.png</strong> to this repo folder — receipts include your stamp.</div>
+      <!-- Header -->
+      <div class="header" role="banner">
+        <div class="header-left">
+          <img src="11.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+          <div class="title-block">
+            <h1>Selelo Business Smart Tracker</h1>
+            <p>Smart, lightweight bookkeeping — runs in your browser. Upload your images to this folder.</p>
+            <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+              <span class="badge small" title="Local storage">Offline-ready</span>
+              <span class="badge small" title="Single file">Single HTML</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="badges" aria-hidden="true">
+            <div class="badge">SavannaVista</div>
+          </div>
         </div>
       </div>
 
-      <div class="controls">
-        <button id="themeBtn" class="btn-accent">Toggle Theme</button>
+      <!-- Controls -->
+      <div class="controls" role="region" aria-label="main controls">
+        <button id="themeBtn" class="btn-accent" title="Toggle dark/light">Toggle Theme</button>
         <button id="exportCSVBtn" class="btn-accent">Export CSV</button>
         <button id="downloadPLPdfBtn" class="btn-accent">Download P&L PDF</button>
-        <a href="logo.png" download class="link-download">Download Logo</a>
-        <a href="wallpaper.png" download class="link-download">Download Wallpaper</a>
-        <a href="stamp.png" download class="link-download">Download Stamp</a>
+        <a id="dlLogo" class="link-download" href="11.png" download>Download Logo</a>
+        <a id="dlBg" class="link-download" href="2.png" download>Download Wallpaper</a>
+        <a id="dlStamp" class="link-download" href="Business%20Email%20Signature.png" download>Download Stamp</a>
       </div>
 
+      <!-- Main grid -->
       <div class="grid">
-        <!-- Left column: Form + table -->
+        <!-- LEFT -->
         <div>
           <div class="card" aria-labelledby="add-trans">
             <h2 id="add-trans">Add Transaction</h2>
+
             <label for="txDate">Date</label>
             <input id="txDate" type="date">
 
@@ -138,7 +233,7 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
           </div>
         </div>
 
-        <!-- Right column: dashboard, budgets, charts, P&L -->
+        <!-- RIGHT -->
         <aside>
           <div class="card">
             <h3>Dashboard</h3>
@@ -161,8 +256,8 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
           <div class="card" style="margin-top:12px">
             <h3>Charts</h3>
             <div class="canvas"><canvas id="chartIE" height="140"></canvas></div>
-            <div class="canvas"><canvas id="chartCat" height="140"></canvas></div>
-            <div class="canvas"><canvas id="chartTrend" height="140"></canvas></div>
+            <div class="canvas" style="margin-top:10px"><canvas id="chartCat" height="140"></canvas></div>
+            <div class="canvas" style="margin-top:10px"><canvas id="chartTrend" height="140"></canvas></div>
           </div>
 
           <div class="card" style="margin-top:12px">
@@ -177,18 +272,19 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
         </aside>
       </div>
 
-      <div class="footer">Made for Selian — upload the images to this folder and they will load automatically.</div>
+      <div class="footer">Made for Selian — upload <strong>11.png</strong>, <strong>2.png</strong>, and <strong>Business Email Signature.png</strong> to this folder.</div>
     </div>
   </div>
 
-  <!-- Admin modal (show/hide) -->
+  <!-- Admin modal -->
   <div id="adminModal" class="modal" aria-modal="true" role="dialog" aria-hidden="true">
     <div class="inner" role="document">
       <h3>Admin Password</h3>
       <p class="small">Enter admin password to proceed</p>
       <div style="position:relative">
-        <input id="adminInput" type="password" placeholder="Admin password" style="padding-right:70px">
-        <button id="toggleShow" style="position:absolute;right:6px;top:6px;padding:6px 8px;font-size:12px">Show</button>
+        <input id="adminInput" type="password" placeholder="Admin password" style="padding-right:90px">
+        <button id="toggleShow" style="position:absolute;right:6px;top:6px;padding:6px 10px;font-size:12px">Show</button>
+        <button id="adminHelp" style="position:absolute;right:90px;top:6px;padding:6px 8px;font-size:12px;background:transparent;border:1px solid rgba(0,0,0,0.06);border-radius:6px">?</button>
       </div>
       <div style="text-align:right;margin-top:10px">
         <button id="adminCancel">Cancel</button>
@@ -197,7 +293,7 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
     </div>
   </div>
 
-  <!-- Edit modal (opened after admin confirm) -->
+  <!-- Edit modal -->
   <div id="editModal" class="modal" aria-modal="true" role="dialog" aria-hidden="true">
     <div class="inner" role="document">
       <h3>Edit Transaction</h3>
@@ -222,18 +318,19 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+<!-- Script -->
 <script>
 /* ================= Configuration & State ================= */
 const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-const STORAGE_TX = "sel_transactions_final_v1";
-const STORAGE_BUDGETS = "sel_budgets_final_v1";
+const STORAGE_TX = "sel_transactions_sel_final";
+const STORAGE_BUDGETS = "sel_budgets_sel_final";
 
 let transactions = JSON.parse(localStorage.getItem(STORAGE_TX) || "[]");
 let budgets = JSON.parse(localStorage.getItem(STORAGE_BUDGETS) || "{}");
-let pendingAdmin = null; // {action, payload}
+let pendingAdmin = null;
 let currentEditIndex = null;
 
-/* ================= Element refs ================= */
+/* ================= Elements ================= */
 const txDate = document.getElementById('txDate');
 const txType = document.getElementById('txType');
 const txCategory = document.getElementById('txCategory');
@@ -279,6 +376,7 @@ const adminInput = document.getElementById('adminInput');
 const adminCancel = document.getElementById('adminCancel');
 const adminOk = document.getElementById('adminOk');
 const toggleShow = document.getElementById('toggleShow');
+const adminHelp = document.getElementById('adminHelp');
 
 const editModal = document.getElementById('editModal');
 const editDate = document.getElementById('editDate');
@@ -300,13 +398,13 @@ function saveBudgets(){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(bud
 
 function showMsg(text, color='green'){
   txMsg.style.color = color; txMsg.textContent = text;
-  setTimeout(()=>{ if(txMsg.textContent===text) txMsg.textContent=''; }, 3500);
+  setTimeout(()=>{ if(txMsg.textContent===text) txMsg.textContent=''; }, 3000);
 }
-function openModal(mod){ mod.style.display = 'flex'; mod.setAttribute('aria-hidden','false'); }
-function closeModal(mod){ mod.style.display = 'none'; mod.setAttribute('aria-hidden','true'); }
+function openModal(mod){ mod.style.display='flex'; mod.setAttribute('aria-hidden','false'); }
+function closeModal(mod){ mod.style.display='none'; mod.setAttribute('aria-hidden','true'); }
 
-/* close modal on outside click */
-document.querySelectorAll('.modal').forEach(m => {
+/* close modal when clicking outside */
+document.querySelectorAll('.modal').forEach(m=>{
   m.addEventListener('click', (e)=> { if(e.target === m) closeModal(m); });
 });
 
@@ -323,6 +421,7 @@ toggleShow.addEventListener('click', ()=>{
   if(adminInput.type === 'password'){ adminInput.type = 'text'; toggleShow.textContent = 'Hide'; }
   else { adminInput.type = 'password'; toggleShow.textContent = 'Show'; }
 });
+adminHelp.addEventListener('click', ()=> alert('Admin passwords: 0742147197 and 0721235005'));
 adminOk.addEventListener('click', ()=>{
   const pass = adminInput.value.trim();
   if(!ADMIN_PASSWORDS.includes(pass)){ alert('Incorrect admin password'); return; }
@@ -337,9 +436,9 @@ adminOk.addEventListener('click', ()=>{
   if(action === 'editSave') doSaveEdit(payload.payload);
 });
 
-/* ----------------- Add / Clear ----------------- */
+/* ---------------- Add / Clear ---------------- */
 addBtn.addEventListener('click', ()=> requireAdmin('add', null));
-clearBtn.addEventListener('click', ()=>{ txDate.value=''; txAmount.value=''; txNotes.value=''; });
+clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
 
 function doAddTransaction(){
   const date = txDate.value;
@@ -351,11 +450,11 @@ function doAddTransaction(){
   transactions.push({date,type,category,amount,notes});
   saveTransactions();
   renderTransactions();
-  showMsg(`Added: ${type} — ${category} — ${amount}`);
+  showMsg('Transaction added','green');
   txDate.value=''; txAmount.value=''; txNotes.value='';
 }
 
-/* ----------------- Edit flow ----------------- */
+/* ---------------- Edit ---------------- */
 function requestEdit(index){ requireAdmin('editOpen', {index}); }
 function openEditModal(index){
   currentEditIndex = index;
@@ -364,9 +463,8 @@ function openEditModal(index){
   editAmount.value = t.amount; editNotes.value = t.notes || '';
   openModal(editModal);
 }
-editCancel.addEventListener('click', ()=>{ closeModal(editModal); currentEditIndex = null; });
+editCancel.addEventListener('click', ()=> { closeModal(editModal); currentEditIndex = null; });
 editSave.addEventListener('click', ()=>{
-  // prepare payload and require admin confirm to save
   const payload = {
     index: currentEditIndex,
     newData: {
@@ -387,11 +485,11 @@ function doSaveEdit(payloadObj){
   transactions[idx] = nd;
   saveTransactions();
   renderTransactions();
-  showMsg('Transaction edited', 'green');
+  showMsg('Transaction edited','green');
   currentEditIndex = null;
 }
 
-/* ----------------- Delete ----------------- */
+/* ---------------- Delete ---------------- */
 function requestDelete(index){ requireAdmin('delete', {index}); }
 function doDeleteTransaction(index){
   if(!confirm('Delete this transaction?')) return;
@@ -401,7 +499,7 @@ function doDeleteTransaction(index){
   showMsg('Transaction deleted','red');
 }
 
-/* ----------------- Budgets ----------------- */
+/* ---------------- Budgets ---------------- */
 const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
 function renderBudgetInputs(){
   budgetsArea.innerHTML = '';
@@ -424,7 +522,7 @@ function doSaveBudgets(){
   showMsg('Budgets saved','green');
 }
 
-/* ----------------- Filters & rendering ----------------- */
+/* ---------------- Filters & render ---------------- */
 function passesFilters(t){
   if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
   if(fType.value && t.type !== fType.value) return false;
@@ -478,7 +576,7 @@ txTbody.addEventListener('click', (e)=>{
   if(act === 'receipt') openReceipt(idx);
 });
 
-/* ----------------- Budget alerts ----------------- */
+/* ---------------- Budget alerts ---------------- */
 function checkBudgetAlerts(){
   let msg = '';
   CATS.forEach(cat=>{
@@ -490,7 +588,7 @@ function checkBudgetAlerts(){
   budgetAlert.textContent = msg;
 }
 
-/* ----------------- Charts ----------------- */
+/* ---------------- Charts ---------------- */
 function renderCharts(){
   const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
@@ -509,7 +607,7 @@ function renderCharts(){
   chartTrend = new Chart(chartTrendCtx,{ type:'line', data:{ labels:months, datasets:[{label:'Income', data:incArr, borderColor:'#4caf50', fill:true, backgroundColor:'rgba(76,175,80,0.12)'},{label:'Expense', data:expArr, borderColor:'#ff5252', fill:true, backgroundColor:'rgba(255,82,82,0.12)'}]}, options:{responsive:true, plugins:{legend:{position:'bottom'}}, tension:0.3 }});
 }
 
-/* ----------------- Export CSV ----------------- */
+/* ---------------- Export CSV ---------------- */
 exportCSVBtn.addEventListener('click', ()=>{
   if(!transactions.length){ alert('No transactions to export'); return; }
   let csv = 'Date,Type,Category,Amount,Notes\n';
@@ -519,7 +617,7 @@ exportCSVBtn.addEventListener('click', ()=>{
   const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
-/* ----------------- P&L display + download ----------------- */
+/* ---------------- P&L show + download ---------------- */
 genPLBtn.addEventListener('click', generatePL);
 downloadPLBtn.addEventListener('click', downloadPLPdf);
 downloadPLPdfBtn.addEventListener('click', downloadPLPdf);
@@ -563,14 +661,15 @@ function downloadPLPdf(){
   doc.save(`PL_${m || 'all'}.pdf`);
 }
 
-/* ----------------- Receipt / print ----------------- */
+/* ---------------- Receipt / print ---------------- */
 function openReceipt(index){
   const t = transactions[index];
   const inv = 'INV-' + (10000 + index);
   const issued = new Date().toLocaleDateString();
   const html = `
     <div class="printable" style="text-align:center;font-family:Arial,sans-serif;color:#000">
-      <img src="logo.png" style="max-width:120px;margin-bottom:6px" onerror="this.style.display='none'"><h2>Selelo Business Receipt</h2>
+      <img src="11.png" style="max-width:120px;margin-bottom:8px" onerror="this.style.display='none'">
+      <h2>Selelo Business Receipt</h2>
       <div style="text-align:left;margin-top:8px;font-size:14px">
         <strong>Receipt No:</strong> ${inv}<br>
         <strong>Issued:</strong> ${issued}<br>
@@ -580,7 +679,9 @@ function openReceipt(index){
         <strong>Amount:</strong> KES ${t.amount}<br>
         <strong>Notes:</strong> ${t.notes || '-'}
       </div>
-      <div style="margin-top:12px"><img src="stamp.png" style="max-width:140px;opacity:0.95" onerror="this.style.display='none'"></div>
+      <div style="margin-top:12px">
+        <img src="Business Email Signature.png" style="max-width:180px;opacity:0.95" onerror="this.style.display='none'">
+      </div>
       <div style="margin-top:12px">
         <button id="printReceiptBtn" style="padding:8px 12px;border-radius:8px;background:#111;color:#fff">Print</button>
         <button id="closeReceiptBtn" style="padding:8px 12px;border-radius:8px;margin-left:8px">Close</button>
@@ -589,33 +690,33 @@ function openReceipt(index){
   `;
   receiptInner.innerHTML = html;
   openModal(receiptModal);
-  document.getElementById('printReceiptBtn').addEventListener('click', ()=>{
+
+  const pr = document.getElementById('printReceiptBtn');
+  const cl = document.getElementById('closeReceiptBtn');
+  if(pr){ pr.addEventListener('click', ()=>{
     const w = window.open('', '_blank', 'width=700,height=800');
     w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>');
     w.document.close();
     setTimeout(()=>{ w.print(); }, 300);
-  });
-  document.getElementById('closeReceiptBtn').addEventListener('click', ()=> closeModal(receiptModal));
+  }); }
+  if(cl){ cl.addEventListener('click', ()=> closeModal(receiptModal)); }
 }
 
-/* ----------------- Theme toggle ----------------- */
-let dark = false;
-themeBtn.addEventListener('click', ()=> {
-  dark = !dark;
-  if(dark){
-    document.body.style.background = '#111';
-    document.querySelector('.overlay').style.background = 'rgba(0,0,0,0.85)';
-  } else {
-    document.body.style.background = "url('wallpaper.png') center/cover no-repeat fixed";
-    document.querySelector('.overlay').style.background = 'rgba(255,255,255,0.95)';
-  }
+/* ---------------- Theme toggle (works) ---------------- */
+(function(){
+  // initialize from localStorage
+  const saved = localStorage.getItem('sel_theme') || 'light';
+  if(saved === 'dark') document.body.classList.add('dark');
+})();
+themeBtn.addEventListener('click', ()=>{
+  document.body.classList.toggle('dark');
+  localStorage.setItem('sel_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
 });
 
-/* ----------------- Init ----------------- */
+/* ---------------- Init ---------------- */
 function init(){
   renderBudgetInputs();
   renderTransactions();
-  // ensure modals close on outside click (wired earlier)
 }
 init();
 
@@ -623,4 +724,4 @@ init();
 window.addEventListener('beforeunload', ()=> { saveTransactions(); saveBudgets(); });
 </script>
 </body>
-    </html>
+          </html>
