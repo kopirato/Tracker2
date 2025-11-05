@@ -4,88 +4,47 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>SELELO BUSINESS PARK</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Styles -->
 <style>
 :root{
-  --bg-dark:#07121a;
+  --bg-dark:#07121a; --muted:#9aa7b3; --text:#eaf6ff;
+  --accent1:#6ee7ff; --accent2:#b38bff; --good:#4ade80; --danger:#ff6b6b;
   --glass: rgba(255,255,255,0.03);
-  --glass-strong: rgba(255,255,255,0.06);
-  --muted:#9aa7b3;
-  --text:#eaf6ff;
-  --accent1:#6ee7ff;
-  --accent2:#b38bff;
-  --good:#4ade80;
-  --danger:#ff6b6b;
-  --radius:14px;
-  --maxw:1200px;
+  --radius:14px; --maxw:1200px;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
 body{
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url('2.png') center/cover no-repeat fixed;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-color:var(--bg-dark);
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)),
+    url('2.png') center/cover no-repeat fixed;
+  background-size:cover;background-position:center;background-attachment:fixed;background-color:var(--bg-dark);
 }
-
-/* Shell & glass card */
 .shell{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
-.card{
-  width:100%; max-width:var(--maxw); border-radius:18px; padding:18px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007));
-  box-shadow: 0 40px 110px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-  backdrop-filter: blur(8px) saturate(120%);
-  border:1px solid rgba(255,255,255,0.03);
-  min-height:85vh; display:flex; flex-direction:column; gap:12px;
-}
-
-/* Header */
+.card{width:100%;max-width:var(--maxw);border-radius:18px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007));box-shadow:0 40px 110px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);backdrop-filter:blur(8px) saturate(120%);border:1px solid rgba(255,255,255,0.03);min-height:85vh;display:flex;flex-direction:column;gap:12px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:62px;height:62px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(0,0,0,0.6)}
 h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase}
 .sub{color:var(--muted);font-size:12px}
-
-/* Controls */
 .controls{display:flex;gap:8px;align-items:center}
 .btn{border:0;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
 .btn-theme{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
 .btn-admin{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;box-shadow:0 12px 30px rgba(99,102,241,0.06)}
-
-/* Grid */
 .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:8px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-/* Panels */
 .panel{background:transparent;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
 .admin-panel{transition:all 240ms ease}
-.admin-panel.admin-active{
-  background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));
-  border:1px solid rgba(110,231,255,0.12);
-  box-shadow:0 16px 48px rgba(110,231,255,0.03), inset 0 0 30px rgba(110,231,255,0.02);
-}
-
-/* Form fields (transparent, border only) */
+.admin-panel.admin-active{background:linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));border:1px solid rgba(110,231,255,0.12);box-shadow:0 16px 48px rgba(110,231,255,0.03), inset 0 0 30px rgba(110,231,255,0.02)}
 .fields{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .field{flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px}
 label{font-size:13px;color:var(--muted);font-weight:700}
-input[type="text"], input[type="date"], input[type="number"], select, textarea{
-  background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);font-size:14px;
-  transition:box-shadow 150ms ease,border-color 150ms ease;
-}
+input[type="text"], input[type="date"], input[type="number"], select, textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);font-size:14px;transition:box-shadow 150ms ease,border-color 150ms ease}
 textarea{min-height:72px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(110,231,255,0.92);box-shadow:0 10px 40px rgba(110,231,255,0.06)}
-
-/* Actions */
 .actions{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .btn-add{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;padding:10px 14px;border-radius:10px;font-weight:800}
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:10px 12px;border-radius:10px}
-
-/* Table */
 .table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
 table{width:100%;border-collapse:collapse;min-width:640px}
 thead th{padding:10px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.02);font-size:13px}
@@ -93,47 +52,28 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.01);color:var(-
 .action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700}
 .delete-btn{background:transparent;border:1px solid rgba(255,92,92,0.95);color:rgba(255,92,92,0.95);padding:6px 8px;border-radius:8px;font-weight:700}
 .delete-btn:hover{background:rgba(255,92,92,0.95);color:#fff;box-shadow:0 10px 30px rgba(255,92,92,0.12)}
-
-/* Dashboard */
 .dashboard{display:flex;flex-direction:column;gap:12px}
 .stat-grid{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
 .stat{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01));padding:10px;border-radius:10px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
 .stat h4{margin:0;color:var(--muted);font-size:12px}
 .stat p{margin:8px 0 0;font-weight:800;font-size:18px}
-
-/* Charts hidden by default (only show when admin) */
 .charts{display:none;gap:8px;margin-top:10px}
 .charts.show{display:block}
-
-/* Modal (top center) */
 .modal{position:fixed;left:50%;transform:translateX(-50%);top:7%;width:94%;max-width:460px;z-index:1300;display:none}
 .modal-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
 .modal.show{display:block;animation:drop 240ms ease}
 @keyframes drop{from{transform:translateX(-50%) translateY(-8px) scale(0.996);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
 .modal h3{margin:0 0 8px 0;font-size:18px}
 .modal p{margin:0 0 10px 0;color:var(--muted)}
-
-/* Receipt */
 .receipt{background:#fff;color:#000;padding:12px;border-radius:8px}
-
-/* Footer */
 footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;padding-top:10px}
-
-/* small screens */
-@media (max-width:640px){
-  .logo{width:52px;height:52px}
-  .fields{flex-direction:column}
-  table{min-width:520px}
-  .modal{top:4%}
-  .card{padding:12px}
-}
+@media (max-width:640px){.logo{width:52px;height:52px}.fields{flex-direction:column}table{min-width:520px}.modal{top:4%}.card{padding:12px}}
 </style>
 </head>
 <body>
   <div class="shell">
     <main class="card" role="application" aria-label="Selelo Business Park">
 
-      <!-- Header -->
       <div class="top">
         <div class="brand">
           <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
@@ -149,17 +89,13 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
         </div>
       </div>
 
-      <!-- Actions -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="exportCsv" class="btn btn-theme">Export CSV</button>
         <button id="genPL" class="btn btn-theme">Generate P&L</button>
         <button id="downloadPL" class="btn btn-admin">Download P&L</button>
       </div>
 
-      <!-- Main Grid -->
       <div class="grid">
-
-        <!-- Left: Add + Transactions -->
         <section>
           <div id="addPanel" class="panel admin-panel" aria-labelledby="addTitle">
             <div style="display:flex;justify-content:space-between;align-items:center">
@@ -171,28 +107,13 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
             </div>
 
             <div class="fields" role="form" aria-label="Add transaction form">
-              <div class="field">
-                <label for="txDate">Date</label>
-                <input id="txDate" type="date">
-              </div>
-              <div class="field">
-                <label for="txType">Type</label>
-                <select id="txType"><option>Income</option><option>Expense</option></select>
-              </div>
-              <div class="field">
-                <label for="txCategory">Category</label>
-                <select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-              </div>
-              <div class="field">
-                <label for="txAmount">Amount</label>
-                <input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00">
-              </div>
+              <div class="field"><label for="txDate">Date</label><input id="txDate" type="date"></div>
+              <div class="field"><label for="txType">Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
+              <div class="field"><label for="txCategory">Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
+              <div class="field"><label for="txAmount">Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
             </div>
 
-            <div style="margin-top:10px">
-              <label for="txNotes">Notes</label>
-              <textarea id="txNotes" placeholder="Optional notes..."></textarea>
-            </div>
+            <div style="margin-top:10px"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
 
             <div class="actions">
               <button id="addBtn" class="btn-add" disabled>Add Transaction</button>
@@ -201,11 +122,9 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
             </div>
           </div>
 
-          <!-- Transactions table -->
           <div class="panel" style="margin-top:12px">
             <div style="display:flex;justify-content:space-between;align-items:center">
-              <h3 style="margin:0">Transactions</h3>
-              <div class="sub">Filter and manage</div>
+              <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
             </div>
 
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
@@ -220,15 +139,11 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
             </div>
 
             <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="transactions table">
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txTbody"></tbody>
-              </table>
+              <table aria-label="transactions table"><thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead><tbody id="txTbody"></tbody></table>
             </div>
           </div>
         </section>
 
-        <!-- Right: Dashboard & Charts -->
         <aside>
           <div class="panel dashboard">
             <h3 style="margin:0">Overview</h3>
@@ -264,7 +179,7 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     </main>
   </div>
 
-  <!-- Admin modal (top-center) -->
+  <!-- Admin modal (top center) -->
   <div id="adminModal" class="modal" aria-hidden="true" role="dialog">
     <div class="modal-panel">
       <h3>Administrator access</h3>
@@ -293,32 +208,31 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     </div>
   </div>
 
-  <!-- Receipt / PL modal (top) -->
+  <!-- Receipt modal (top) -->
   <div id="receiptModal" class="modal" aria-hidden="true" style="top:8%;transform:translateX(-50%)">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
-  <!-- Libs -->
+  <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- App script -->
+  <!-- App script (DOM-ready wiring to ensure listeners attach) -->
   <script>
-  (function(){
-    // Config
+  document.addEventListener('DOMContentLoaded', function(){
+    // --- configuration ---
     const ADMIN_PASSWORDS = ["0742147197","0721235005"];
     const KEY_TX = "selelo_tx_final";
-    const KEY_BUD = "selelo_bud_final";
     const KEY_ADMIN = "selelo_admin_final";
     const KEY_THEME = "selelo_theme_final";
 
-    // State
+    // --- state ---
     let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-    let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
     let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
     let editIndex = null;
+    let chartIE, chartCat, chartTrend;
 
-    // Elements
+    // --- element refs ---
     const adminBtn = document.getElementById('adminBtn');
     const themeBtn = document.getElementById('themeBtn');
     const addBtn = document.getElementById('addBtn');
@@ -344,7 +258,6 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     const statExpense = document.getElementById('statExpense');
     const statBalance = document.getElementById('statBalance');
     const adminBadgeWrap = document.getElementById('adminBadgeWrap');
-
     const chartsPanel = document.getElementById('chartsPanel');
 
     const adminModal = document.getElementById('adminModal');
@@ -370,26 +283,27 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     const reportMonth = document.getElementById('reportMonth');
     const showPLBtn = document.getElementById('showPLBtn');
 
-    // Charts contexts
-    const chartIECtx = document.getElementById('chartIE')?.getContext('2d');
-    const chartCatCtx = document.getElementById('chartCat')?.getContext('2d');
-    const chartTrendCtx = document.getElementById('chartTrend')?.getContext('2d');
-    let chartIE, chartCat, chartTrend;
+    const chartIECtx = document.getElementById('chartIE')?.getContext?.('2d');
+    const chartCatCtx = document.getElementById('chartCat')?.getContext?.('2d');
+    const chartTrendCtx = document.getElementById('chartTrend')?.getContext?.('2d');
 
-    // Utilities
-    function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); localStorage.setItem(KEY_BUD, JSON.stringify(budgets)); }
+    // --- util ---
+    function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
     function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
-    function openModal(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); el.style.display='block'; }
-    function closeModal(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); el.style.display='none'; }
+    function openModal(el){ el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
+    function closeModal(el){ el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
     function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function notify(msg, color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = msg; setTimeout(()=>{ if(txMsg.textContent===msg) txMsg.textContent=''; }, 3000); }
+    function notify(msg,color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = msg; setTimeout(()=>{ if(txMsg.textContent===msg) txMsg.textContent=''; },3000); }
 
-    // Close modals clicking outside
+    // --- modal outside click close ---
     document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m); }));
 
-    // Theme (persist)
-    (function applySavedTheme(){ const t = localStorage.getItem(KEY_THEME) || 'dark'; if(t === 'light'){ document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed'; } })();
-    themeBtn.addEventListener('click', ()=> {
+    // --- theme persisted (small) ---
+    (function applyTheme(){
+      const t = localStorage.getItem(KEY_THEME) || 'dark';
+      if(t === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
+    })();
+    themeBtn.addEventListener('click', ()=>{
       const cur = localStorage.getItem(KEY_THEME) || 'dark';
       const next = cur === 'dark' ? 'light' : 'dark';
       localStorage.setItem(KEY_THEME, next);
@@ -397,13 +311,11 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       else document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
     });
 
-    // Admin flow
+    // --- admin flow ---
     adminBtn.addEventListener('click', ()=>{
       if(isAdmin){
         if(!confirm('Sign out admin?')) return;
-        setAdmin(false);
-        notify('Admin signed out','var(--muted)');
-        return;
+        setAdmin(false); notify('Admin signed out','var(--muted)'); return;
       }
       adminPassword.value = '';
       openModal(adminModal);
@@ -413,31 +325,28 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     adminConfirm.addEventListener('click', ()=>{
       const p = (adminPassword.value||'').trim();
       if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
-      // SUCCESS: hide modal forever until logout (modal closes and won't auto-open)
+      // SUCCESS: hide modal and enable admin UI
       closeModal(adminModal);
       setAdmin(true);
       notify('Admin session active','var(--good)');
     });
 
-    // Apply admin UI
+    // --- apply admin UI ---
     function applyAdminUI(){
       const addPanel = document.getElementById('addPanel');
       if(isAdmin){
         addPanel.classList.add('admin-active');
         adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
-        chartsPanel.classList.add('show');
-        chartsPanel.removeAttribute('aria-hidden');
+        chartsPanel.classList.add('show'); chartsPanel.removeAttribute('aria-hidden');
       } else {
         addPanel.classList.remove('admin-active');
-        adminBadgeWrap.innerHTML = '';
-        chartsPanel.classList.remove('show');
-        chartsPanel.setAttribute('aria-hidden','true');
+        adminBadgeWrap.innerHTML = ''; chartsPanel.classList.remove('show'); chartsPanel.setAttribute('aria-hidden','true');
       }
       addBtn.disabled = !isAdmin;
       renderTransactions();
     }
 
-    // Add transaction
+    // --- add transaction ---
     addBtn.addEventListener('click', ()=>{
       if(!isAdmin){ alert('Admin only'); return; }
       const date = txDate.value, type = txType.value, category = txCategory.value;
@@ -449,7 +358,7 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
     });
     clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
 
-    // Edit flow
+    // --- edit flow ---
     function openEdit(i){
       if(!isAdmin){ alert('Admin only'); return; }
       editIndex = i;
@@ -468,7 +377,7 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       editIndex = null;
     });
 
-    // Delete
+    // --- delete ---
     function deleteTx(i){
       if(!isAdmin){ alert('Admin only'); return; }
       if(!confirm('Delete this transaction?')) return;
@@ -476,7 +385,7 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       saveAll(); renderTransactions(); notify('Deleted','var(--danger)');
     }
 
-    // Filters
+    // --- filters and render ---
     applyFilter.addEventListener('click', renderTransactions);
     resetFilter.addEventListener('click', ()=> { fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
 
@@ -491,7 +400,6 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       return true;
     }
 
-    // Render transactions
     function renderTransactions(){
       txTbody.innerHTML = '';
       let inc = 0, exp = 0;
@@ -512,11 +420,10 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       statIncome.textContent = inc.toLocaleString();
       statExpense.textContent = exp.toLocaleString();
       statBalance.textContent = (inc - exp).toLocaleString();
-      checkBudgetAlerts();
-      if(isAdmin) renderCharts(); // only render charts for admin
+      if(isAdmin) renderCharts();
     }
 
-    // Table action delegation
+    // --- table delegation ---
     txTbody.addEventListener('click', (e)=>{
       const b = e.target.closest('button[data-act]');
       if(!b) return;
@@ -526,63 +433,29 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       if(act === 'rcpt') openReceipt(idx);
     });
 
-    // Budget alerts (simple)
-    const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
-    function safeKey(s){ return s.replace(/\s+/g,'_'); }
-    function renderBudgetInputs(){
-      const budgetsArea = document.getElementById('budgetsArea');
-      budgetsArea.innerHTML = '';
-      CATS.forEach(c => {
-        const dv = document.createElement('div'); dv.style.marginBottom = '8px';
-        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px">`;
-        budgetsArea.appendChild(dv);
-        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
-      });
-    }
-    document.getElementById('saveBudgets')?.addEventListener('click', ()=>{
-      if(!isAdmin){ alert('Admin only'); return; }
-      CATS.forEach(c => { budgets[c] = parseFloat(document.getElementById('b_'+safeKey(c)).value) || 0; });
-      saveAll(); renderTransactions(); notify('Budgets saved');
-    });
-    function checkBudgetAlerts(){
-      let msg = '';
-      CATS.forEach(c=>{
-        const spent = transactions.filter(t=>t.type==='Expense' && t.category===c).reduce((a,b)=>a+b.amount,0);
-        if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded: ${c} (${spent.toLocaleString()} > ${budgets[c].toLocaleString()}). `;
-      });
-      document.getElementById('budgetAlert').textContent = msg;
-    }
-
-    // Charts (only render if admin)
+    // --- charts (only for admin) ---
     function renderCharts(){
       if(!isAdmin) return;
       const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      if(chartIE) chartIE.destroy();
-      chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
-      const catMap = {};
-      transactions.forEach(t=> catMap[t.category]=(catMap[t.category]||0)+t.amount);
-      if(chartCat) chartCat.destroy();
-      chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
-      const monthly = {};
-      transactions.forEach(t=>{ const m=t.date.slice(0,7); monthly[m]=monthly[m]||{Income:0,Expense:0}; monthly[m][t.type]+=t.amount; });
+      try{ if(chartIE) chartIE.destroy(); chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} }); }catch(e){console.warn(e)}
+      const catMap = {}; transactions.forEach(t=> catMap[t.category] = (catMap[t.category]||0)+t.amount );
+      try{ if(chartCat) chartCat.destroy(); chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} }); }catch(e){}
+      const monthly = {}; transactions.forEach(t=>{ const m = t.date.slice(0,7); monthly[m]=monthly[m] || {Income:0,Expense:0}; monthly[m][t.type]+=t.amount; });
       const months = Object.keys(monthly).sort();
-      const incArr = months.map(m=>monthly[m].Income||0);
-      const expArr = months.map(m=>monthly[m].Expense||0);
-      if(chartTrend) chartTrend.destroy();
-      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income',data:incArr,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.12)',fill:true},{label:'Expense',data:expArr,borderColor:'#ff6b6b',backgroundColor:'rgba(255,107,107,0.12)',fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} });
+      const incArr = months.map(m=>monthly[m].Income||0); const expArr = months.map(m=>monthly[m].Expense||0);
+      try{ if(chartTrend) chartTrend.destroy(); chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income',data:incArr,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.12)',fill:true},{label:'Expense',data:expArr,borderColor:'#ff6b6b',backgroundColor:'rgba(255,107,107,0.12)',fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} }); }catch(e){}
     }
 
-    // Export CSV
-    exportCsv.addEventListener('click', ()=>{
-      if(!transactions.length){ alert('No transactions'); return; }
-      let csv = 'Date,Type,Category,Amount,Notes\n';
-      transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
+    // --- export csv ---
+    exportCsv.addEventListener('click', ()=> {
+      if(!transactions.length){ alert('No transactions to export'); return; }
+      let csv = 'Date,Type,Category,Amount,Notes\n'; transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
       const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
 
-    // P&L generate & download
+    // --- P&L generate & download ---
     genPL.addEventListener('click', generatePL);
     downloadPL.addEventListener('click', downloadPLPdf);
     showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
@@ -591,7 +464,7 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      const br={}; arr.forEach(t=> br[t.category]=(br[t.category]||0)+t.amount);
+      const br={}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
       let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category:</strong><ul>`;
       for(const k in br) html += `<li>${k}: ${br[k].toLocaleString()}</li>`; html += '</ul></div>';
       document.getElementById('plView').innerHTML = html;
@@ -604,16 +477,14 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
       const { jsPDF } = window.jspdf; const doc = new jsPDF();
-      doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-      doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+      doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20); doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
       doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${inc-exp}`, 14, 60);
-      let y=72; const br={}; arr.forEach(t=> br[t.category]=(br[t.category]||0)+t.amount);
-      doc.text('Category breakdown:', 14, y); y+=8;
+      let y=72; const br={}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount); doc.text('Category breakdown:', 14, y); y+=8;
       for(const k in br){ doc.text(`${k}: ${br[k]}`, 16, y); y+=8; if(y>270){ doc.addPage(); y=20; } }
       doc.save(`PL_${m || 'all'}.pdf`);
     }
 
-    // Receipt
+    // --- receipt ---
     function openReceipt(i){
       const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
       let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
@@ -629,35 +500,32 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
       },60);
     }
 
-    // init
+    // --- initial render ---
     function init(){
-      applyAdminUI();
-      renderBudgetInputs();
-      renderTransactions();
-      if(isAdmin) chartsPanel.classList.add('show'); else chartsPanel.classList.remove('show');
+      applyAdminUI(); renderTransactions();
     }
     init();
 
-    // helper renderBudgetInputs (redeclared)
-    function renderBudgetInputs(){
-      const budgetsArea = document.getElementById('budgetsArea');
-      if(!budgetsArea) return;
-      budgetsArea.innerHTML = '';
-      CATS.forEach(c=> {
-        const dv = document.createElement('div'); dv.style.marginBottom='8px';
-        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px">`;
-        budgetsArea.appendChild(dv);
-        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
-      });
+    // --- helper ---
+    function applyAdminUI(){
+      const addPanel = document.getElementById('addPanel');
+      if(isAdmin){
+        addPanel.classList.add('admin-active');
+        adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
+        chartsPanel.classList.add('show'); chartsPanel.removeAttribute('aria-hidden');
+      } else {
+        addPanel.classList.remove('admin-active'); adminBadgeWrap.innerHTML = ''; chartsPanel.classList.remove('show'); chartsPanel.setAttribute('aria-hidden','true');
+      }
+      addBtn.disabled = !isAdmin;
     }
 
-    // Save on unload
+    // Save before unload
     window.addEventListener('beforeunload', ()=> saveAll());
 
-    // Expose for debug
-    window.__selelo = { transactions, budgets, setAdmin };
+    // Expose for debugging (optional)
+    window.__selelo = { transactions, setAdmin: setAdmin };
 
-  })();
+  }); // DOMContentLoaded
   </script>
 </body>
-            </html>
+          </html>
