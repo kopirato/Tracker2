@@ -6,7 +6,7 @@
 <title>Selelo Business Smart Tracker</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Segoe UI',T, Geneva, Verdana, sans-serif;background:#f4f7f6;color:#1c1c1c;transition:0.3s;}
+  body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:#f4f7f6;color:#1c1c1c;transition:0.3s;}
   body.dark{background:#121212;color:#fff;}
   h1,h2,h3{text-align:center;margin:10px 0;font-weight:600;}
   h2{font-size:1.5em;}
@@ -40,7 +40,7 @@
 <body>
 <div class="container">
   <h1>Selelo Business Smart Tracker</h1>
-  <button class="btn-theme" onclick="toggleTheme()">Toggle Dark/Light Theme</button>
+  <button id="themeBtn" class="btn-theme">Toggle Dark/Light Theme</button>
 
   <h2>Add Transaction</h2>
   <label for="date">Date</label>
@@ -65,10 +65,10 @@
   <label for="amount">Amount</label>
   <input type="number" id="amount" placeholder="0" required>
 
-  <button class="btn-add" onclick="addTransaction()">Add Transaction</button>
+  <button id="addBtn" class="btn-add">Add Transaction</button>
 
   <h2>Filter by Month</h2>
-  <input type="month" id="filterMonth" onchange="renderTransactions()">
+  <input type="month" id="filterMonth">
 
   <div class="dashboard">
     <div class="card">
@@ -89,7 +89,7 @@
   <canvas id="categoryChart" width="400" height="200"></canvas>
   <canvas id="monthlyTrendChart" width="400" height="200"></canvas>
 
-  <button class="btn-export" onclick="exportCSV()">Export Transactions CSV</button>
+  <button id="exportBtn" class="btn-export">Export Transactions CSV</button>
 
   <table>
     <thead>
@@ -101,8 +101,8 @@
   </table>
 
   <h2>Monthly Profit & Loss Statement</h2>
-  <input type="month" id="reportMonth" onchange="generateReport()">
-  <button class="btn-export" onclick="downloadPDF()">Download PDF</button>
+  <input type="month" id="reportMonth">
+  <button id="reportDownloadBtn" class="btn-export">Download PDF</button>
   <div id="reportDiv">
     <h3 id="reportTitle"></h3>
     <p id="reportIncome"></p>
@@ -114,15 +114,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
 let transactions = JSON.parse(localStorage.getItem('transactions'))||[];
 let isDark=false;
 const adminPasswords=["0742147197","+254 721 235005"];
 
-function toggleTheme(){isDark=!isDark;document.body.classList.toggle('dark',isDark);}
+// Button Event Listeners
+document.getElementById('themeBtn').addEventListener('click', ()=>{isDark=!isDark;document.body.classList.toggle('dark',isDark);});
+document.getElementById('addBtn').addEventListener('click', addTransaction);
+document.getElementById('exportBtn').addEventListener('click', exportCSV);
+document.getElementById('reportDownloadBtn').addEventListener('click', downloadPDF);
+document.getElementById('filterMonth').addEventListener('change', renderTransactions);
+document.getElementById('reportMonth').addEventListener('change', generateReport);
 
-// Add transaction
+// Add Transaction Function
 function addTransaction(){
   const pass=prompt("Enter your admin password:");
   if(!pass||!adminPasswords.includes(pass.trim())){alert("Incorrect password.");return;}
@@ -130,14 +135,14 @@ function addTransaction(){
   const type=document.getElementById('type').value;
   const category=document.getElementById('category').value;
   const amount=parseFloat(document.getElementById('amount').value);
-  if(!date||!amount)return;
+  if(!date||!amount){alert("Please fill date and amount");return;}
   transactions.push({date,type,category,amount});
   localStorage.setItem('transactions',JSON.stringify(transactions));
   renderTransactions();
   document.getElementById('date').value='';document.getElementById('amount').value='';
 }
 
-// Delete transaction
+// Delete Transaction
 function deleteTransaction(index){
   const pass=prompt("Enter your admin password to delete:");
   if(!pass||!adminPasswords.includes(pass.trim())){alert("Incorrect password.");return;}
@@ -148,7 +153,7 @@ function deleteTransaction(index){
   }
 }
 
-// Render transactions
+// Render Transactions Table
 function renderTransactions(){
   const table=document.getElementById('transactionTable');
   table.innerHTML='';
@@ -158,7 +163,7 @@ function renderTransactions(){
     if(filter&&!t.date.startsWith(filter))return;
     const row=document.createElement('tr');
     row.innerHTML=`<td>${t.date}</td><td>${t.type}</td><td>${t.category}</td><td>${t.amount}</td>
-      <td><button onclick="deleteTransaction(${i})" style="background:#FF5252;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;">Delete</button></td>`;
+      <td><button class="deleteBtn" data-index="${i}" style="background:#FF5252;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;">Delete</button></td>`;
     table.appendChild(row);
     if(t.type==='Income')totalIncome+=t.amount;
     if(t.type==='Expense')totalExpense+=t.amount;
@@ -166,16 +171,24 @@ function renderTransactions(){
   document.getElementById('totalIncome').innerText=totalIncome;
   document.getElementById('totalExpense').innerText=totalExpense;
   document.getElementById('balance').innerText=totalIncome-totalExpense;
+  attachDeleteButtons();
   renderCharts();
 }
 
-// Charts
+// Attach Delete Button Listeners
+function attachDeleteButtons(){
+  document.querySelectorAll('.deleteBtn').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteTransaction(btn.getAttribute('data-index')));
+  });
+}
+
+// Render Charts
 function renderCharts(){
   const income=transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const expense=transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
   renderDoughnut('incomeExpenseChart',['Income','Expenses'],[income,expense],['#4CAF50','#FF5252']);
   const categories={};
-  transactions.forEach(t=>{categories[t.category]=(categories[t.category]||0)+t.amount;});
+  transactions.forEach(t=>categories[t.category]=(categories[t.category]||0)+t.amount);
   renderDoughnut('categoryChart',Object.keys(categories),Object.values(categories));
   const months={};
   transactions.forEach(t=>{const m=t.date.slice(0,7);months[m]=months[m]||{Income:0,Expense:0};months[m][t.type]+=t.amount;});
@@ -197,12 +210,12 @@ function renderLine(id,labels,income,expense){
 
 // CSV Export
 function exportCSV(){
-  if(!transactions.length)return;
+  if(!transactions.length){alert("No transactions to export.");return;}
   let csv='Date,Type,Category,Amount\n';
   transactions.forEach(t=>{csv+=`"${t.date}","${t.type}","${t.category}","${t.amount}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='transactions.csv'; document.body.appendChild(a); a.click(); a.remove();
+  const a=document.createElement('a');a.href=url;a.download='transactions.csv';document.body.appendChild(a);a.click();a.remove();
 }
 
 // Generate Monthly Report
@@ -227,16 +240,15 @@ function generateReport(){
 // Download PDF
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc=new jsPDF();
   doc.setFontSize(16); doc.text("Monthly Profit & Loss Report",10,20);
-  doc.setFontSize(12); 
+  doc.setFontSize(12);
   doc.text(document.getElementById('reportTitle').innerText,10,30);
   doc.text(document.getElementById('reportIncome').innerText,10,40);
   doc.text(document.getElementById('reportExpense').innerText,10,50);
   doc.text(document.getElementById('reportBalance').innerText,10,60);
   let y=70;
-  const items=document.querySelectorAll('#reportCategoryBreakdown ul li');
-  items.forEach(i=>{doc.text(i.innerText,10,y); y+=10;});
+  document.querySelectorAll('#reportCategoryBreakdown ul li').forEach(i=>{doc.text(i.innerText,10,y);y+=10;});
   doc.save('Monthly_Report.pdf');
 }
 
