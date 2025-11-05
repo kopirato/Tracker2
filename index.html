@@ -173,4 +173,75 @@ function renderTransactions(){
 function renderCharts(){
   const income=transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const expense=transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-  renderDoughnut('incomeExpenseChart',['Income','Expenses'],[income,expense],['#4CAF50','#FF5252
+  renderDoughnut('incomeExpenseChart',['Income','Expenses'],[income,expense],['#4CAF50','#FF5252']);
+  const categories={};
+  transactions.forEach(t=>{categories[t.category]=(categories[t.category]||0)+t.amount;});
+  renderDoughnut('categoryChart',Object.keys(categories),Object.values(categories));
+  const months={};
+  transactions.forEach(t=>{const m=t.date.slice(0,7);months[m]=months[m]||{Income:0,Expense:0};months[m][t.type]+=t.amount;});
+  const monthKeys=Object.keys(months).sort();
+  renderLine('monthlyTrendChart',monthKeys,monthKeys.map(m=>months[m].Income),monthKeys.map(m=>months[m].Expense));
+}
+
+function renderDoughnut(id,labels,data,colors){
+  const ctx=document.getElementById(id).getContext('2d');
+  if(window[id])window[id].destroy();
+  window[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors||['#4CAF50','#FF5252','#FFC107','#03A9F4','#9C27B0','#FF5722']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+}
+
+function renderLine(id,labels,income,expense){
+  const ctx=document.getElementById(id).getContext('2d');
+  if(window[id])window[id].destroy();
+  window[id]=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Income',data:income,borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,0.2)',tension:0.3},{label:'Expense',data:expense,borderColor:'#FF5252',backgroundColor:'rgba(255,82,82,0.2)',tension:0.3}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+}
+
+// CSV Export
+function exportCSV(){
+  if(!transactions.length)return;
+  let csv='Date,Type,Category,Amount\n';
+  transactions.forEach(t=>{csv+=`"${t.date}","${t.type}","${t.category}","${t.amount}"\n`;});
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='transactions.csv'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+// Generate Monthly Report
+function generateReport(){
+  const month=document.getElementById('reportMonth').value;
+  if(!month)return;
+  const filtered=transactions.filter(t=>t.date.startsWith(month));
+  const income=filtered.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
+  const expense=filtered.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
+  document.getElementById('reportTitle').innerText=`Report for ${month}`;
+  document.getElementById('reportIncome').innerText=`Total Income: ${income}`;
+  document.getElementById('reportExpense').innerText=`Total Expense: ${expense}`;
+  document.getElementById('reportBalance').innerText=`Balance: ${income-expense}`;
+  const breakdown={};
+  filtered.forEach(t=>breakdown[t.category]=(breakdown[t.category]||0)+t.amount);
+  let html='<h4>Category Breakdown:</h4><ul>';
+  for(let k in breakdown){html+=`<li>${k}: ${breakdown[k]}</li>`;}
+  html+='</ul>';
+  document.getElementById('reportCategoryBreakdown').innerHTML=html;
+}
+
+// Download PDF
+function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16); doc.text("Monthly Profit & Loss Report",10,20);
+  doc.setFontSize(12); 
+  doc.text(document.getElementById('reportTitle').innerText,10,30);
+  doc.text(document.getElementById('reportIncome').innerText,10,40);
+  doc.text(document.getElementById('reportExpense').innerText,10,50);
+  doc.text(document.getElementById('reportBalance').innerText,10,60);
+  let y=70;
+  const items=document.querySelectorAll('#reportCategoryBreakdown ul li');
+  items.forEach(i=>{doc.text(i.innerText,10,y); y+=10;});
+  doc.save('Monthly_Report.pdf');
+}
+
+// Initial render
+renderTransactions();
+</script>
+</body>
+</html>
