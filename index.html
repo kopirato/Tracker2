@@ -1,77 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SELELO BUSINESS PARK</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg-dark:#07121a;
-  --muted:#9aa7b3;
-  --text:#eaf6ff;
-  --accent1:#6ee7ff;
-  --accent2:#b38bff;
-  --good:#4ade80;
-  --danger:#ff6b6b;
-  --glass-weak: rgba(255,255,255,0.02);
-  --glass-strong: rgba(255,255,255,0.06);
-  --radius:14px;
-  --maxw:1200px;
+  --bg-dark:#07121a; --muted:#9aa7b3; --text:#eaf6ff;
+  --accent1:#6ee7ff; --accent2:#b38bff;
+  --radius:14px; --maxw:1200px;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
-
-body{
-  background-image: url('2.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-color: var(--bg-dark);
-  margin:0;
-  padding:0;
-  min-height:100vh;
-}
-body::before{
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
-  z-index: -1;
-  pointer-events: none;
-  backdrop-filter: blur(2px);
-}
-.shell{
-  min-height:100vh;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:28px;
-}
-.card{
-  width:100%;
-  max-width:var(--maxw);
-  border-radius:18px;
-  padding:18px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007));
-  box-shadow: 0 40px 110px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-  backdrop-filter: blur(10px) saturate(120%);
-  border:1px solid rgba(255,255,255,0.03);
-  min-height:85vh;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index: 1;
-}
+html,body{height:100%;margin:0;font-family:Inter,sans-serif;color:var(--text);}
+body{background-image:url('2.png');background-size:cover;background-position:center;background-repeat:no-repeat;min-height:100vh;margin:0;padding:0;}
+body::before{content:"";position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));z-index:-1;pointer-events:none;backdrop-filter:blur(2px);}
+.shell{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px;}
+.card{width:100%;max-width:var(--maxw);border-radius:18px;padding:18px;background:rgba(255,255,255,0.02);box-shadow:0 40px 110px rgba(0,0,0,0.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.03);min-height:85vh;display:flex;flex-direction:column;gap:12px;}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:62px;height:62px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(0,0,0,0.6)}
-h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase}
-.sub{color:var(--muted);font-size:12px}
+.logo{width:62px;height:62px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);}
+h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase;}
+.sub{color:var(--muted);font-size:12px;}
 .controls{display:flex;gap:8px;align-items:center}
 .btn{border:0;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
 .btn-theme{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
@@ -79,19 +29,10 @@ h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:upp
 .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:8px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
 .panel{background:transparent;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.admin-panel{transition:all 240ms ease}
-.admin-panel.admin-active{
-  background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));
-  border:1px solid rgba(110,231,255,0.12);
-  box-shadow:0 16px 48px rgba(110,231,255,0.03), inset 0 0 30px rgba(110,231,255,0.02);
-}
 .fields{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .field{flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px}
 label{font-size:13px;color:var(--muted);font-weight:700}
-input[type="text"], input[type="date"], input[type="number"], select, textarea{
-  background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);font-size:14px;
-  transition:box-shadow 150ms ease,border-color 150ms ease;
-}
+input, select, textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);font-size:14px;}
 textarea{min-height:72px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(110,231,255,0.92);box-shadow:0 10px 40px rgba(110,231,255,0.06)}
 .actions{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
@@ -104,223 +45,133 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.01);color:var(-
 .action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700}
 .delete-btn{background:transparent;border:1px solid rgba(255,92,92,0.95);color:rgba(255,92,92,0.95);padding:6px 8px;border-radius:8px;font-weight:700}
 .delete-btn:hover{background:rgba(255,92,92,0.95);color:#fff;box-shadow:0 10px 30px rgba(255,92,92,0.12)}
-.dashboard{display:flex;flex-direction:column;gap:12px}
-.stat-grid{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
-.stat{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01));padding:10px;border-radius:10px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
-.stat h4{margin:0;color:var(--muted);font-size:12px}
-.stat p{margin:8px 0 0;font-weight:800;font-size:18px}
-.charts{display:none;gap:8px;margin-top:10px}
-.charts.show{display:block}
-.modal{position:fixed;left:50%;transform:translateX(-50%);top:7%;width:94%;max-width:460px;z-index:1300;display:none}
-.modal-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
-.modal.show{display:block;animation:drop 240ms ease}
-@keyframes drop{from{transform:translateX(-50%) translateY(-8px) scale(0.996);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
-.modal h3{margin:0 0 8px 0;font-size:18px}
-.modal p{margin:0 0 10px 0;color:var(--muted)}
-.receipt{background:#fff;color:#000;padding:12px;border-radius:8px}
-footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;padding-top:10px}
-@media (max-width:640px){
-  .logo{width:52px;height:52px}
-  .fields{flex-direction:column}
-  table{min-width:520px}
-  .modal{top:4%}
-  .card{padding:12px}
-}
 </style>
 </head>
 <body>
 <div class="shell">
-<main class="card" role="application" aria-label="Selelo Business Park">
-
-<!-- Header -->
-<div class="top">
-  <div class="brand">
-    <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
-    <div>
-      <h1>SELELO BUSINESS PARK</h1>
-      <p class="sub">Dashboard</p>
-    </div>
-  </div>
-  <div class="controls">
-    <button class="btn btn-theme" id="themeToggle">Toggle Theme</button>
-    <button class="btn btn-admin" id="adminPanelToggle">Admin</button>
-  </div>
-</div>
-
-<!-- Grid -->
-<div class="grid">
-  <div class="panel dashboard">
-    <div class="stat-grid">
-      <div class="stat">
-        <h4>Total Income</h4>
-        <p id="totalIncome">0</p>
+  <div class="card">
+    <div class="top">
+      <div class="brand">
+        <img src="2.png" class="logo">
+        <div>
+          <h1>SELELO BUSINESS PARK</h1>
+          <p class="sub">Business Tracker</p>
+        </div>
       </div>
-      <div class="stat">
-        <h4>Total Expenses</h4>
-        <p id="totalExpenses">0</p>
-      </div>
-      <div class="stat">
-        <h4>Balance</h4>
-        <p id="balance">0</p>
+      <div class="controls">
+        <button class="btn btn-admin" onclick="toggleAdmin()">Admin</button>
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Type</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="transactionsTable">
-          <!-- Transactions will populate here -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+    <div class="grid">
+      <!-- Form Panel -->
+      <div class="panel admin-panel" id="adminPanel">
+        <h3>Add Transaction</h3>
+        <div class="fields">
+          <div class="field">
+            <label>Date</label>
+            <input type="date" id="date">
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <select id="type">
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <input type="text" id="category" placeholder="Category">
+          </div>
+          <div class="field">
+            <label>Amount</label>
+            <input type="number" id="amount" placeholder="Amount">
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-add" onclick="addTransaction()">Add</button>
+        </div>
+      </div>
 
-  <!-- Admin Panel -->
-  <div class="panel admin-panel" id="adminPanel">
-    <h3>Admin Controls</h3>
-    <div class="fields">
-      <div class="field">
-        <label for="transactionType">Type</label>
-        <select id="transactionType">
-          <option value="Income">Income</option>
-          <option value="Expense">Expense</option>
-        </select>
+      <!-- Transactions Table -->
+      <div class="panel">
+        <h3>Transactions</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="transactionTable"></tbody>
+          </table>
+        </div>
       </div>
-      <div class="field">
-        <label for="amount">Amount</label>
-        <input type="number" id="amount">
-      </div>
-      <div class="field">
-        <label for="desc">Description</label>
-        <input type="text" id="desc">
-      </div>
-      <div class="field">
-        <label for="date">Date</label>
-        <input type="date" id="date">
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn-add" id="addTransaction">Add Transaction</button>
-      <button class="btn-ghost" id="clearTransactions">Clear All</button>
     </div>
   </div>
 </div>
 
-<footer>
-  &copy; 2025 SELELO BUSINESS PARK
-</footer>
-</main>
-</div>
-
-<!-- Firebase Config & Full Script -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-// Firebase Config
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
 const firebaseConfig = {
-  apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-  authDomain: "selelo-tracker.firebaseapp.com",
-  projectId: "selelo-tracker",
-  storageBucket: "selelo-tracker.firebasestorage.app",
-  messagingSenderId: "42660826905",
-  appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// DOM Elements
-const addBtn = document.getElementById('addTransaction');
-const typeEl = document.getElementById('transactionType');
-const amountEl = document.getElementById('amount');
-const descEl = document.getElementById('desc');
-const dateEl = document.getElementById('date');
-const totalIncomeEl = document.getElementById('totalIncome');
-const totalExpensesEl = document.getElementById('totalExpenses');
-const balanceEl = document.getElementById('balance');
-const transactionsTable = document.getElementById('transactionsTable');
-const clearBtn = document.getElementById('clearTransactions');
-const adminPanel = document.getElementById('adminPanel');
-const adminToggle = document.getElementById('adminPanelToggle');
-
-// Add Transaction
-async function addTransactionToFirestore() {
-  if(amountEl.value && descEl.value && dateEl.value) {
-    await addDoc(collection(db,'transactions'),{
-      type: typeEl.value,
-      amount: parseFloat(amountEl.value),
-      description: descEl.value,
-      date: dateEl.value
-    });
-    amountEl.value=''; descEl.value=''; dateEl.value='';
-    loadTransactions();
-  } else {
-    alert('Please fill all fields');
-  }
+function toggleAdmin(){
+  const panel = document.getElementById('adminPanel');
+  panel.classList.toggle('admin-active');
 }
 
-// Delete Transaction
-async function deleteTransaction(id) {
-  if(confirm('Delete this transaction?')) {
-    await deleteDoc(doc(db,'transactions',id));
-    loadTransactions();
-  }
+function addTransaction(){
+  const date = document.getElementById('date').value;
+  const type = document.getElementById('type').value;
+  const category = document.getElementById('category').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+  
+  if(!date || !type || !category || isNaN(amount)) return alert("Fill all fields");
+
+  const newKey = db.ref().child('transactions').push().key;
+  db.ref('transactions/' + newKey).set({date, type, category, amount})
+    .then(() => {document.getElementById('date').value='';document.getElementById('category').value='';document.getElementById('amount').value='';})
+    .catch(err => console.error(err));
 }
 
-// Load Transactions
-async function loadTransactions() {
-  const snapshot = await getDocs(collection(db,'transactions'));
-  let income=0, expense=0;
-  transactionsTable.innerHTML='';
-  snapshot.forEach(d=>{
-    const t = d.data();
+// Load transactions
+db.ref('transactions').on('value', snapshot => {
+  const table = document.getElementById('transactionTable');
+  table.innerHTML = '';
+  snapshot.forEach(child => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${t.date}</td>
-                    <td>${t.type}</td>
-                    <td>${t.description}</td>
-                    <td>${t.amount.toFixed(2)}</td>
-                    <td><button class="delete-btn" onclick="deleteTransaction('${d.id}')">Delete</button></td>`;
-    transactionsTable.appendChild(tr);
-    if(t.type==='Income') income+=t.amount;
-    else if(t.type==='Expense') expense+=t.amount;
+    const data = child.val();
+    tr.innerHTML = `
+      <td>${data.date}</td>
+      <td>${data.type}</td>
+      <td>${data.category}</td>
+      <td>${data.amount}</td>
+      <td><button class="delete-btn" onclick="deleteTransaction('${child.key}')">Delete</button></td>
+    `;
+    table.appendChild(tr);
   });
-  totalIncomeEl.textContent = income.toFixed(2);
-  totalExpensesEl.textContent = expense.toFixed(2);
-  balanceEl.textContent = (income-expense).toFixed(2);
-}
-
-// Clear All Transactions
-async function clearAllTransactions() {
-  if(confirm('Clear all transactions?')) {
-    const snapshot = await getDocs(collection(db,'transactions'));
-    snapshot.forEach(async d=>{
-      await deleteDoc(doc(db,'transactions',d.id));
-    });
-    loadTransactions();
-  }
-}
-
-// Toggle Admin Panel
-adminToggle.addEventListener('click',()=>{
-  adminPanel.classList.toggle('admin-active');
 });
 
-// Event Listeners
-addBtn.addEventListener('click',addTransactionToFirestore);
-clearBtn.addEventListener('click',clearAllTransactions);
-window.addEventListener('load',loadTransactions);
-
-// Make deleteTransaction globally accessible
-window.deleteTransaction = deleteTransaction;
+function deleteTransaction(key){
+  db.ref('transactions/' + key).remove();
+}
 </script>
 </body>
-      </html>
+                                                                  </html>
