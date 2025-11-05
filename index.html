@@ -3,96 +3,97 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Selelo — Smart Tracker</title>
+<title>SELELO BUSINESS TRACKER</title>
+
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Minimal, modern styling (dark-first) -->
 <style>
 :root{
-  --bg:#07121a;
-  --overlay: rgba(3,6,10,0.6);
-  --card: rgba(255,255,255,0.03);
-  --panel:#071826;
-  --muted:#9aa7b3;
+  --bg-dark:#07121a;
   --text:#e8f3fb;
-  --accent1:#6ee7ff;
-  --accent2:#b38bff;
-  --good:#4ade80;
+  --muted:#9aa7b3;
+  --card-bg:rgba(255,255,255,0.03);
+  --glass: rgba(255,255,255,0.025);
+  --accent-cyan:#6ee7ff;
+  --accent-purple:#b38bff;
+  --success:#4ade80;
   --danger:#ff6b6b;
   --radius:14px;
   --maxw:1100px;
-  --glass: rgba(255,255,255,0.02);
+  --shadow: 0 18px 60px rgba(0,0,0,0.6);
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
 body{
   background: radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url('2.png') center/cover no-repeat fixed;
-  background-color:var(--bg);
+  background-color:var(--bg-dark);
 }
 
-/* shell & main */
-.shell{min-height:100vh;padding:22px;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
-.app{width:100%;max-width:var(--maxw);border-radius:18px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.02));box-shadow:0 18px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02)}
+/* Shell & container */
+.shell{min-height:100vh;padding:20px;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
+.app{width:100%;max-width:var(--maxw);border-radius:18px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.02));box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.02)}
 
-/* header minimal */
+/* Header - minimal */
 .header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 4px}
 .header-left{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.6)}
-.title h1{margin:0;font-size:18px;font-weight:700}
+.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04);box-shadow:0 8px 28px rgba(0,0,0,0.6)}
+.title h1{margin:0;font-size:18px;font-weight:700;letter-spacing:0.6px}
 .title p{margin:4px 0 0;font-size:12px;color:var(--muted);display:none}
 
-/* header right: ONLY theme toggle */
+/* Header controls (only admin + theme toggle) */
 .header-right{display:flex;align-items:center;gap:8px}
-.btn{border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
-.btn-theme{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021224;box-shadow:0 10px 28px rgba(100,120,255,0.06)}
+.btn{border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
+.btn-admin{background:linear-gradient(90deg,var(--accent-cyan),var(--accent-purple));color:#021224;box-shadow:0 10px 24px rgba(99,102,241,0.06)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
 
-/* action bar (under header) */
+/* Action bar (below header) */
 .action-bar{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:8px;border-radius:12px}
 .action{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02);font-weight:700;color:var(--text);cursor:pointer}
 
-/* layout grid */
+/* Grid layout */
 .grid{margin-top:14px;display:grid;grid-template-columns:1fr 360px;gap:16px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
 
-/* card */
-.card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+/* Card */
+.card{background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
 .card h2{margin:0 0 8px 0;font-size:16px}
 .card h3{margin:0 0 8px 0;font-size:15px}
+.small{font-size:12px;color:var(--muted)}
 
-/* cute dashboard panel to block wallpaper */
+/* Dashboard panel that blocks wallpaper */
 .dashboard-panel{
-  margin-top:6px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.03));backdrop-filter: blur(6px);
-  border:1px solid rgba(255,255,255,0.02);
-  display:flex;gap:10px;align-items:center;justify-content:space-between;
+  margin-top:6px;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.02);display:flex;gap:10px;align-items:center;justify-content:space-between;
 }
-.dashboard-panel .left{display:flex;gap:10px;align-items:center}
-.dashboard-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:10px;border-radius:12px;min-width:90px;text-align:center}
+.dashboard-card{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005));padding:10px;border-radius:12px;min-width:90px;text-align:center}
 .dashboard-card h4{margin:0;color:var(--muted);font-size:12px}
 .dashboard-card p{margin:6px 0 0;font-weight:800;font-size:16px}
 
-/* form & inputs */
+/* Form inputs */
 label{display:block;font-size:12px;color:var(--muted);margin-top:8px}
 input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);font-size:14px}
 textarea{min-height:80px;resize:vertical}
-.small{font-size:12px;color:var(--muted)}
 
-/* transactions table */
+/* Table */
 .table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{padding:10px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.02)}
 tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(--text)}
 .action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer}
 
-/* modals (admin prompt thoughtful) */
-.modal{display:none;position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));z-index:999;align-items:center;justify-content:center;padding:16px}
+/* Modal */
+.modal{display:none;position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.75));z-index:999;align-items:center;justify-content:center;padding:16px}
 .panel{width:100%;max-width:560px;background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.03));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
 .admin-prompt{font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:12px}
-.admin-prompt .deep{font-weight:600;color:var(--text);font-size:15px;margin-top:6px}
-.modal .controls{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.admin-prompt .deep{font-weight:700;color:var(--text);font-size:15px;margin-top:6px}
 
-/* receipt printable */
+/* Receipt printable */
 .printable{background:#fff;color:#000;padding:16px;border-radius:8px}
-.printable img{max-width:180px;display:block;margin:6px auto}
+.printable img{max-width:180px;display:block;margin:8px auto}
 
-/* responsive */
+/* small screens */
 @media(max-width:520px){
   .logo{width:48px;height:48px}
   .title h1{font-size:16px}
@@ -107,34 +108,37 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
 </head>
 <body>
   <div class="shell">
-    <div class="app" role="application" aria-label="Selelo Smart Tracker">
-      <!-- header minimal: only theme toggle -->
-      <div class="header" role="banner">
+    <div class="app" role="application" aria-label="Selelo Business Tracker">
+
+      <!-- HEADER -->
+      <header class="header" role="banner">
         <div class="header-left">
           <img src="11.png" alt="logo" class="logo" onerror="this.style.display='none'">
           <div class="title">
-            <h1>Selelo</h1>
+            <h1>SELELO BUSINESS TRACKER</h1>
           </div>
         </div>
 
-        <div class="header-right">
-          <button id="themeToggle" class="btn btn-theme" aria-label="Toggle theme">Theme</button>
+        <div class="header-right" role="navigation" aria-label="Top controls">
+          <button id="adminToggleBtn" class="btn btn-admin" title="Admin sign in / out">Admin Login</button>
+          <button id="themeToggleBtn" class="btn btn-ghost" title="Toggle theme">Toggle Theme</button>
         </div>
-      </div>
+      </header>
 
-      <!-- action bar (CSV, P&L etc) -->
+      <!-- ACTION BAR -->
       <div class="action-bar" role="toolbar" aria-label="Quick actions">
-        <div id="exportCsv" class="action" title="Export transactions to CSV">Export CSV</div>
-        <div id="generatePL" class="action" title="Show P&L">Show P&L</div>
-        <div id="downloadPL" class="action" title="Download P&L PDF">Download P&L</div>
+        <div id="exportCsvBtn" class="action" title="Export transactions to CSV">Export CSV</div>
+        <div id="showPLBtn" class="action" title="Show Profit & Loss">Show P&L</div>
+        <div id="downloadPLBtn" class="action" title="Download Profit & Loss PDF">Download P&L</div>
       </div>
 
-      <!-- main grid -->
+      <!-- MAIN GRID -->
       <div class="grid">
-        <!-- left column -->
+        <!-- LEFT: Form + list -->
         <section>
-          <div class="card">
-            <h2>Add Transaction</h2>
+          <div class="card" aria-labelledby="addTxTitle">
+            <h2 id="addTxTitle">Add Transaction</h2>
+
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <div style="flex:1">
                 <label for="txDate">Date</label>
@@ -157,19 +161,19 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <label for="txNotes">Notes</label>
             <textarea id="txNotes" placeholder="Optional"></textarea>
 
-            <div class="row" style="margin-top:10px;align-items:center">
-              <button id="addTxBtn" class="btn btn-theme" disabled>Add</button>
-              <button id="clearBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Clear</button>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">
+              <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
+              <button id="clearBtn" class="btn btn-ghost">Clear</button>
               <div id="adminHint" class="small" style="color:var(--muted)">Admin required to add/delete</div>
             </div>
 
-            <div id="txMsg" class="small" style="margin-top:8px;color:var(--good)"></div>
+            <div id="txMsg" class="small" style="margin-top:8px;color:var(--success)"></div>
           </div>
 
           <div class="card" style="margin-top:12px">
             <h3>Transactions</h3>
 
-            <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
               <input id="fMonth" type="month" style="min-width:160px">
               <select id="fType"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
               <select id="fCategory"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
@@ -179,36 +183,37 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
               <input id="fMin" type="number" placeholder="Min" style="width:100px">
               <input id="fMax" type="number" placeholder="Max" style="width:100px">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1">
-              <button id="applyFilter" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Apply</button>
-              <button id="resetFilter" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Reset</button>
+              <button id="applyFilterBtn" class="btn btn-ghost">Apply</button>
+              <button id="resetFilterBtn" class="btn btn-ghost">Reset</button>
             </div>
 
             <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="transactions">
+              <table aria-label="Transactions table">
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txTbody"></tbody>
+                <tbody id="txTableBody"></tbody>
               </table>
             </div>
           </div>
         </section>
 
-        <!-- right column -->
+        <!-- RIGHT: Dashboard & others -->
         <aside>
           <div class="card">
             <h3>Overview</h3>
 
             <!-- cute dashboard panel blocking wallpaper -->
             <div class="dashboard-panel" role="region" aria-label="summary">
-              <div class="left">
-                <div class="dashboard-card"><h4>Total Income</h4><p id="statIncome">0</p></div>
-                <div class="dashboard-card"><h4>Total Expense</h4><p id="statExpense">0</p></div>
-                <div class="dashboard-card"><h4>Balance</h4><p id="statBalance">0</p></div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="dashboard-card"><h4>Total Income</h4><p id="totalIncome">0</p></div>
+                <div class="dashboard-card"><h4>Total Expense</h4><p id="totalExpense">0</p></div>
+                <div class="dashboard-card"><h4>Balance</h4><p id="balance">0</p></div>
               </div>
               <div style="min-width:120px;text-align:right">
-                <div style="font-size:12px;color:var(--muted)">Admin:</div>
-                <div id="adminStatus" style="font-weight:700">Not signed in</div>
+                <div class="small" style="color:var(--muted)">Admin</div>
+                <div id="adminStatus" style="font-weight:700">Signed out</div>
               </div>
             </div>
+
             <div id="budgetAlert" class="small" style="margin-top:8px;color:var(--danger)"></div>
           </div>
 
@@ -216,7 +221,7 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <h3>Budgets</h3>
             <div id="budgetsArea"></div>
             <div style="margin-top:8px">
-              <button id="saveBudgetsBtn" class="btn" disabled style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Save Budgets</button>
+              <button id="saveBudgetsBtn" class="btn btn-ghost" disabled>Save Budgets</button>
             </div>
           </div>
 
@@ -232,43 +237,41 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <label for="reportMonth">Month (optional)</label>
             <input id="reportMonth" type="month">
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button id="genPLBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Show</button>
-              <button id="downloadPLBtn" class="btn btn-theme">Download</button>
+              <button id="genPLBtn" class="btn btn-ghost">Show</button>
+              <button id="downloadPLBtnCard" class="btn btn-admin">Download</button>
             </div>
             <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
           </div>
         </aside>
       </div>
 
-      <div style="height:6px"></div>
+      <div style="height:10px"></div>
       <div style="text-align:center;color:var(--muted);font-size:12px">Made for Selian</div>
-
     </div>
   </div>
 
-  <!-- ADMIN modal (slow, deep, thoughtful prompt) -->
+  <!-- ADMIN LOGIN MODAL (thoughtful prompt) -->
   <div id="adminModal" class="modal" aria-hidden="true">
-    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
-      <h2 id="adminTitle">Administrator access</h2>
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+      <h2 id="adminModalTitle">Administrator access</h2>
       <p class="admin-prompt">
-        This area grants editing control. <span class="deep">Please enter the administrator password slowly — reflect before confirming.</span>
-        <br><br>
-        <small style="color:var(--muted)">Only use this on trusted devices. Session stays active until you sign out.</small>
+        This is the administrative interface. Signing in will unlock edit and delete actions.
+        <span class="deep">Enter the password carefully and only on trusted devices.</span>
       </p>
 
       <div style="position:relative">
-        <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)">
-        <button id="adminShow" style="position:absolute;right:8px;top:8px;padding:6px;border-radius:8px;background:transparent;border:0;color:var(--muted)">Show</button>
+        <input id="adminPasswordInput" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)">
+        <button id="adminShowBtn" style="position:absolute;right:8px;top:8px;padding:6px;border-radius:8px;background:transparent;border:0;color:var(--muted)">Show</button>
       </div>
 
-      <div class="controls" style="margin-top:12px">
-        <button id="adminCancel" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Cancel</button>
-        <button id="adminConfirm" class="btn btn-theme">Confirm</button>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button id="adminCancelBtn" class="btn btn-ghost">Cancel</button>
+        <button id="adminConfirmBtn" class="btn btn-admin">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- EDIT modal -->
+  <!-- EDIT MODAL -->
   <div id="editModal" class="modal" aria-hidden="true">
     <div class="panel">
       <h3>Edit transaction</h3>
@@ -278,336 +281,444 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
       <label>Amount</label><input id="editAmount" type="number">
       <label>Notes</label><textarea id="editNotes"></textarea>
       <div style="text-align:right;margin-top:10px">
-        <button id="editCancel" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Cancel</button>
-        <button id="editSave" class="btn btn-theme">Save</button>
+        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
+        <button id="editSaveBtn" class="btn btn-admin">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- RECEIPT modal -->
+  <!-- RECEIPT MODAL -->
   <div id="receiptModal" class="modal" aria-hidden="true">
-    <div class="panel" id="receiptInner"></div>
+    <div class="panel" id="receiptInner" role="document"></div>
   </div>
 
-  <!-- dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- SCRIPT: all logic -->
+  <!-- App Script: fully wired -->
   <script>
-  // CONFIG
-  const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-  const KEY_TX = "sel_tx_v2";
-  const KEY_BUD = "sel_bud_v2";
-  const KEY_ADMIN = "sel_admin_v2";
-  const KEY_THEME = "sel_theme_v2";
-
-  // state
-  let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-  let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
-  let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-  let editIndex = null;
-
-  // elements
-  const themeToggle = document.getElementById('themeToggle');
-  const exportCsv = document.getElementById('exportCsv');
-  const generatePL = document.getElementById('generatePL');
-  const downloadPL = document.getElementById('downloadPL');
-
-  const adminBtn = document.getElementById('adminBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const adminModal = document.getElementById('adminModal');
-  const adminPassword = document.getElementById('adminPassword');
-  const adminShow = document.getElementById('adminShow');
-  const adminCancel = document.getElementById('adminCancel');
-  const adminConfirm = document.getElementById('adminConfirm');
-
-  const addTxBtn = document.getElementById('addTxBtn'), clearBtn = document.getElementById('clearBtn');
-  const txDate = document.getElementById('txDate'), txType = document.getElementById('txType'), txCategory = document.getElementById('txCategory'), txAmount = document.getElementById('txAmount'), txNotes = document.getElementById('txNotes'), txMsg = document.getElementById('txMsg');
-
-  const txTbody = document.getElementById('txTbody');
-  const applyFilter = document.getElementById('applyFilter'), resetFilter = document.getElementById('resetFilter');
-  const fMonth = document.getElementById('fMonth'), fType = document.getElementById('fType'), fCategory = document.getElementById('fCategory'), fMin = document.getElementById('fMin'), fMax = document.getElementById('fMax'), fNotes = document.getElementById('fNotes');
-
-  const statIncome = document.getElementById('statIncome'), statExpense = document.getElementById('statExpense'), statBalance = document.getElementById('statBalance'), adminStatus = document.getElementById('adminStatus'), txMsgBox = document.getElementById('txMsg');
-  const budgetsArea = document.getElementById('budgetsArea'), saveBudgetsBtn = document.getElementById('saveBudgetsBtn');
-
-  const genPLBtn = document.getElementById('genPLBtn'), downloadPLBtn = document.getElementById('downloadPLBtn'), reportMonth = document.getElementById('reportMonth'), plView = document.getElementById('plView');
-
-  const editModal = document.getElementById('editModal'), editDate = document.getElementById('editDate'), editType = document.getElementById('editType'), editCategory = document.getElementById('editCategory'), editAmount = document.getElementById('editAmount'), editNotes = document.getElementById('editNotes'), editCancel = document.getElementById('editCancel'), editSave = document.getElementById('editSave');
-
-  const receiptModal = document.getElementById('receiptModal'), receiptInner = document.getElementById('receiptInner');
-
-  const chartIECtx = document.getElementById('chartIE').getContext('2d'), chartCatCtx = document.getElementById('chartCat').getContext('2d'), chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
-  let chartIE, chartCat, chartTrend;
-
-  // helpers
-  function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); localStorage.setItem(KEY_BUD, JSON.stringify(budgets)); }
-  function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
-  function notify(msg, color='var(--good)'){ txMsgBox.style.color = color; txMsgBox.textContent = msg; setTimeout(()=>{ if(txMsgBox.textContent===msg) txMsgBox.textContent=''; }, 3500); }
-  function openModal(m){ m.style.display='flex'; m.setAttribute('aria-hidden','false'); }
-  function closeModal(m){ m.style.display='none'; m.setAttribute('aria-hidden','true'); }
-  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m); }));
-
-  // initial UI apply
-  function applyAdminUI(){
-    addTxBtn.disabled = !isAdmin;
-    saveBudgetsBtn.disabled = !isAdmin;
-    adminStatus.textContent = isAdmin ? 'Signed in' : 'Not signed in';
-    document.getElementById('adminHint').style.display = isAdmin ? 'none' : 'block';
-    // hide/show logout button: we removed logout from header to stay minimal, so show prompt style in dashboard only
-    // leave admin button always visible to sign in again
-  }
-
-  // theme toggle (dark default)
   (function(){
-    const saved = localStorage.getItem(KEY_THEME) || 'dark';
-    if(saved === 'light'){ document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed'; document.documentElement.style.setProperty('--text','#0b1a20'); document.documentElement.style.setProperty('--muted','#55606a'); }
-    else { /* default dark already */ }
-  })();
-  themeToggle.addEventListener('click', ()=>{
-    const cur = localStorage.getItem(KEY_THEME) || 'dark';
-    const next = cur === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(KEY_THEME, next);
-    if(next === 'light'){
-      document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
-      document.documentElement.style.setProperty('--text','#0b1a20');
-      document.documentElement.style.setProperty('--muted','#55606a');
-      notify('Light theme');
-    } else {
-      document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url(\"2.png\") center/cover no-repeat fixed';
-      document.documentElement.style.setProperty('--text','#e8f3fb');
-      document.documentElement.style.setProperty('--muted','#9aa7b3');
-      notify('Dark theme');
+    /* ===== CONFIG ===== */
+    const ADMIN_PASSWORDS = ["0742147197","0721235005"];
+    const KEY_TX = "selelo_transactions_v1";
+    const KEY_BUD = "selelo_budgets_v1";
+    const KEY_ADMIN = "selelo_admin_v1";
+    const KEY_THEME = "selelo_theme_v1";
+
+    /* ===== STATE (load from localStorage) ===== */
+    let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+    let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
+    let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
+    let currentEditIndex = null;
+
+    /* ===== ELEMENTS ===== */
+    const adminToggleBtn = document.getElementById('adminToggleBtn');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const showPLBtn = document.getElementById('showPLBtn');
+    const downloadPLBtn = document.getElementById('downloadPLBtn');
+
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const txDate = document.getElementById('txDate');
+    const txType = document.getElementById('txType');
+    const txCategory = document.getElementById('txCategory');
+    const txAmount = document.getElementById('txAmount');
+    const txNotes = document.getElementById('txNotes');
+    const txMsg = document.getElementById('txMsg');
+
+    const txTableBody = document.getElementById('txTableBody');
+
+    const applyFilterBtn = document.getElementById('applyFilterBtn');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const fMonth = document.getElementById('fMonth');
+    const fType = document.getElementById('fType');
+    const fCategory = document.getElementById('fCategory');
+    const fMin = document.getElementById('fMin');
+    const fMax = document.getElementById('fMax');
+    const fNotes = document.getElementById('fNotes');
+
+    const totalIncomeEl = document.getElementById('totalIncome');
+    const totalExpenseEl = document.getElementById('totalExpense');
+    const balanceEl = document.getElementById('balance');
+    const adminStatus = document.getElementById('adminStatus');
+    const budgetAlert = document.getElementById('budgetAlert');
+
+    const budgetsArea = document.getElementById('budgetsArea');
+    const saveBudgetsBtn = document.getElementById('saveBudgetsBtn');
+
+    const chartIECtx = document.getElementById('chartIE').getContext('2d');
+    const chartCatCtx = document.getElementById('chartCat').getContext('2d');
+    const chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
+    let chartIE, chartCat, chartTrend;
+
+    const genPLBtn = document.getElementById('genPLBtn');
+    const downloadPLBtnCard = document.getElementById('downloadPLBtnCard');
+    const reportMonth = document.getElementById('reportMonth');
+    const plView = document.getElementById('plView');
+
+    const adminModal = document.getElementById('adminModal');
+    const adminPasswordInput = document.getElementById('adminPasswordInput');
+    const adminShowBtn = document.getElementById('adminShowBtn');
+    const adminCancelBtn = document.getElementById('adminCancelBtn');
+    const adminConfirmBtn = document.getElementById('adminConfirmBtn');
+
+    const editModal = document.getElementById('editModal');
+    const editDate = document.getElementById('editDate');
+    const editType = document.getElementById('editType');
+    const editCategory = document.getElementById('editCategory');
+    const editAmount = document.getElementById('editAmount');
+    const editNotes = document.getElementById('editNotes');
+    const editCancelBtn = document.getElementById('editCancelBtn');
+    const editSaveBtn = document.getElementById('editSaveBtn');
+
+    const receiptModal = document.getElementById('receiptModal');
+    const receiptInner = document.getElementById('receiptInner');
+
+    /* ===== UTILITIES ===== */
+    function saveStorage(){
+      localStorage.setItem(KEY_TX, JSON.stringify(transactions));
+      localStorage.setItem(KEY_BUD, JSON.stringify(budgets));
     }
-  });
+    function setAdminSession(on){
+      isAdmin = !!on;
+      localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false");
+      applyAdminUI();
+    }
+    function notify(msg, color='var(--success)'){
+      txMsg.style.color = color;
+      txMsg.textContent = msg;
+      setTimeout(()=>{ if(txMsg.textContent === msg) txMsg.textContent=''; }, 3000);
+    }
+    function openModal(el){ el.style.display = 'flex'; el.setAttribute('aria-hidden','false'); }
+    function closeModal(el){ el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  // ADMIN prompt flow (slow, deep, thoughtful)
-  adminBtn.addEventListener('click', ()=>{ adminPassword.value=''; adminPassword.type='password'; adminShow.textContent='Show'; openModal(adminModal); });
-  adminShow.addEventListener('click', ()=>{ adminPassword.type = adminPassword.type === 'password' ? 'text' : 'password'; adminShow.textContent = adminPassword.type === 'password' ? 'Show' : 'Hide'; });
-  adminCancel.addEventListener('click', ()=> closeModal(adminModal));
-  adminConfirm.addEventListener('click', ()=>{
-    const p = (adminPassword.value || '').trim();
-    if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
-    setAdmin(true);
-    closeModal(adminModal);
-    notify('Administrator session started', 'var(--good)');
-  });
-
-  // add transaction (admin-only)
-  addTxBtn.addEventListener('click', ()=>{
-    if(!isAdmin){ alert('Admin only'); return; }
-    const date = txDate.value, type = txType.value, category = txCategory.value, amount = parseFloat(txAmount.value), notes = txNotes.value || '';
-    if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
-    transactions.push({date,type,category,amount,notes});
-    saveAll(); renderTransactions(); notify('Transaction saved');
-    txDate.value=''; txAmount.value=''; txNotes.value='';
-  });
-
-  clearBtn.addEventListener('click', ()=>{ txDate.value=''; txAmount.value=''; txNotes.value=''; });
-
-  // edit flow (admin)
-  function openEdit(i){
-    if(!isAdmin){ alert('Admin only'); return; }
-    editIndex = i;
-    const t = transactions[i];
-    editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
-    openModal(editModal);
-  }
-  editCancel.addEventListener('click', ()=> { closeModal(editModal); editIndex = null; });
-  editSave.addEventListener('click', ()=>{
-    if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
-    if(editIndex == null) return;
-    const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || ''};
-    if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid'); return; }
-    transactions[editIndex] = nd;
-    saveAll(); renderTransactions(); closeModal(editModal); notify('Edited');
-    editIndex = null;
-  });
-
-  // delete (admin)
-  function removeTx(i){
-    if(!isAdmin){ alert('Admin only'); return; }
-    if(!confirm('Delete transaction?')) return;
-    transactions.splice(i,1);
-    saveAll(); renderTransactions(); notify('Deleted','var(--danger)');
-  }
-
-  // budgets
-  const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
-  function cssSafe(s){ return s.replace(/\s+/g,'_'); }
-  function renderBudgetInputs(){
-    budgetsArea.innerHTML = '';
-    CATS.forEach(c => {
-      const wrapper = document.createElement('div'); wrapper.style.marginBottom = '8px';
-      wrapper.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${cssSafe(c)}" type="number" style="margin-top:6px">`;
-      budgetsArea.appendChild(wrapper);
-      const el = wrapper.querySelector('input'); if(el) el.value = budgets[c] || '';
+    // close modal on outside click
+    document.querySelectorAll('.modal').forEach(m => {
+      m.addEventListener('click', (e) => { if(e.target === m) closeModal(m); });
     });
-  }
-  saveBudgetsBtn.addEventListener('click', ()=>{
-    if(!isAdmin){ alert('Admin only'); return; }
-    CATS.forEach(c => { const v = parseFloat(document.getElementById('b_'+cssSafe(c)).value) || 0; budgets[c] = v; });
-    saveAll(); renderTransactions(); notify('Budgets saved');
-  });
 
-  // filters & render
-  applyFilter.addEventListener('click', renderTransactions);
-  resetFilter.addEventListener('click', ()=>{ fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
-
-  function passesFilters(t){
-    if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
-    if(fType.value && t.type !== fType.value) return false;
-    if(fCategory.value && t.category !== fCategory.value) return false;
-    const min = parseFloat(fMin.value) || -Infinity, max = parseFloat(fMax.value) || Infinity;
-    if(t.amount < min || t.amount > max) return false;
-    const nf = (fNotes.value || '').toLowerCase(); if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
-    return true;
-  }
-
-  function renderTransactions(){
-    txTbody.innerHTML = '';
-    let totInc = 0, totExp = 0;
-    transactions.forEach((t,i) => {
-      if(!passesFilters(t)) return;
-      const tr = document.createElement('tr');
-      const actions = [];
-      if(isAdmin){
-        actions.push(`<button class="action-btn" data-act="edit" data-i="${i}" style="background:#f0b429">Edit</button>`);
-        actions.push(`<button class="action-btn" data-act="del" data-i="${i}" style="background:var(--danger);color:#000">Del</button>`);
+    /* ===== THEME ===== */
+    (function applySavedTheme(){
+      const saved = localStorage.getItem(KEY_THEME) || 'dark';
+      if(saved === 'light'){
+        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#07121a');
+        document.documentElement.style.setProperty('--muted','#55606a');
+      } else {
+        // keep dark default
       }
-      actions.push(`<button class="action-btn" data-act="rcp" data-i="${i}" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001">Receipt</button>`);
-      tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${t.amount.toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
-      txTbody.appendChild(tr);
-      if(t.type === 'Income') totInc += t.amount;
-      if(t.type === 'Expense') totExp += t.amount;
+    })();
+    themeToggleBtn.addEventListener('click', ()=>{
+      const cur = localStorage.getItem(KEY_THEME) || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(KEY_THEME, next);
+      if(next === 'light'){
+        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#07121a');
+        document.documentElement.style.setProperty('--muted','#55606a');
+        notify('Light theme activated', 'var(--accent-cyan)');
+      } else {
+        document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#e8f3fb');
+        document.documentElement.style.setProperty('--muted','#9aa7b3');
+        notify('Dark theme activated', 'var(--accent-purple)');
+      }
     });
-    statIncome.textContent = totInc.toLocaleString();
-    statExpense.textContent = totExp.toLocaleString();
-    statBalance.textContent = (totInc - totExp).toLocaleString();
-    checkBudgetAlerts(); renderCharts();
-  }
 
-  txTbody.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-act]');
-    if(!btn) return;
-    const act = btn.dataset.act, idx = parseInt(btn.dataset.i);
-    if(act === 'edit') openEdit(idx);
-    if(act === 'del') removeTx(idx);
-    if(act === 'rcp') openReceipt(idx);
-  });
-
-  // budget alerts
-  function checkBudgetAlerts(){
-    let msg = '';
-    CATS.forEach(c => {
-      const spent = transactions.filter(t => t.type === 'Expense' && t.category === c).reduce((a,b)=>a+b.amount,0);
-      if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded for ${c}: ${spent.toLocaleString()} > ${budgets[c].toLocaleString()}. `;
+    /* ===== ADMIN FLOW ===== */
+    adminToggleBtn.addEventListener('click', ()=> {
+      // If admin signed in -> sign out on click (confirm)
+      if(isAdmin){
+        if(!confirm('Sign out admin?')) return;
+        setAdminSession(false);
+        notify('Admin signed out', 'var(--muted)');
+      } else {
+        // open modal to sign in
+        adminPasswordInput.value = '';
+        adminPasswordInput.type = 'password';
+        adminShowBtn.textContent = 'Show';
+        openModal(adminModal);
+        setTimeout(()=> adminPasswordInput.focus(), 120);
+      }
     });
-    document.getElementById('budgetAlert').textContent = msg;
-  }
 
-  // charts
-  function renderCharts(){
-    const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-    const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-    if(chartIE) chartIE.destroy();
-    chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-    const catMap = {};
-    transactions.forEach(t => catMap[t.category] = (catMap[t.category]||0) + t.amount);
-    if(chartCat) chartCat.destroy();
-    chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-    const monthly = {};
-    transactions.forEach(t => { const m = t.date.slice(0,7); monthly[m] = monthly[m] || {Income:0,Expense:0}; monthly[m][t.type] += t.amount; });
-    const months = Object.keys(monthly).sort();
-    const incArr = months.map(m => monthly[m].Income || 0);
-    const expArr = months.map(m => monthly[m].Expense || 0);
-    if(chartTrend) chartTrend.destroy();
-    chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true},{label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}}});
-  }
+    adminShowBtn.addEventListener('click', ()=> {
+      if(adminPasswordInput.type === 'password'){ adminPasswordInput.type = 'text'; adminShowBtn.textContent = 'Hide'; }
+      else { adminPasswordInput.type = 'password'; adminShowBtn.textContent = 'Show'; }
+    });
 
-  // CSV export
-  exportCsv.addEventListener('click', ()=>{
-    if(!transactions.length){ alert('No transactions to export'); return; }
-    let csv = 'Date,Type,Category,Amount,Notes\n';
-    transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
-    const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  });
+    adminCancelBtn.addEventListener('click', ()=> { closeModal(adminModal); });
+    adminConfirmBtn.addEventListener('click', ()=> {
+      const p = (adminPasswordInput.value || '').trim();
+      if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
+      setAdminSession(true);
+      closeModal(adminModal);
+      notify('Admin session active', 'var(--success)');
+    });
 
-  // P&L show & download
-  genPLBtn.addEventListener('click', generatePL);
-  downloadPLBtn.addEventListener('click', downloadPLPdf);
-  generatePL.addEventListener('click', ()=>{ generatePL(); openModal(document.getElementById('receiptModal')); }); // show in a modal for quick view
-  downloadPL.addEventListener('click', downloadPLPdf);
-
-  function generatePL(){
-    const m = reportMonth.value;
-    const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-    const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-    let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}`;
-    const breakdown = {};
-    arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
-    html += '<div style="margin-top:8px"><strong>Category:</strong><ul>';
-    for(const k in breakdown) html += `<li>${k}: ${breakdown[k].toLocaleString()}</li>`;
-    html += '</ul></div>';
-    plView.innerHTML = html;
-  }
-
-  function downloadPLPdf(){
-    const m = reportMonth.value;
-    const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-    const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(16); doc.text('Selelo — Profit & Loss', 14, 20);
-    doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-    doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${(inc-exp)}`, 14, 60);
-    let y = 72;
-    doc.text('Category breakdown:', 14, y); y += 8;
-    const breakdown = {};
-    arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
-    for(const k in breakdown){
-      doc.text(`${k}: ${breakdown[k]}`, 16, y); y += 8;
-      if(y > 270){ doc.addPage(); y = 20; }
+    /* ===== ADMIN UI APPLY ===== */
+    function applyAdminUI(){
+      // enable/disable add & budgets & edit/delete visibility
+      addBtn.disabled = !isAdmin;
+      saveBudgetsBtn.disabled = !isAdmin;
+      document.getElementById('adminHint').style.display = isAdmin ? 'none' : 'block';
+      adminStatus.textContent = isAdmin ? 'Signed in' : 'Signed out';
+      adminToggleBtn.textContent = isAdmin ? 'Sign out' : 'Admin Login';
+      // show/hide edit/delete buttons rely on rendering
+      renderTransactions();
     }
-    doc.save(`PL_${m || 'all'}.pdf`);
-  }
 
-  // receipt/print
-  function openReceipt(i){
-    const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
-    const html = `<div class="printable"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3><div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div><div style="text-align:center;margin-top:12px"><img src="Business%20Email%20Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div><div style="text-align:center;margin-top:12px"><button id="printRec" class="btn btn-theme">Print</button> <button id="closeRec" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Close</button></div></div>`;
-    receiptInner.innerHTML = html; openModal(receiptModal);
-    document.getElementById('printRec').addEventListener('click', ()=> {
-      const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=>w.print(),300);
+    /* ===== ADD TRANSACTION ===== */
+    addBtn.addEventListener('click', ()=> {
+      if(!isAdmin){ alert('Admin only'); return; }
+      const date = txDate.value, type = txType.value, category = txCategory.value;
+      const amount = parseFloat(txAmount.value), notes = txNotes.value || '';
+      if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
+      transactions.push({ date, type, category, amount, notes });
+      saveStorage();
+      renderTransactions();
+      notify('Transaction added');
+      txDate.value=''; txAmount.value=''; txNotes.value='';
     });
-    document.getElementById('closeRec').addEventListener('click', ()=> closeModal(receiptModal));
-  }
 
-  // init
-  function init(){
-    // load admin session
-    isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-    applyAdminUI();
-    renderBudgetInputs();
-    renderTransactions();
-    renderCharts();
-  }
-  init();
+    clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
 
-  // renderBudgetInputs, renderTransactions, renderCharts, etc. are defined above and used
+    /* ===== EDIT FLOW ===== */
+    function openEditModal(index){
+      if(!isAdmin){ alert('Admin only'); return; }
+      currentEditIndex = index;
+      const t = transactions[index];
+      editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
+      openModal(editModal);
+    }
+    editCancelBtn.addEventListener('click', ()=> { closeModal(editModal); currentEditIndex = null; });
+    editSaveBtn.addEventListener('click', ()=> {
+      if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
+      if(currentEditIndex === null) return;
+      const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || '' };
+      if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid data'); return; }
+      transactions[currentEditIndex] = nd;
+      saveStorage(); renderTransactions(); closeModal(editModal); notify('Transaction edited');
+      currentEditIndex = null;
+    });
 
-  // expose remove and edit to window for debug (not necessary normally)
-  window.__SELELO = {transactions, budgets};
+    /* ===== DELETE ===== */
+    function deleteTransaction(index){
+      if(!isAdmin){ alert('Admin only'); return; }
+      if(!confirm('Delete this transaction?')) return;
+      transactions.splice(index,1);
+      saveStorage(); renderTransactions(); notify('Transaction deleted', 'var(--danger)');
+    }
 
-  // save on unload
-  window.addEventListener('beforeunload', ()=> { saveAll(); });
+    /* ===== BUDGETS ===== */
+    const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
+    function cssSafe(s){ return s.replace(/\s+/g,'_'); }
+    function renderBudgetInputs(){
+      budgetsArea.innerHTML = '';
+      CATS.forEach(cat => {
+        const div = document.createElement('div'); div.style.marginBottom = '8px';
+        div.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${cssSafe(cat)}" type="number" style="margin-top:6px">`;
+        budgetsArea.appendChild(div);
+        const el = div.querySelector('input'); if(el) el.value = budgets[cat] || '';
+      });
+    }
+    saveBudgetsBtn.addEventListener('click', ()=> {
+      if(!isAdmin){ alert('Admin only'); return; }
+      CATS.forEach(cat => {
+        const v = parseFloat(document.getElementById('b_'+cssSafe(cat)).value) || 0;
+        budgets[cat] = v;
+      });
+      saveStorage(); renderTransactions(); notify('Budgets saved');
+    });
 
+    /* ===== FILTERS & RENDER ===== */
+    applyFilterBtn.addEventListener('click', renderTransactions);
+    resetFilterBtn.addEventListener('click', ()=> { fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
+
+    function passesFilters(t){
+      if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
+      if(fType.value && t.type !== fType.value) return false;
+      if(fCategory.value && t.category !== fCategory.value) return false;
+      const min = parseFloat(fMin.value) || -Infinity, max = parseFloat(fMax.value) || Infinity;
+      if(t.amount < min || t.amount > max) return false;
+      const nf = (fNotes.value || '').toLowerCase(); if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
+      return true;
+    }
+
+    function renderTransactions(){
+      txTableBody.innerHTML = '';
+      let inc = 0, exp = 0;
+      transactions.forEach((t, i) => {
+        if(!passesFilters(t)) return;
+        const tr = document.createElement('tr');
+        // actions: only show edit/delete if admin
+        const actions = [];
+        if(isAdmin){
+          actions.push(`<button class="action-btn" data-action="edit" data-i="${i}" style="background:#f0b429">Edit</button>`);
+          actions.push(`<button class="action-btn" data-action="delete" data-i="${i}" style="background:var(--danger);color:#000">Delete</button>`);
+        }
+        actions.push(`<button class="action-btn" data-action="receipt" data-i="${i}" style="background:linear-gradient(90deg,var(--accent-cyan),var(--accent-purple));color:#001">Receipt</button>`);
+        tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${t.amount.toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
+        txTableBody.appendChild(tr);
+        if(t.type === 'Income') inc += t.amount;
+        if(t.type === 'Expense') exp += t.amount;
+      });
+      totalIncomeEl.textContent = inc.toLocaleString();
+      totalExpenseEl.textContent = exp.toLocaleString();
+      balanceEl.textContent = (inc - exp).toLocaleString();
+      checkBudgetAlerts();
+      renderCharts();
+    }
+
+    // handle clicks inside table (delegation)
+    txTableBody.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const idx = parseInt(btn.dataset.i);
+      if(action === 'edit') openEditModal(idx);
+      if(action === 'delete') deleteTransaction(idx);
+      if(action === 'receipt') openReceipt(idx);
+    });
+
+    /* ===== budget alerts ===== */
+    function checkBudgetAlerts(){
+      let msg = '';
+      CATS.forEach(cat => {
+        const spent = transactions.filter(t => t.type === 'Expense' && t.category === cat).reduce((a,b)=>a+b.amount,0);
+        if(budgets[cat] && budgets[cat] > 0 && spent > budgets[cat]) msg += `Budget exceeded: ${cat} (${spent.toLocaleString()} > ${budgets[cat].toLocaleString()}). `;
+      });
+      budgetAlert.textContent = msg;
+    }
+
+    /* ===== CHARTS ===== */
+    function renderCharts(){
+      const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
+      const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
+      if(chartIE) chartIE.destroy();
+      chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}} }});
+      const catMap = {};
+      transactions.forEach(t => catMap[t.category] = (catMap[t.category]||0) + t.amount);
+      if(chartCat) chartCat.destroy();
+      chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}} }});
+      const monthly = {};
+      transactions.forEach(t => { const m = t.date.slice(0,7); monthly[m] = monthly[m] || {Income:0,Expense:0}; monthly[m][t.type] += t.amount; });
+      const months = Object.keys(monthly).sort();
+      const incArr = months.map(m => monthly[m].Income || 0);
+      const expArr = months.map(m => monthly[m].Expense || 0);
+      if(chartTrend) chartTrend.destroy();
+      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{ label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true }, { label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true }] }, options:{responsive:true, tension:0.3, plugins:{legend:{position:'bottom'}} }});
+    }
+
+    /* ===== EXPORT CSV ===== */
+    exportCsvBtn.addEventListener('click', () => {
+      if(!transactions.length){ alert('No transactions'); return; }
+      let csv = 'Date,Type,Category,Amount,Notes\n';
+      transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    /* ===== P&L show & download ===== */
+    genPLBtn.addEventListener('click', generatePL);
+    downloadPLBtnCard.addEventListener('click', downloadPLPdf);
+    showPLBtn.addEventListener('click', () => { generatePL(); openModal(receiptModal); });
+
+    function generatePL(){
+      const m = reportMonth.value;
+      const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions.slice();
+      const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+b.amount,0);
+      const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+b.amount,0);
+      let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Total Income:</strong> ${inc.toLocaleString()}<br><strong>Total Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}`;
+      const breakdown = {};
+      arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
+      html += '<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul>';
+      for(const k in breakdown) html += `<li>${k}: ${breakdown[k].toLocaleString()}</li>`;
+      html += '</ul></div>';
+      plView.innerHTML = html;
+    }
+
+    function downloadPLPdf(){
+      const m = reportMonth.value;
+      const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions.slice();
+      const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+b.amount,0);
+      const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+b.amount,0);
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16); doc.text('SELELO — Profit & Loss', 14, 20);
+      doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+      doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${inc-exp}`, 14, 60);
+      let y = 72;
+      doc.text('Category breakdown:', 14, y); y += 8;
+      const breakdown = {};
+      arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
+      for(const k in breakdown){
+        doc.text(`${k}: ${breakdown[k]}`, 16, y); y += 8;
+        if(y > 270){ doc.addPage(); y = 20; }
+      }
+      doc.save(`PL_${m || 'all'}.pdf`);
+    }
+
+    /* ===== Receipt printing ===== */
+    function openReceipt(index){
+      const t = transactions[index];
+      const inv = 'INV-' + (10000 + index);
+      const issued = new Date().toLocaleDateString();
+      let html = `<div class="printable"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div>`;
+      html += `<h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
+      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div>`;
+      html += `<div style="text-align:center;margin-top:12px"><img src="${encodeURIComponent('Business Email Signature.png')}" alt="stamp" style="max-width:200px;opacity:0.95"></div>`;
+      html += `<div style="text-align:center;margin-top:12px"><button id="printBtn" class="btn btn-admin">Print</button> <button id="closeBtn" class="btn btn-ghost">Close</button></div></div>`;
+      receiptInner.innerHTML = html;
+      openModal(receiptModal);
+
+      document.getElementById('printBtn').addEventListener('click', ()=>{
+        const w = window.open('','_blank','width=700,height=800');
+        w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>');
+        w.document.close();
+        setTimeout(()=> w.print(), 300);
+      });
+      document.getElementById('closeBtn').addEventListener('click', ()=> closeModal(receiptModal));
+    }
+
+    /* ===== INIT ===== */
+    function init(){
+      // apply admin UI state & render
+      applyAdminUI();
+      renderBudgetInputs();
+      renderTransactions();
+      renderCharts();
+    }
+
+    /* helper renderBudgetInputs (redeclared to ensure availability) */
+    function renderBudgetInputs(){
+      budgetsArea.innerHTML = '';
+      CATS.forEach(cat => {
+        const div = document.createElement('div'); div.style.marginBottom = '8px';
+        div.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${cssSafe(cat)}" type="number" style="margin-top:6px">`;
+        budgetsArea.appendChild(div);
+        const el = div.querySelector('input'); if(el) el.value = budgets[cat] || '';
+      });
+    }
+
+    // wire table actions by delegation already set above
+    // call init
+    init();
+
+    // repair: link top action buttons also to card buttons
+    document.getElementById('downloadPLBtn').addEventListener('click', downloadPLPdf);
+    document.getElementById('downloadPLBtnCard').addEventListener('click', downloadPLPdf);
+    document.getElementById('genPLBtn') && document.getElementById('genPLBtn').addEventListener('click', generatePL);
+
+    // save before unload
+    window.addEventListener('beforeunload', ()=> { saveStorage(); });
+
+  })();
   </script>
 </body>
-</html>
+  </html>
