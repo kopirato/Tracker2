@@ -5,194 +5,167 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>SELELO BUSINESS PARK</title>
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
+<!-- Styles -->
 <style>
-  :root{
-    --bg-dark:#07121a;
-    --glass-veil: rgba(255,255,255,0.04);
-    --glass-strong: rgba(255,255,255,0.06);
-    --muted:#a7b7c4;
-    --text:#eaf6ff;
-    --accent1:#6ee7ff;
-    --accent2:#b38bff;
-    --good:#4ade80;
-    --danger:#ff6b6b;
-    --radius:14px;
-    --maxw:1200px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial; -webkit-font-smoothing:antialiased; color:var(--text);}
-  body{
-    background:
-      radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)),
-      url('2.png') center/cover no-repeat fixed;
-    background-color:var(--bg-dark);
-  }
+:root{
+  --bg-dark:#07121a;
+  --glass: rgba(255,255,255,0.03);
+  --glass-strong: rgba(255,255,255,0.06);
+  --muted:#9aa7b3;
+  --text:#eaf6ff;
+  --accent1:#6ee7ff;
+  --accent2:#b38bff;
+  --good:#4ade80;
+  --danger:#ff6b6b;
+  --radius:14px;
+  --maxw:1200px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
+body{
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url('2.png') center/cover no-repeat fixed;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color:var(--bg-dark);
+}
 
-  /* page shell */
-  .shell{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45));}
+/* Shell & glass card */
+.shell{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
+.card{
+  width:100%; max-width:var(--maxw); border-radius:18px; padding:18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.007));
+  box-shadow: 0 40px 110px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  backdrop-filter: blur(8px) saturate(120%);
+  border:1px solid rgba(255,255,255,0.03);
+  min-height:85vh; display:flex; flex-direction:column; gap:12px;
+}
 
-  /* main glass card (covers content area strongly) */
-  .card {
-    width:100%;
-    max-width:var(--maxw);
-    border-radius:18px;
-    padding:18px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    backdrop-filter: blur(8px) saturate(120%);
-    border: 1px solid rgba(255,255,255,0.03);
-    min-height:84vh; /* stretches to bottom mostly */
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
+/* Header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:62px;height:62px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(0,0,0,0.6)}
+h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase}
+.sub{color:var(--muted);font-size:12px}
 
-  /* header */
-  .top {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-  }
-  .brand {
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
-  .logo {
-    width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,0.6);
-  }
-  h1 { margin:0; font-size:20px; letter-spacing:1px; font-weight:700; text-transform:uppercase; color:var(--text); }
-  .sub { color:var(--muted); font-size:12px; margin-top:2px; }
+/* Controls */
+.controls{display:flex;gap:8px;align-items:center}
+.btn{border:0;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
+.btn-theme{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.btn-admin{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;box-shadow:0 12px 30px rgba(99,102,241,0.06)}
 
-  /* top controls */
-  .controls { display:flex; gap:8px; align-items:center; }
-  .btn {
-    border:0; padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px;
-  }
-  .btn-theme { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); }
-  .btn-admin { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; box-shadow:0 12px 30px rgba(99,102,241,0.06); }
+/* Grid */
+.grid{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:8px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
 
-  /* layout: main grid */
-  .grid { display:grid; grid-template-columns: 1fr 380px; gap:18px; align-items:start; margin-top:6px; }
-  @media (max-width:980px){ .grid { grid-template-columns: 1fr; } }
+/* Panels */
+.panel{background:transparent;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.admin-panel{transition:all 240ms ease}
+.admin-panel.admin-active{
+  background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));
+  border:1px solid rgba(110,231,255,0.12);
+  box-shadow:0 16px 48px rgba(110,231,255,0.03), inset 0 0 30px rgba(110,231,255,0.02);
+}
 
-  /* left column cards */
-  .panel { background:transparent; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.02); }
+/* Form fields (transparent, border only) */
+.fields{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.field{flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;color:var(--muted);font-weight:700}
+input[type="text"], input[type="date"], input[type="number"], select, textarea{
+  background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--text);font-size:14px;
+  transition:box-shadow 150ms ease,border-color 150ms ease;
+}
+textarea{min-height:72px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(110,231,255,0.92);box-shadow:0 10px 40px rgba(110,231,255,0.06)}
 
-  /* Add transaction - admin highlighted */
-  .admin-panel { transition: all 300ms ease; border-radius:12px; padding:12px; position:relative; }
-  .admin-panel.admin-active {
-    box-shadow: 0 20px 60px rgba(110,231,255,0.04), inset 0 0 30px rgba(110,231,255,0.02);
-    border: 1px solid rgba(110,231,255,0.14);
-    background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));
-  }
+/* Actions */
+.actions{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.btn-add{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;padding:10px 14px;border-radius:10px;font-weight:800}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:10px 12px;border-radius:10px}
 
-  .fields { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; }
-  .field { flex:1; min-width:140px; display:flex; flex-direction:column; gap:6px; }
-  label { font-size:13px; color:var(--muted); font-weight:600; }
-  input[type="text"], input[type="date"], input[type="number"], select, textarea {
-    background:transparent; border:1px solid rgba(255,255,255,0.06); padding:10px 12px; border-radius:10px; color:var(--text); font-size:14px;
-    transition: box-shadow 160ms ease, border-color 160ms ease;
-  }
-  textarea { min-height:72px; resize:vertical; }
-  input:focus, select:focus, textarea:focus {
-    outline:none;
-    border-color:rgba(110,231,255,0.9);
-    box-shadow:0 8px 32px rgba(110,231,255,0.06);
-  }
+/* Table */
+.table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:640px}
+thead th{padding:10px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.02);font-size:13px}
+tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.01);color:var(--text);font-size:14px}
+.action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700}
+.delete-btn{background:transparent;border:1px solid rgba(255,92,92,0.95);color:rgba(255,92,92,0.95);padding:6px 8px;border-radius:8px;font-weight:700}
+.delete-btn:hover{background:rgba(255,92,92,0.95);color:#fff;box-shadow:0 10px 30px rgba(255,92,92,0.12)}
 
-  .actions-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap; }
-  .btn-add { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; padding:10px 14px; border-radius:10px; font-weight:800; }
+/* Dashboard */
+.dashboard{display:flex;flex-direction:column;gap:12px}
+.stat-grid{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
+.stat{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01));padding:10px;border-radius:10px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
+.stat h4{margin:0;color:var(--muted);font-size:12px}
+.stat p{margin:8px 0 0;font-weight:800;font-size:18px}
 
-  /* table */
-  .table-wrap { margin-top:12px; overflow:auto; border-radius:10px; border:1px solid rgba(255,255,255,0.02); }
-  table { width:100%; border-collapse:collapse; min-width:640px; }
-  thead th { text-align:left; font-size:13px; padding:10px; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.03); }
-  tbody td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.02); color:var(--text); font-size:14px; vertical-align:middle; }
+/* Charts hidden by default (only show when admin) */
+.charts{display:none;gap:8px;margin-top:10px}
+.charts.show{display:block}
 
-  /* delete button style */
-  .delete-btn { background:transparent; border:1px solid rgba(255,92,92,0.95); color:rgba(255,92,92,0.95); padding:6px 8px; border-radius:8px; font-weight:700; cursor:pointer; }
-  .delete-btn:hover { background:rgba(255,92,92,0.95); color:#fff; box-shadow:0 8px 22px rgba(255,92,92,0.14); }
+/* Modal (top center) */
+.modal{position:fixed;left:50%;transform:translateX(-50%);top:7%;width:94%;max-width:460px;z-index:1300;display:none}
+.modal-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
+.modal.show{display:block;animation:drop 240ms ease}
+@keyframes drop{from{transform:translateX(-50%) translateY(-8px) scale(0.996);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
+.modal h3{margin:0 0 8px 0;font-size:18px}
+.modal p{margin:0 0 10px 0;color:var(--muted)}
 
-  /* action btn */
-  .action-btn { padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700; }
+/* Receipt */
+.receipt{background:#fff;color:#000;padding:12px;border-radius:8px}
 
-  /* dashboard right */
-  .dashboard { display:flex; flex-direction:column; gap:12px; }
-  .dashboard .stat-grid { display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; }
-  .stat { flex:1; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01)); padding:10px; border-radius:10px; text-align:center; border:1px solid rgba(255,255,255,0.02); }
-  .stat h4 { margin:0;color:var(--muted); font-size:12px; }
-  .stat p { margin:8px 0 0; font-weight:800; font-size:18px; }
+/* Footer */
+footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;padding-top:10px}
 
-  /* charts */
-  canvas { width:100% !important; height:140px !important; border-radius:8px; background:transparent; }
-
-  /* modal top-center admin */
-  .modal { position:fixed; left:50%; transform:translateX(-50%); top:6%; width:92%; max-width:420px; z-index:1200; display:none; padding:0; }
-  .modal-panel { border-radius:12px; padding:16px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 30px 80px rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
-  .modal.show { display:block; animation: drop 220ms ease; }
-  @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.995); opacity:0 } to { transform: translateX(-50%) translateY(0) scale(1); opacity:1 } }
-  .modal h3 { margin:0 0 8px 0; font-size:18px; }
-  .modal p { margin:0 0 12px 0; color:var(--muted); font-size:13px; line-height:1.4; }
-
-  .modal .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
-
-  /* receipt printable */
-  .receipt { background:#fff; color:#000; padding:12px; border-radius:8px; }
-
-  /* footer */
-  footer { margin-top:auto; text-align:center; color:var(--muted); font-size:13px; padding-top:12px; }
-
-  /* small screens */
-  @media (max-width:640px){
-    .logo{width:52px;height:52px}
-    .fields { flex-direction:column; }
-    table{ min-width:520px; }
-    .modal { top:4%; max-width:92%; }
-  }
+/* small screens */
+@media (max-width:640px){
+  .logo{width:52px;height:52px}
+  .fields{flex-direction:column}
+  table{min-width:520px}
+  .modal{top:4%}
+  .card{padding:12px}
+}
 </style>
 </head>
 <body>
   <div class="shell">
     <main class="card" role="application" aria-label="Selelo Business Park">
 
-      <!-- TOP: header -->
-      <div class="top" role="banner">
+      <!-- Header -->
+      <div class="top">
         <div class="brand">
-          <img src="11.png" alt="logo" class="logo" onerror="this.style.display='none'">
+          <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
           <div>
             <h1>SELELO BUSINESS PARK</h1>
-            <div class="sub">Clear, local bookkeeping — offline, private</div>
+            <div class="sub">Local bookkeeping • Private • Offline-ready</div>
           </div>
         </div>
 
         <div class="controls" role="toolbar" aria-label="Top controls">
-          <button id="adminBtn" class="btn btn-admin" title="Admin sign in / out">Admin Login</button>
+          <button id="adminBtn" class="btn btn-admin" title="Admin sign in/out">Admin Login</button>
           <button id="themeBtn" class="btn btn-theme" title="Toggle dark/light">Toggle Theme</button>
         </div>
       </div>
 
-      <!-- ACTIONS (export, P&L etc) -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <!-- Actions -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="exportCsv" class="btn btn-theme">Export CSV</button>
         <button id="genPL" class="btn btn-theme">Generate P&L</button>
         <button id="downloadPL" class="btn btn-admin">Download P&L</button>
       </div>
 
-      <!-- MAIN GRID -->
-      <div class="grid" role="main">
+      <!-- Main Grid -->
+      <div class="grid">
 
-        <!-- LEFT: Add + Table -->
+        <!-- Left: Add + Transactions -->
         <section>
           <div id="addPanel" class="panel admin-panel" aria-labelledby="addTitle">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <div>
                 <h2 id="addTitle" style="margin:0;font-size:16px">Add Transaction</h2>
-                <div class="sub">Admin only — sign in to modify</div>
+                <div class="sub">Sign in as admin to add, edit or delete</div>
               </div>
               <div id="adminBadgeWrap"></div>
             </div>
@@ -200,27 +173,19 @@
             <div class="fields" role="form" aria-label="Add transaction form">
               <div class="field">
                 <label for="txDate">Date</label>
-                <input id="txDate" type="date" />
+                <input id="txDate" type="date">
               </div>
-
               <div class="field">
                 <label for="txType">Type</label>
-                <select id="txType">
-                  <option>Income</option>
-                  <option>Expense</option>
-                </select>
+                <select id="txType"><option>Income</option><option>Expense</option></select>
               </div>
-
               <div class="field">
                 <label for="txCategory">Category</label>
-                <select id="txCategory">
-                  <option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
-                </select>
+                <select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
               </div>
-
               <div class="field">
                 <label for="txAmount">Amount</label>
-                <input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00" />
+                <input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00">
               </div>
             </div>
 
@@ -229,14 +194,14 @@
               <textarea id="txNotes" placeholder="Optional notes..."></textarea>
             </div>
 
-            <div class="actions-row">
-              <button id="addBtn" class="btn btn-add" title="Add transaction" disabled>Add</button>
-              <button id="clearBtn" class="btn btn-theme">Clear</button>
+            <div class="actions">
+              <button id="addBtn" class="btn-add" disabled>Add Transaction</button>
+              <button id="clearBtn" class="btn-ghost">Clear</button>
               <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
             </div>
           </div>
 
-          <!-- Transactions list -->
+          <!-- Transactions table -->
           <div class="panel" style="margin-top:12px">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <h3 style="margin:0">Transactions</h3>
@@ -244,22 +209,18 @@
             </div>
 
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
-              <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-                <option value="">All Types</option><option>Income</option><option>Expense</option>
-              </select>
-              <select id="fCategory" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
-              </select>
-              <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
-              <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
-              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
-              <button id="applyFilter" class="btn btn-theme">Apply</button>
-              <button id="resetFilter" class="btn btn-theme">Reset</button>
+              <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+              <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
+              <select id="fCategory" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+              <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+              <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+              <button id="applyFilter" class="btn btn-ghost">Apply</button>
+              <button id="resetFilter" class="btn btn-ghost">Reset</button>
             </div>
 
             <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="transactions">
+              <table aria-label="transactions table">
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
@@ -267,11 +228,11 @@
           </div>
         </section>
 
-        <!-- RIGHT: Dashboard -->
+        <!-- Right: Dashboard & Charts -->
         <aside>
           <div class="panel dashboard">
             <h3 style="margin:0">Overview</h3>
-            <div class="stat-grid" style="margin-top:10px">
+            <div class="stat-grid">
               <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
               <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
               <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
@@ -279,13 +240,7 @@
             <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
 
-          <div class="panel" style="margin-top:12px">
-            <h3 style="margin:0">Budgets</h3>
-            <div id="budgetsArea" style="margin-top:8px"></div>
-            <div style="margin-top:8px"><button id="saveBudgets" class="btn btn-theme" disabled>Save Budgets</button></div>
-          </div>
-
-          <div class="panel" style="margin-top:12px">
+          <div id="chartsPanel" class="panel charts" aria-hidden="true" style="margin-top:12px">
             <h3 style="margin:0">Charts</h3>
             <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
             <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
@@ -295,9 +250,9 @@
           <div class="panel" style="margin-top:12px">
             <h3 style="margin:0">Profit & Loss</h3>
             <label for="reportMonth" class="sub" style="display:block;margin-top:8px">Month (optional)</label>
-            <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
+            <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
             <div style="display:flex;gap:8px;margin-top:10px">
-              <button id="showPLBtn" class="btn btn-theme">Show</button>
+              <button id="showPLBtn" class="btn btn-ghost">Show</button>
               <button id="downloadPLBtn" class="btn btn-admin">Download</button>
             </div>
             <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
@@ -305,83 +260,77 @@
         </aside>
       </div>
 
-      <!-- footer -->
-      <footer>
-        Proudly developed by Seltec | +254745151968 | Twitter: @Its_SelianFr
-      </footer>
+      <footer>Proudly developed by Seltec | +254745151968 | @Its_SelianFr</footer>
     </main>
   </div>
 
-  <!-- ADMIN MODAL top-center -->
-  <div id="adminModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <!-- Admin modal (top-center) -->
+  <div id="adminModal" class="modal" aria-hidden="true" role="dialog">
     <div class="modal-panel">
       <h3>Administrator access</h3>
-      <p style="margin:6px 0 10px 0; color:var(--muted)">Enter admin password to unlock add/edit/delete. Session is stored locally on this device.</p>
-      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);"/>
-      <div class="modal-actions">
-        <button id="adminCancel" class="btn btn-theme">Cancel</button>
+      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
+      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
         <button id="adminConfirm" class="btn btn-admin">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- EDIT MODAL (centered on screen) -->
-  <div id="editModal" class="modal" style="top:40%; transform:translateX(-50%) translateY(-50%);" aria-hidden="true">
+  <!-- Edit modal (center) -->
+  <div id="editModal" class="modal" aria-hidden="true" style="top:40%;transform:translateX(-50%) translateY(-50%)">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
-      <label style="font-size:13px;color:var(--muted);">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"/>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"><option>Income</option><option>Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"/>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"></textarea>
+      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option>Income</option><option>Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></textarea>
       <div style="text-align:right;margin-top:10px">
-        <button id="editCancelBtn" class="btn btn-theme">Cancel</button>
+        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
         <button id="editSaveBtn" class="btn btn-admin">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- RECEIPT / P&L modal (reuses modal structure) -->
-  <div id="receiptModal" class="modal" style="top:8%;transform:translateX(-50%);" aria-hidden="true">
+  <!-- Receipt / PL modal (top) -->
+  <div id="receiptModal" class="modal" aria-hidden="true" style="top:8%;transform:translateX(-50%)">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
-  <!-- libs -->
+  <!-- Libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+  <!-- App script -->
   <script>
   (function(){
-    // ===== config =====
+    // Config
     const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-    const KEY_TX = "sel_tx_v_final";
-    const KEY_BUD = "sel_bud_v_final";
-    const KEY_ADMIN = "sel_admin_v_final";
-    const KEY_THEME = "sel_theme_v_final";
+    const KEY_TX = "selelo_tx_final";
+    const KEY_BUD = "selelo_bud_final";
+    const KEY_ADMIN = "selelo_admin_final";
+    const KEY_THEME = "selelo_theme_final";
 
-    // ===== state =====
+    // State
     let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
     let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
     let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
     let editIndex = null;
 
-    // ===== elements =====
+    // Elements
     const adminBtn = document.getElementById('adminBtn');
     const themeBtn = document.getElementById('themeBtn');
-    const exportCsvBtn = document.getElementById('exportCsv');
-    const genPLBtn = document.getElementById('genPL');
-    const downloadPLBtn = document.getElementById('downloadPL');
-
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
     const txDate = document.getElementById('txDate');
     const txType = document.getElementById('txType');
     const txCategory = document.getElementById('txCategory');
     const txAmount = document.getElementById('txAmount');
     const txNotes = document.getElementById('txNotes');
-    const addBtn = document.getElementById('addBtn');
-    const clearBtn = document.getElementById('clearBtn');
     const txMsg = document.getElementById('txMsg');
-
     const txTbody = document.getElementById('txTbody');
+
     const fMonth = document.getElementById('fMonth');
     const fType = document.getElementById('fType');
     const fCategory = document.getElementById('fCategory');
@@ -395,16 +344,8 @@
     const statExpense = document.getElementById('statExpense');
     const statBalance = document.getElementById('statBalance');
     const adminBadgeWrap = document.getElementById('adminBadgeWrap');
-    const adminStatus = document.getElementById('adminStatus');
 
-    const budgetsArea = document.getElementById('budgetsArea');
-    const saveBudgetsBtn = document.getElementById('saveBudgets');
-
-    // charts
-    const chartIECtx = document.getElementById('chartIE')?.getContext('2d');
-    const chartCatCtx = document.getElementById('chartCat')?.getContext('2d');
-    const chartTrendCtx = document.getElementById('chartTrend')?.getContext('2d');
-    let chartIE, chartCat, chartTrend;
+    const chartsPanel = document.getElementById('chartsPanel');
 
     const adminModal = document.getElementById('adminModal');
     const adminPassword = document.getElementById('adminPassword');
@@ -423,104 +364,96 @@
     const receiptModal = document.getElementById('receiptModal');
     const receiptInner = document.getElementById('receiptInner');
 
+    const exportCsv = document.getElementById('exportCsv');
+    const genPL = document.getElementById('genPL');
+    const downloadPL = document.getElementById('downloadPL');
     const reportMonth = document.getElementById('reportMonth');
     const showPLBtn = document.getElementById('showPLBtn');
-    const downloadPLBtnModal = document.getElementById('downloadPLBtn');
 
-    // util
+    // Charts contexts
+    const chartIECtx = document.getElementById('chartIE')?.getContext('2d');
+    const chartCatCtx = document.getElementById('chartCat')?.getContext('2d');
+    const chartTrendCtx = document.getElementById('chartTrend')?.getContext('2d');
+    let chartIE, chartCat, chartTrend;
+
+    // Utilities
     function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); localStorage.setItem(KEY_BUD, JSON.stringify(budgets)); }
     function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
-    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function openModal(el){ el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
-    function closeModal(el){ el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
-    function notify(text, color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = text; setTimeout(()=> { if(txMsg.textContent===text) txMsg.textContent=''; }, 3000); }
+    function openModal(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); el.style.display='block'; }
+    function closeModal(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); el.style.display='none'; }
+    function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function notify(msg, color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = msg; setTimeout(()=>{ if(txMsg.textContent===msg) txMsg.textContent=''; }, 3000); }
 
-    // close modals clicking outside
-    document.querySelectorAll('.modal').forEach(m => {
-      m.addEventListener('click', (e)=> { if(e.target === m) closeModal(m); });
-    });
+    // Close modals clicking outside
+    document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m); }));
 
-    // theme
-    (function applySavedTheme(){
-      const t = localStorage.getItem(KEY_THEME) || 'dark';
-      if(t === 'light'){
-        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text','#07121a');
-        document.documentElement.style.setProperty('--muted','#55606a');
-      }
-    })();
-    themeBtn.addEventListener('click', ()=>{
+    // Theme (persist)
+    (function applySavedTheme(){ const t = localStorage.getItem(KEY_THEME) || 'dark'; if(t === 'light'){ document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed'; } })();
+    themeBtn.addEventListener('click', ()=> {
       const cur = localStorage.getItem(KEY_THEME) || 'dark';
       const next = cur === 'dark' ? 'light' : 'dark';
       localStorage.setItem(KEY_THEME, next);
-      if(next === 'light'){
-        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text','#07121a');
-        document.documentElement.style.setProperty('--muted','#55606a');
-      } else {
-        document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url(\"2.png\") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text','#eaf6ff');
-        document.documentElement.style.setProperty('--muted','#a7b7c4');
-      }
+      if(next === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
+      else document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
     });
 
-    // admin flow
+    // Admin flow
     adminBtn.addEventListener('click', ()=>{
       if(isAdmin){
         if(!confirm('Sign out admin?')) return;
         setAdmin(false);
-        notify('Signed out', 'var(--muted)');
+        notify('Admin signed out','var(--muted)');
         return;
       }
       adminPassword.value = '';
       openModal(adminModal);
-      setTimeout(()=> adminPassword.focus(), 120);
+      setTimeout(()=> adminPassword.focus(),120);
     });
-
     adminCancel.addEventListener('click', ()=> closeModal(adminModal));
     adminConfirm.addEventListener('click', ()=>{
       const p = (adminPassword.value||'').trim();
       if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
-      setAdmin(true);
+      // SUCCESS: hide modal forever until logout (modal closes and won't auto-open)
       closeModal(adminModal);
-      notify('Admin session active', 'var(--good)');
+      setAdmin(true);
+      notify('Admin session active','var(--good)');
     });
 
+    // Apply admin UI
     function applyAdminUI(){
-      // card highlight
       const addPanel = document.getElementById('addPanel');
       if(isAdmin){
         addPanel.classList.add('admin-active');
         adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
-        adminStatus.textContent = 'Signed in';
+        chartsPanel.classList.add('show');
+        chartsPanel.removeAttribute('aria-hidden');
       } else {
         addPanel.classList.remove('admin-active');
         adminBadgeWrap.innerHTML = '';
-        adminStatus.textContent = 'Signed out';
+        chartsPanel.classList.remove('show');
+        chartsPanel.setAttribute('aria-hidden','true');
       }
       addBtn.disabled = !isAdmin;
-      saveBudgetsBtn.disabled = !isAdmin;
       renderTransactions();
     }
 
-    // add transaction
+    // Add transaction
     addBtn.addEventListener('click', ()=>{
       if(!isAdmin){ alert('Admin only'); return; }
       const date = txDate.value, type = txType.value, category = txCategory.value;
       const amount = parseFloat(txAmount.value), notes = txNotes.value || '';
       if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
-      transactions.push({date,type,category,amount,notes});
+      transactions.push({ date, type, category, amount, notes });
       saveAll(); renderTransactions(); notify('Transaction added');
       txDate.value=''; txAmount.value=''; txNotes.value='';
     });
-
     clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
 
-    // edit flow
-    function openEdit(index){
+    // Edit flow
+    function openEdit(i){
       if(!isAdmin){ alert('Admin only'); return; }
-      editIndex = index;
-      const t = transactions[index];
+      editIndex = i;
+      const t = transactions[i];
       editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
       openModal(editModal);
     }
@@ -529,39 +462,21 @@
       if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
       if(editIndex == null) return;
       const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || '' };
-      if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid'); return; }
+      if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid data'); return; }
       transactions[editIndex] = nd;
       saveAll(); renderTransactions(); closeModal(editModal); notify('Transaction edited');
       editIndex = null;
     });
 
-    // delete
-    function deleteTransaction(index){
+    // Delete
+    function deleteTx(i){
       if(!isAdmin){ alert('Admin only'); return; }
-      if(!confirm('Delete transaction?')) return;
-      transactions.splice(index,1);
-      saveAll(); renderTransactions(); notify('Deleted', 'var(--danger)');
+      if(!confirm('Delete this transaction?')) return;
+      transactions.splice(i,1);
+      saveAll(); renderTransactions(); notify('Deleted','var(--danger)');
     }
 
-    // budgets
-    const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
-    function safeKey(s){ return s.replace(/\s+/g,'_'); }
-    function renderBudgetInputs(){
-      budgetsArea.innerHTML = '';
-      CATS.forEach(c => {
-        const dv = document.createElement('div'); dv.style.marginBottom='8px';
-        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px" />`;
-        budgetsArea.appendChild(dv);
-        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
-      });
-    }
-    saveBudgetsBtn.addEventListener('click', ()=>{
-      if(!isAdmin){ alert('Admin only'); return; }
-      CATS.forEach(c => { budgets[c] = parseFloat(document.getElementById('b_'+safeKey(c)).value) || 0; });
-      saveAll(); renderTransactions(); notify('Budgets saved');
-    });
-
-    // filters
+    // Filters
     applyFilter.addEventListener('click', renderTransactions);
     resetFilter.addEventListener('click', ()=> { fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
 
@@ -576,11 +491,11 @@
       return true;
     }
 
-    // render transactions
+    // Render transactions
     function renderTransactions(){
       txTbody.innerHTML = '';
       let inc = 0, exp = 0;
-      transactions.forEach((t,i) => {
+      transactions.forEach((t,i)=>{
         if(!passesFilters(t)) return;
         const tr = document.createElement('tr');
         const actions = [];
@@ -589,7 +504,7 @@
           actions.push(`<button class="delete-btn" data-act="del" data-i="${i}">Delete</button>`);
         }
         actions.push(`<button class="action-btn" data-act="rcpt" data-i="${i}">Receipt</button>`);
-        tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>KES ${t.amount.toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
+        tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${t.amount.toLocaleString()}</td><td>${esc(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
         txTbody.appendChild(tr);
         if(t.type === 'Income') inc += t.amount;
         if(t.type === 'Expense') exp += t.amount;
@@ -598,106 +513,120 @@
       statExpense.textContent = exp.toLocaleString();
       statBalance.textContent = (inc - exp).toLocaleString();
       checkBudgetAlerts();
-      renderCharts();
+      if(isAdmin) renderCharts(); // only render charts for admin
     }
 
-    // table action delegation
+    // Table action delegation
     txTbody.addEventListener('click', (e)=>{
       const b = e.target.closest('button[data-act]');
       if(!b) return;
       const act = b.dataset.act, idx = parseInt(b.dataset.i);
       if(act === 'edit') openEdit(idx);
-      if(act === 'del') deleteTransaction(idx);
+      if(act === 'del') deleteTx(idx);
       if(act === 'rcpt') openReceipt(idx);
     });
 
-    // budget alerts
+    // Budget alerts (simple)
+    const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
+    function safeKey(s){ return s.replace(/\s+/g,'_'); }
+    function renderBudgetInputs(){
+      const budgetsArea = document.getElementById('budgetsArea');
+      budgetsArea.innerHTML = '';
+      CATS.forEach(c => {
+        const dv = document.createElement('div'); dv.style.marginBottom = '8px';
+        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px">`;
+        budgetsArea.appendChild(dv);
+        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
+      });
+    }
+    document.getElementById('saveBudgets')?.addEventListener('click', ()=>{
+      if(!isAdmin){ alert('Admin only'); return; }
+      CATS.forEach(c => { budgets[c] = parseFloat(document.getElementById('b_'+safeKey(c)).value) || 0; });
+      saveAll(); renderTransactions(); notify('Budgets saved');
+    });
     function checkBudgetAlerts(){
       let msg = '';
-      CATS.forEach(c => {
+      CATS.forEach(c=>{
         const spent = transactions.filter(t=>t.type==='Expense' && t.category===c).reduce((a,b)=>a+b.amount,0);
-        if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded for ${c}: ${spent.toLocaleString()} > ${budgets[c].toLocaleString()}. `;
+        if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded: ${c} (${spent.toLocaleString()} > ${budgets[c].toLocaleString()}). `;
       });
       document.getElementById('budgetAlert').textContent = msg;
     }
 
-    // charts
+    // Charts (only render if admin)
     function renderCharts(){
+      if(!isAdmin) return;
       const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
       if(chartIE) chartIE.destroy();
       chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
       const catMap = {};
-      transactions.forEach(t=> catMap[t.category] = (catMap[t.category]||0) + t.amount );
+      transactions.forEach(t=> catMap[t.category]=(catMap[t.category]||0)+t.amount);
       if(chartCat) chartCat.destroy();
       chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
-      const months = {};
-      transactions.forEach(t => { const m = t.date.slice(0,7); months[m] = months[m] || {Income:0,Expense:0}; months[m][t.type] += t.amount; });
-      const keys = Object.keys(months).sort();
-      const incArr = keys.map(k=>months[k].Income||0);
-      const expArr = keys.map(k=>months[k].Expense||0);
+      const monthly = {};
+      transactions.forEach(t=>{ const m=t.date.slice(0,7); monthly[m]=monthly[m]||{Income:0,Expense:0}; monthly[m][t.type]+=t.amount; });
+      const months = Object.keys(monthly).sort();
+      const incArr = months.map(m=>monthly[m].Income||0);
+      const expArr = months.map(m=>monthly[m].Expense||0);
       if(chartTrend) chartTrend.destroy();
-      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:keys, datasets:[{label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true}, {label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} });
+      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income',data:incArr,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.12)',fill:true},{label:'Expense',data:expArr,borderColor:'#ff6b6b',backgroundColor:'rgba(255,107,107,0.12)',fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} });
     }
 
-    // export CSV
-    exportCsvBtn.addEventListener('click', ()=>{
-      if(!transactions.length){ alert('No transactions to export'); return; }
+    // Export CSV
+    exportCsv.addEventListener('click', ()=>{
+      if(!transactions.length){ alert('No transactions'); return; }
       let csv = 'Date,Type,Category,Amount,Notes\n';
       transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
-      const blob = new Blob([csv], { type:'text/csv' }); const url = URL.createObjectURL(blob);
+      const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
 
-    // P&L
-    genPLBtn.addEventListener('click', generatePL);
-    downloadPLBtn.addEventListener('click', downloadPLPdf);
-    document.getElementById('showPLBtn').addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
+    // P&L generate & download
+    genPL.addEventListener('click', generatePL);
+    downloadPL.addEventListener('click', downloadPLPdf);
+    showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
 
     function generatePL(){
       const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      const br = {}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
+      const br={}; arr.forEach(t=> br[t.category]=(br[t.category]||0)+t.amount);
       let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category:</strong><ul>`;
-      for(const k in br) html += `<li>${k}: ${br[k].toLocaleString()}</li>`;
-      html += '</ul></div>';
+      for(const k in br) html += `<li>${k}: ${br[k].toLocaleString()}</li>`; html += '</ul></div>';
       document.getElementById('plView').innerHTML = html;
-      // also put into receiptInner for quick print
-      receiptInner.innerHTML = `<div><h3>Profit & Loss</h3>${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-theme">Close</button></div></div>`;
-      setTimeout(()=> { const closeBtn = document.getElementById('closePL'); if(closeBtn) closeBtn.addEventListener('click', ()=> closeModal(receiptModal)); }, 50);
+      receiptInner.innerHTML = `<div>${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+      setTimeout(()=> { const cb = document.getElementById('closePL'); if(cb) cb.addEventListener('click', ()=> closeModal(receiptModal)); },50);
     }
 
     function downloadPLPdf(){
       const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const { jsPDF } = window.jspdf; const doc = new jsPDF();
       doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
       doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
       doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${inc-exp}`, 14, 60);
-      let y=72; const br={}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
+      let y=72; const br={}; arr.forEach(t=> br[t.category]=(br[t.category]||0)+t.amount);
       doc.text('Category breakdown:', 14, y); y+=8;
       for(const k in br){ doc.text(`${k}: ${br[k]}`, 16, y); y+=8; if(y>270){ doc.addPage(); y=20; } }
-      doc.save(`PL_${m||'all'}.pdf`);
+      doc.save(`PL_${m || 'all'}.pdf`);
     }
 
-    // receipt
+    // Receipt
     function openReceipt(i){
       const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
       let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
-      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div>`;
+      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${esc(t.notes||'-')}</div>`;
       html += `<div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div>`;
-      html += `<div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-theme">Close</button></div></div>`;
+      html += `<div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
       receiptInner.innerHTML = html; openModal(receiptModal);
       setTimeout(()=> {
-        const pr = document.getElementById('printReceipt'), cl = document.getElementById('closeReceipt');
-        pr.addEventListener('click', ()=> {
+        document.getElementById('printReceipt')?.addEventListener('click', ()=> {
           const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=> w.print(), 300);
         });
-        cl.addEventListener('click', ()=> closeModal(receiptModal));
-      }, 60);
+        document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(receiptModal));
+      },60);
     }
 
     // init
@@ -705,13 +634,14 @@
       applyAdminUI();
       renderBudgetInputs();
       renderTransactions();
-      renderCharts();
+      if(isAdmin) chartsPanel.classList.add('show'); else chartsPanel.classList.remove('show');
     }
-
     init();
 
-    // utility renderBudgetInputs
+    // helper renderBudgetInputs (redeclared)
     function renderBudgetInputs(){
+      const budgetsArea = document.getElementById('budgetsArea');
+      if(!budgetsArea) return;
       budgetsArea.innerHTML = '';
       CATS.forEach(c=> {
         const dv = document.createElement('div'); dv.style.marginBottom='8px';
@@ -721,13 +651,13 @@
       });
     }
 
-    // save on unload
+    // Save on unload
     window.addEventListener('beforeunload', ()=> saveAll());
 
-    // expose some helpers for debugging (optional)
+    // Expose for debug
     window.__selelo = { transactions, budgets, setAdmin };
 
   })();
   </script>
 </body>
-        </html>
+            </html>
