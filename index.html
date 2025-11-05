@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Selelo Business Smart Tracker</title>
-
 <!-- Styles -->
 <style>
 :root{
@@ -25,9 +24,7 @@ body{
   color:var(--text);
   background: url('2.png') center/cover no-repeat fixed;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
 }
-
 /* dark theme */
 body.dark{
   --bg:#0f1724;
@@ -37,8 +34,6 @@ body.dark{
   --glass: rgba(10,14,20,0.65);
   background: #0b1220;
 }
-
-/* overlay & container */
 .overlay{
   min-height:100vh;
   background: linear-gradient(rgba(255,255,255,0.86), rgba(255,255,255,0.74));
@@ -47,7 +42,6 @@ body.dark{
 body.dark .overlay{
   background: linear-gradient(rgba(6,10,15,0.75), rgba(6,10,15,0.75));
 }
-
 .app{
   max-width:1150px;
   margin:16px auto;
@@ -57,7 +51,6 @@ body.dark .overlay{
   box-shadow: 0 12px 40px rgba(2,6,23,0.18);
   backdrop-filter: blur(6px);
 }
-
 /* Header */
 .header{
   display:flex;
@@ -76,7 +69,6 @@ body.dark .logo{border:4px solid rgba(255,255,255,0.06)}
 .title-block h1{margin:0;font-size:20px}
 .title-block p{margin:4px 0 0;color:var(--muted);font-size:13px}
 .header-right{display:flex;gap:10px;align-items:center}
-
 /* header badges */
 .badges{display:flex;gap:8px;align-items:center}
 .badge{
@@ -85,7 +77,6 @@ body.dark .logo{border:4px solid rgba(255,255,255,0.06)}
   font-size:13px;
 }
 .badge.small{padding:6px 8px;font-size:12px;font-weight:600; background:transparent;color:var(--muted);box-shadow:none}
-
 /* controls */
 .controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:12px 0}
 button{cursor:pointer;border:0;padding:9px 12px;border-radius:10px;font-weight:700}
@@ -93,54 +84,46 @@ button{cursor:pointer;border:0;padding:9px 12px;border-radius:10px;font-weight:7
 .btn-primary{background:var(--good);color:#fff}
 .btn-danger{background:var(--danger);color:#fff}
 .link-download{color:var(--accent);text-decoration:none;font-weight:700}
-
 /* layout */
 .grid{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:8px}
 @media(max-width:1000px){.grid{grid-template-columns:1fr}}
 .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
 .card h2, .card h3{margin:0 0 8px 0}
-
 /* form */
 label{display:block;margin-top:8px;font-weight:700;color:var(--muted);font-size:13px}
 input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;background:transparent;font-size:14px;margin-top:6px;color:var(--text)}
 textarea{min-height:70px;resize:vertical}
 .small{font-size:13px;color:var(--muted);margin-top:6px}
-
 /* stats */
 .dashboard{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 .stat{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fafafa);text-align:center;box-shadow:0 8px 20px rgba(2,6,23,0.04)}
 body.dark .stat{background:linear-gradient(180deg,#071226,#071226)}
-
 /* table */
 .table-wrap{overflow:auto;margin-top:12px}
 table{width:100%;border-collapse:collapse;font-size:14px;border-radius:8px;overflow:hidden}
 thead th{padding:10px;background:#f7f9fc;border-bottom:1px solid #eef2f6;text-align:left}
 tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
 .action-btn{padding:6px 8px;border-radius:6px;border:0;font-weight:700}
-
 /* filter row */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .filter-row > *{min-width:110px;flex:1}
-
 /* modal */
 .modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,0.5);z-index:999;align-items:center;justify-content:center}
 .modal .inner{width:96%;max-width:520px;background:var(--card);padding:16px;border-radius:10px}
 .modal .inner h3{margin-top:0}
-
 /* receipt printable */
 @media print{
   body *{visibility:hidden}
   .printable, .printable *{visibility:visible}
   .printable{position:fixed;left:0;top:0;width:100%}
 }
-
 /* footer */
 .footer{margin-top:14px;text-align:center;color:var(--muted);font-size:13px}
-
-/* small helpers */
+/* helpers */
 .row{display:flex;gap:8px}
 .col{flex:1}
 .center{text-align:center}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -150,10 +133,10 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
       <!-- Header -->
       <div class="header" role="banner">
         <div class="header-left">
-          <img src="11.png" alt="Logo" class="logo" onerror="this.style.display='none'">
+          <img id="logoImg" src="11.png" alt="Logo" class="logo" onerror="this.style.display='none'">
           <div class="title-block">
             <h1>Selelo Business Smart Tracker</h1>
-            <p>Smart, lightweight bookkeeping — runs in your browser. Upload your images to this folder.</p>
+            <p>Smart, lightweight bookkeeping — runs in your browser. Upload your images (11.png, 2.png, Business Email Signature.png).</p>
             <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
               <span class="badge small" title="Local storage">Offline-ready</span>
               <span class="badge small" title="Single file">Single HTML</span>
@@ -164,6 +147,10 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
         <div class="header-right">
           <div class="badges" aria-hidden="true">
             <div class="badge">SavannaVista</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-left:12px">
+            <button id="adminLoginBtn" class="btn-accent" title="Admin login">Admin Login</button>
+            <button id="adminLogoutBtn" class="btn-danger hidden" title="Logout admin">Logout</button>
           </div>
         </div>
       </div>
@@ -203,8 +190,10 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
             <textarea id="txNotes" placeholder="Describe the transaction"></textarea>
 
             <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-              <button id="addBtn" class="btn-primary">Add (admin)</button>
+              <!-- Add is admin-only; disabled for non-admin -->
+              <button id="addBtn" class="btn-primary" disabled>Add</button>
               <button id="clearBtn">Clear</button>
+              <span id="adminHint" class="small" style="align-self:center;margin-left:8px;color:var(--muted)">Admin required to add/delete</span>
             </div>
             <div id="txMsg" class="small" aria-live="polite" style="color:green;margin-top:8px"></div>
           </div>
@@ -249,7 +238,7 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
             <h3>Budgets</h3>
             <div id="budgetsArea"></div>
             <div style="margin-top:8px">
-              <button id="saveBudgetsBtn" class="btn-accent">Save Budgets (admin)</button>
+              <button id="saveBudgetsBtn" class="btn-accent" disabled>Save Budgets</button>
             </div>
           </div>
 
@@ -276,11 +265,11 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
     </div>
   </div>
 
-  <!-- Admin modal -->
+  <!-- Admin Login Modal (password-only) -->
   <div id="adminModal" class="modal" aria-modal="true" role="dialog" aria-hidden="true">
     <div class="inner" role="document">
-      <h3>Admin Password</h3>
-      <p class="small">Enter admin password to proceed</p>
+      <h3>Admin Login</h3>
+      <p class="small">Enter admin password to enable admin interface</p>
       <div style="position:relative">
         <input id="adminInput" type="password" placeholder="Admin password" style="padding-right:90px">
         <button id="toggleShow" style="position:absolute;right:6px;top:6px;padding:6px 10px;font-size:12px">Show</button>
@@ -288,7 +277,7 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
       </div>
       <div style="text-align:right;margin-top:10px">
         <button id="adminCancel">Cancel</button>
-        <button id="adminOk" class="btn-primary">Confirm</button>
+        <button id="adminOk" class="btn-primary">Login</button>
       </div>
     </div>
   </div>
@@ -320,35 +309,38 @@ tbody td{padding:10px;border-bottom:1px solid #f1f3f6}
 
 <!-- Script -->
 <script>
-/* ================= Configuration & State ================= */
+/* ================= CONFIG & STATE ================= */
 const ADMIN_PASSWORDS = ["0742147197","0721235005"];
 const STORAGE_TX = "sel_transactions_sel_final";
 const STORAGE_BUDGETS = "sel_budgets_sel_final";
+const STORAGE_ADMIN = "sel_admin_session";
+const STORAGE_THEME = "sel_theme";
 
 let transactions = JSON.parse(localStorage.getItem(STORAGE_TX) || "[]");
 let budgets = JSON.parse(localStorage.getItem(STORAGE_BUDGETS) || "{}");
-let pendingAdmin = null;
+let isAdmin = localStorage.getItem(STORAGE_ADMIN) === "true";
+let pendingAction = null; // used for modals that need context
 let currentEditIndex = null;
 
-/* ================= Elements ================= */
+/* ================= ELEMENT REFS ================= */
+const addBtn = document.getElementById('addBtn');
+const clearBtn = document.getElementById('clearBtn');
 const txDate = document.getElementById('txDate');
 const txType = document.getElementById('txType');
 const txCategory = document.getElementById('txCategory');
 const txAmount = document.getElementById('txAmount');
 const txNotes = document.getElementById('txNotes');
-const addBtn = document.getElementById('addBtn');
-const clearBtn = document.getElementById('clearBtn');
 const txTbody = document.getElementById('txTbody');
 const txMsg = document.getElementById('txMsg');
 
+const applyFilterBtn = document.getElementById('applyFilter');
+const resetFilterBtn = document.getElementById('resetFilter');
 const fMonth = document.getElementById('fMonth');
 const fType = document.getElementById('fType');
 const fCategory = document.getElementById('fCategory');
 const fMin = document.getElementById('fMin');
 const fMax = document.getElementById('fMax');
 const fNotes = document.getElementById('fNotes');
-const applyFilterBtn = document.getElementById('applyFilter');
-const resetFilterBtn = document.getElementById('resetFilter');
 
 const statIncome = document.getElementById('statIncome');
 const statExpense = document.getElementById('statExpense');
@@ -358,23 +350,21 @@ const budgetAlert = document.getElementById('budgetAlert');
 const budgetsArea = document.getElementById('budgetsArea');
 const saveBudgetsBtn = document.getElementById('saveBudgetsBtn');
 
-const chartIECtx = document.getElementById('chartIE').getContext('2d');
-const chartCatCtx = document.getElementById('chartCat').getContext('2d');
-const chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
-let chartIE, chartCat, chartTrend;
-
 const genPLBtn = document.getElementById('genPLBtn');
 const downloadPLBtn = document.getElementById('downloadPLBtn');
-const plView = document.getElementById('plView');
 const reportMonth = document.getElementById('reportMonth');
+const plView = document.getElementById('plView');
 
 const exportCSVBtn = document.getElementById('exportCSVBtn');
 const downloadPLPdfBtn = document.getElementById('downloadPLPdfBtn');
 
+const adminLoginBtn = document.getElementById('adminLoginBtn');
+const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+
 const adminModal = document.getElementById('adminModal');
 const adminInput = document.getElementById('adminInput');
-const adminCancel = document.getElementById('adminCancel');
 const adminOk = document.getElementById('adminOk');
+const adminCancel = document.getElementById('adminCancel');
 const toggleShow = document.getElementById('toggleShow');
 const adminHelp = document.getElementById('adminHelp');
 
@@ -392,79 +382,115 @@ const receiptInner = document.getElementById('receiptInner');
 
 const themeBtn = document.getElementById('themeBtn');
 
-/* ================= Utilities ================= */
+/* Charts contexts */
+const chartIECtx = document.getElementById('chartIE').getContext('2d');
+const chartCatCtx = document.getElementById('chartCat').getContext('2d');
+const chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
+let chartIE, chartCat, chartTrend;
+
+/* ================= UTILITIES ================= */
 function saveTransactions(){ localStorage.setItem(STORAGE_TX, JSON.stringify(transactions)); }
 function saveBudgets(){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(budgets)); }
-
-function showMsg(text, color='green'){
-  txMsg.style.color = color; txMsg.textContent = text;
-  setTimeout(()=>{ if(txMsg.textContent===text) txMsg.textContent=''; }, 3000);
+function setAdminSession(val){
+  isAdmin = !!val;
+  localStorage.setItem(STORAGE_ADMIN, isAdmin ? "true" : "false");
+  applyAdminUI();
 }
-function openModal(mod){ mod.style.display='flex'; mod.setAttribute('aria-hidden','false'); }
-function closeModal(mod){ mod.style.display='none'; mod.setAttribute('aria-hidden','true'); }
+function setTheme(name){
+  if(name === 'dark') document.body.classList.add('dark');
+  else document.body.classList.remove('dark');
+  localStorage.setItem(STORAGE_THEME, name);
+}
+function showMsg(text, color='green'){
+  txMsg.style.color = color;
+  txMsg.textContent = text;
+  setTimeout(()=>{ if(txMsg.textContent === text) txMsg.textContent = ''; }, 3000);
+}
+function openModal(m){ m.style.display = 'flex'; m.setAttribute('aria-hidden','false'); }
+function closeModal(m){ m.style.display = 'none'; m.setAttribute('aria-hidden','true'); }
 
-/* close modal when clicking outside */
-document.querySelectorAll('.modal').forEach(m=>{
+/* close modal on outside click */
+document.querySelectorAll('.modal').forEach(m => {
   m.addEventListener('click', (e)=> { if(e.target === m) closeModal(m); });
 });
 
-/* ================= Admin modal flow ================= */
-function requireAdmin(action, payload){
-  pendingAdmin = {action, payload};
+/* ================= ADMIN LOGIN FLOW ================= */
+adminLoginBtn.addEventListener('click', ()=> {
   adminInput.value = '';
   adminInput.type = 'password';
   toggleShow.textContent = 'Show';
   openModal(adminModal);
-}
-adminCancel.addEventListener('click', ()=>{ pendingAdmin=null; closeModal(adminModal); });
+});
+adminCancel.addEventListener('click', ()=> { closeModal(adminModal); });
 toggleShow.addEventListener('click', ()=>{
   if(adminInput.type === 'password'){ adminInput.type = 'text'; toggleShow.textContent = 'Hide'; }
   else { adminInput.type = 'password'; toggleShow.textContent = 'Show'; }
 });
 adminHelp.addEventListener('click', ()=> alert('Admin passwords: 0742147197 and 0721235005'));
+
 adminOk.addEventListener('click', ()=>{
-  const pass = adminInput.value.trim();
-  if(!ADMIN_PASSWORDS.includes(pass)){ alert('Incorrect admin password'); return; }
+  const p = adminInput.value.trim();
+  if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect password'); return; }
+  setAdminSession(true);
   closeModal(adminModal);
-  const action = pendingAdmin && pendingAdmin.action;
-  const payload = pendingAdmin && pendingAdmin.payload;
-  pendingAdmin = null;
-  if(action === 'add') doAddTransaction();
-  if(action === 'delete') doDeleteTransaction(payload.index);
-  if(action === 'saveBudgets') doSaveBudgets();
-  if(action === 'editOpen') openEditModal(payload.index);
-  if(action === 'editSave') doSaveEdit(payload.payload);
+  showMsg('Admin logged in', 'green');
 });
 
-/* ---------------- Add / Clear ---------------- */
-addBtn.addEventListener('click', ()=> requireAdmin('add', null));
-clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
+/* Logout */
+adminLogoutBtn.addEventListener('click', ()=>{
+  if(!confirm('Logout admin?')) return;
+  setAdminSession(false);
+  showMsg('Admin logged out', 'orange');
+});
 
-function doAddTransaction(){
+/* Apply admin UI state (enable/disable admin-only controls) */
+function applyAdminUI(){
+  if(isAdmin){
+    addBtn.disabled = false;
+    saveBudgetsBtn.disabled = false;
+    adminLoginBtn.classList.add('hidden');
+    adminLogoutBtn.classList.remove('hidden');
+    document.getElementById('adminHint').classList.add('hidden');
+  } else {
+    addBtn.disabled = true;
+    saveBudgetsBtn.disabled = true;
+    adminLoginBtn.classList.remove('hidden');
+    adminLogoutBtn.classList.add('hidden');
+    document.getElementById('adminHint').classList.remove('hidden');
+  }
+}
+
+/* ================= TRANSACTIONS CRUD ================= */
+addBtn.addEventListener('click', () => {
+  if(!isAdmin){ alert('Admin only'); return; }
   const date = txDate.value;
   const type = txType.value;
   const category = txCategory.value;
   const amount = parseFloat(txAmount.value);
   const notes = txNotes.value.trim();
-  if(!date || !amount || isNaN(amount)){ alert('Enter a valid date and amount'); return; }
+  if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
   transactions.push({date,type,category,amount,notes});
   saveTransactions();
   renderTransactions();
   showMsg('Transaction added','green');
   txDate.value=''; txAmount.value=''; txNotes.value='';
-}
+});
 
-/* ---------------- Edit ---------------- */
-function requestEdit(index){ requireAdmin('editOpen', {index}); }
-function openEditModal(index){
+/* Edit flow (admin-only) */
+function requestEdit(index){
+  if(!isAdmin){ alert('Admin only'); return; }
   currentEditIndex = index;
   const t = transactions[index];
-  editDate.value = t.date; editType.value = t.type; editCategory.value = t.category;
-  editAmount.value = t.amount; editNotes.value = t.notes || '';
+  editDate.value = t.date;
+  editType.value = t.type;
+  editCategory.value = t.category;
+  editAmount.value = t.amount;
+  editNotes.value = t.notes || '';
   openModal(editModal);
 }
 editCancel.addEventListener('click', ()=> { closeModal(editModal); currentEditIndex = null; });
 editSave.addEventListener('click', ()=>{
+  if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
   const payload = {
     index: currentEditIndex,
     newData: {
@@ -475,23 +501,21 @@ editSave.addEventListener('click', ()=>{
       notes: editNotes.value || ''
     }
   };
-  closeModal(editModal);
-  requireAdmin('editSave', {payload});
-});
-function doSaveEdit(payloadObj){
-  const idx = payloadObj.index;
-  const nd = payloadObj.newData;
-  if(idx==null || !nd || !nd.date || isNaN(nd.amount)){ alert('Invalid edit data'); return; }
-  transactions[idx] = nd;
+  // validation
+  if(!payload.newData.date || isNaN(payload.newData.amount) || payload.newData.amount <= 0){
+    alert('Invalid edit values'); return;
+  }
+  transactions[payload.index] = payload.newData;
   saveTransactions();
   renderTransactions();
   showMsg('Transaction edited','green');
+  closeModal(editModal);
   currentEditIndex = null;
-}
+});
 
-/* ---------------- Delete ---------------- */
-function requestDelete(index){ requireAdmin('delete', {index}); }
-function doDeleteTransaction(index){
+/* Delete (admin-only) */
+function requestDelete(index){
+  if(!isAdmin){ alert('Admin only'); return; }
   if(!confirm('Delete this transaction?')) return;
   transactions.splice(index,1);
   saveTransactions();
@@ -499,7 +523,7 @@ function doDeleteTransaction(index){
   showMsg('Transaction deleted','red');
 }
 
-/* ---------------- Budgets ---------------- */
+/* ----------------- Budgets ----------------- */
 const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
 function renderBudgetInputs(){
   budgetsArea.innerHTML = '';
@@ -507,14 +531,18 @@ function renderBudgetInputs(){
     const div = document.createElement('div');
     div.style.marginBottom = '8px';
     div.innerHTML = `<label style="font-weight:700">${cat} budget</label>
-      <input type="number" id="budget_${cat}" placeholder="0" value="${budgets[cat]||''}">`;
+      <input type="number" id="budget_${cssSafe(cat)}" placeholder="0" value="${budgets[cat]||''}">`;
     budgetsArea.appendChild(div);
   });
 }
-saveBudgetsBtn.addEventListener('click', ()=> requireAdmin('saveBudgets', null) );
+saveBudgetsBtn.addEventListener('click', ()=> {
+  if(!isAdmin){ alert('Admin only'); return; }
+  doSaveBudgets();
+});
 function doSaveBudgets(){
   CATS.forEach(cat=>{
-    const val = parseFloat(document.getElementById(`budget_${cat}`).value) || 0;
+    const el = document.getElementById(`budget_${cssSafe(cat)}`);
+    const val = el ? parseFloat(el.value) || 0 : 0;
     budgets[cat] = val;
   });
   saveBudgets();
@@ -522,7 +550,12 @@ function doSaveBudgets(){
   showMsg('Budgets saved','green');
 }
 
-/* ---------------- Filters & render ---------------- */
+/* ----------------- Filters & render ----------------- */
+applyFilterBtn.addEventListener('click', renderTransactions);
+resetFilterBtn.addEventListener('click', ()=>{
+  fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions();
+});
+
 function passesFilters(t){
   if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
   if(fType.value && t.type !== fType.value) return false;
@@ -534,10 +567,6 @@ function passesFilters(t){
   if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
   return true;
 }
-applyFilterBtn.addEventListener('click', renderTransactions);
-resetFilterBtn.addEventListener('click', ()=>{
-  fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions();
-});
 
 function renderTransactions(){
   txTbody.innerHTML = '';
@@ -545,16 +574,20 @@ function renderTransactions(){
   transactions.forEach((t,i)=>{
     if(!passesFilters(t)) return;
     const tr = document.createElement('tr');
+    // Actions visible only for admin
+    let actionsHtml = '';
+    if(isAdmin){
+      actionsHtml = `<button class="action-btn" data-action="edit" data-index="${i}" style="background:#ffc107">Edit</button>
+      <button class="action-btn" data-action="delete" data-index="${i}" style="background:var(--danger);color:#fff">Delete</button>`;
+    }
+    actionsHtml += `<button class="action-btn" data-action="receipt" data-index="${i}" style="background:#1976d2;color:#fff">Receipt</button>`;
+
     tr.innerHTML = `<td>${t.date}</td>
-      <td>${t.type}</td>
-      <td>${t.category}</td>
+      <td>${escapeHtml(t.type)}</td>
+      <td>${escapeHtml(t.category)}</td>
       <td>${t.amount.toLocaleString()}</td>
-      <td>${(t.notes||'')}</td>
-      <td>
-        <button class="action-btn" data-action="edit" data-index="${i}" style="background:#ffc107">Edit</button>
-        <button class="action-btn" data-action="delete" data-index="${i}" style="background:var(--danger);color:#fff">Delete</button>
-        <button class="action-btn" data-action="receipt" data-index="${i}" style="background:#1976d2;color:#fff">Receipt</button>
-      </td>`;
+      <td>${escapeHtml(t.notes || '')}</td>
+      <td>${actionsHtml}</td>`;
     txTbody.appendChild(tr);
     if(t.type === 'Income') totalIncome += t.amount;
     if(t.type === 'Expense') totalExpense += t.amount;
@@ -566,17 +599,18 @@ function renderTransactions(){
   renderCharts();
 }
 
-/* delegation for table actions */
+/* Delegation for table action buttons */
 txTbody.addEventListener('click', (e)=>{
   const btn = e.target.closest('button[data-action]');
   if(!btn) return;
-  const act = btn.dataset.action; const idx = parseInt(btn.dataset.index);
-  if(act === 'edit') requestEdit(idx);
-  if(act === 'delete') requestDelete(idx);
-  if(act === 'receipt') openReceipt(idx);
+  const action = btn.dataset.action;
+  const index = parseInt(btn.dataset.index);
+  if(action === 'edit') requestEdit(index);
+  if(action === 'delete') requestDelete(index);
+  if(action === 'receipt') openReceipt(index);
 });
 
-/* ---------------- Budget alerts ---------------- */
+/* ----------------- Budget alerts ----------------- */
 function checkBudgetAlerts(){
   let msg = '';
   CATS.forEach(cat=>{
@@ -588,7 +622,7 @@ function checkBudgetAlerts(){
   budgetAlert.textContent = msg;
 }
 
-/* ---------------- Charts ---------------- */
+/* ----------------- Charts ----------------- */
 function renderCharts(){
   const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
@@ -607,7 +641,7 @@ function renderCharts(){
   chartTrend = new Chart(chartTrendCtx,{ type:'line', data:{ labels:months, datasets:[{label:'Income', data:incArr, borderColor:'#4caf50', fill:true, backgroundColor:'rgba(76,175,80,0.12)'},{label:'Expense', data:expArr, borderColor:'#ff5252', fill:true, backgroundColor:'rgba(255,82,82,0.12)'}]}, options:{responsive:true, plugins:{legend:{position:'bottom'}}, tension:0.3 }});
 }
 
-/* ---------------- Export CSV ---------------- */
+/* ----------------- Export CSV ----------------- */
 exportCSVBtn.addEventListener('click', ()=>{
   if(!transactions.length){ alert('No transactions to export'); return; }
   let csv = 'Date,Type,Category,Amount,Notes\n';
@@ -617,7 +651,7 @@ exportCSVBtn.addEventListener('click', ()=>{
   const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
-/* ---------------- P&L show + download ---------------- */
+/* ----------------- P&L display + download ----------------- */
 genPLBtn.addEventListener('click', generatePL);
 downloadPLBtn.addEventListener('click', downloadPLPdf);
 downloadPLPdfBtn.addEventListener('click', downloadPLPdf);
@@ -661,7 +695,7 @@ function downloadPLPdf(){
   doc.save(`PL_${m || 'all'}.pdf`);
 }
 
-/* ---------------- Receipt / print ---------------- */
+/* ----------------- Receipt / print ----------------- */
 function openReceipt(index){
   const t = transactions[index];
   const inv = 'INV-' + (10000 + index);
@@ -680,7 +714,7 @@ function openReceipt(index){
         <strong>Notes:</strong> ${t.notes || '-'}
       </div>
       <div style="margin-top:12px">
-        <img src="Business Email Signature.png" style="max-width:180px;opacity:0.95" onerror="this.style.display='none'">
+        <img src="Business%20Email%20Signature.png" style="max-width:180px;opacity:0.95" onerror="this.style.display='none'">
       </div>
       <div style="margin-top:12px">
         <button id="printReceiptBtn" style="padding:8px 12px;border-radius:8px;background:#111;color:#fff">Print</button>
@@ -690,7 +724,6 @@ function openReceipt(index){
   `;
   receiptInner.innerHTML = html;
   openModal(receiptModal);
-
   const pr = document.getElementById('printReceiptBtn');
   const cl = document.getElementById('closeReceiptBtn');
   if(pr){ pr.addEventListener('click', ()=>{
@@ -702,19 +735,25 @@ function openReceipt(index){
   if(cl){ cl.addEventListener('click', ()=> closeModal(receiptModal)); }
 }
 
-/* ---------------- Theme toggle (works) ---------------- */
+/* ----------------- Theme toggle ----------------- */
 (function(){
-  // initialize from localStorage
-  const saved = localStorage.getItem('sel_theme') || 'light';
-  if(saved === 'dark') document.body.classList.add('dark');
+  const saved = localStorage.getItem(STORAGE_THEME) || 'light';
+  setTheme(saved);
 })();
 themeBtn.addEventListener('click', ()=>{
-  document.body.classList.toggle('dark');
-  localStorage.setItem('sel_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  const nowDark = document.body.classList.contains('dark');
+  setTheme(nowDark ? 'light' : 'dark');
 });
 
-/* ---------------- Init ---------------- */
+/* ----------------- Helpers & Init ----------------- */
+function cssSafe(name){ return name.replace(/\s+/g,'_'); }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
+}
+
+/* Initialize UI state and render */
 function init(){
+  applyAdminUI();
   renderBudgetInputs();
   renderTransactions();
 }
@@ -724,4 +763,4 @@ init();
 window.addEventListener('beforeunload', ()=> { saveTransactions(); saveBudgets(); });
 </script>
 </body>
-          </html>
+                                                                               </html>
