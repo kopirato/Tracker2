@@ -3,18 +3,29 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Selelo Business Smart Tracker — Final</title>
-
+<title>Selelo Business Smart Tracker</title>
 <style>
-:root{--accent:#1e88e5;--good:#4caf50;--danger:#ff5252;--card:#ffffffee}
+:root{
+  --accent:#1e88e5; --good:#4caf50; --danger:#ff5252; --card:#ffffffee;
+}
 *{box-sizing:border-box}
 body{
   margin:0;font-family:Inter, "Segoe UI", system-ui, Arial, sans-serif;
   background: url('wallpaper.png') center/cover no-repeat fixed;
-  -webkit-font-smoothing:antialiased;color:#111;
+  -webkit-font-smoothing:antialiased;
+  color:#111;
 }
-.overlay{min-height:100vh;background:rgba(255,255,255,0.95);backdrop-filter:blur(3px);padding:18px}
-.app{max-width:1100px;margin:18px auto;padding:18px;border-radius:12px;background:linear-gradient(#ffffffcc,#fafafa);box-shadow:0 10px 30px rgba(0,0,0,0.08)}
+.overlay{
+  min-height:100vh;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(3px);
+  padding:18px;
+}
+.app{
+  max-width:1100px;margin:18px auto;padding:18px;border-radius:12px;
+  background:linear-gradient(#ffffffcc,#fafafa);
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
 .header{display:flex;align-items:center;gap:14px;justify-content:center}
 .logo{width:84px;height:84px;object-fit:contain;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.08)}
 h1{margin:0;font-size:20px;text-align:center}
@@ -61,7 +72,7 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
         <img src="logo.png" alt="Logo" class="logo" onerror="this.style.display='none'">
         <div>
           <h1>Selelo Business Smart Tracker</h1>
-          <div class="small">Upload <strong>logo.png</strong>, <strong>wallpaper.png</strong>, <strong>stamp.png</strong> to this folder — receipts include your stamp.</div>
+          <div class="small">Upload <strong>logo.png</strong>, <strong>wallpaper.png</strong>, <strong>stamp.png</strong> to this repo folder — receipts include your stamp.</div>
         </div>
       </div>
 
@@ -170,7 +181,7 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
     </div>
   </div>
 
-  <!-- Admin modal (nicer with show/hide) -->
+  <!-- Admin modal (show/hide) -->
   <div id="adminModal" class="modal" aria-modal="true" role="dialog" aria-hidden="true">
     <div class="inner" role="document">
       <h3>Admin Password</h3>
@@ -212,17 +223,17 @@ tbody td{padding:10px;border-bottom:1px solid #f3f3f3;font-size:13px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-/* ----------------- Configuration & State ----------------- */
-const ADMIN_PASSWORDS = ["0742147197","0721235005"]; // updated
-const STORAGE_TX = "sel_transactions_v_final";
-const STORAGE_BUDGETS = "sel_budgets_v_final";
+/* ================= Configuration & State ================= */
+const ADMIN_PASSWORDS = ["0742147197","0721235005"];
+const STORAGE_TX = "sel_transactions_final_v1";
+const STORAGE_BUDGETS = "sel_budgets_final_v1";
 
 let transactions = JSON.parse(localStorage.getItem(STORAGE_TX) || "[]");
 let budgets = JSON.parse(localStorage.getItem(STORAGE_BUDGETS) || "{}");
 let pendingAdmin = null; // {action, payload}
 let currentEditIndex = null;
 
-/* ----------------- Element refs ----------------- */
+/* ================= Element refs ================= */
 const txDate = document.getElementById('txDate');
 const txType = document.getElementById('txType');
 const txCategory = document.getElementById('txCategory');
@@ -283,7 +294,7 @@ const receiptInner = document.getElementById('receiptInner');
 
 const themeBtn = document.getElementById('themeBtn');
 
-/* ----------------- Utilities ----------------- */
+/* ================= Utilities ================= */
 function saveTransactions(){ localStorage.setItem(STORAGE_TX, JSON.stringify(transactions)); }
 function saveBudgets(){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(budgets)); }
 
@@ -291,15 +302,15 @@ function showMsg(text, color='green'){
   txMsg.style.color = color; txMsg.textContent = text;
   setTimeout(()=>{ if(txMsg.textContent===text) txMsg.textContent=''; }, 3500);
 }
-function openModal(mod){ mod.style.display='flex'; mod.setAttribute('aria-hidden','false'); }
-function closeModal(mod){ mod.style.display='none'; mod.setAttribute('aria-hidden','true'); }
+function openModal(mod){ mod.style.display = 'flex'; mod.setAttribute('aria-hidden','false'); }
+function closeModal(mod){ mod.style.display = 'none'; mod.setAttribute('aria-hidden','true'); }
 
 /* close modal on outside click */
 document.querySelectorAll('.modal').forEach(m => {
   m.addEventListener('click', (e)=> { if(e.target === m) closeModal(m); });
 });
 
-/* ----------------- Admin modal flow ----------------- */
+/* ================= Admin modal flow ================= */
 function requireAdmin(action, payload){
   pendingAdmin = {action, payload};
   adminInput.value = '';
@@ -587,24 +598,29 @@ function openReceipt(index){
   document.getElementById('closeReceiptBtn').addEventListener('click', ()=> closeModal(receiptModal));
 }
 
-/* ----------------- Theme toggle (simple) ----------------- */
+/* ----------------- Theme toggle ----------------- */
 let dark = false;
 themeBtn.addEventListener('click', ()=> {
   dark = !dark;
-  if(dark){ document.body.style.background = '#111'; document.querySelector('.overlay').style.background = 'rgba(0,0,0,0.85)'; }
-  else { document.body.style.background = "url('wallpaper.png') center/cover no-repeat fixed"; document.querySelector('.overlay').style.background = 'rgba(255,255,255,0.95)'; }
+  if(dark){
+    document.body.style.background = '#111';
+    document.querySelector('.overlay').style.background = 'rgba(0,0,0,0.85)';
+  } else {
+    document.body.style.background = "url('wallpaper.png') center/cover no-repeat fixed";
+    document.querySelector('.overlay').style.background = 'rgba(255,255,255,0.95)';
+  }
 });
 
 /* ----------------- Init ----------------- */
 function init(){
   renderBudgetInputs();
   renderTransactions();
-  // ensure modals close on outside clicks already wired
+  // ensure modals close on outside click (wired earlier)
 }
 init();
 
-/* Save state on unload */
+/* Save on unload */
 window.addEventListener('beforeunload', ()=> { saveTransactions(); saveBudgets(); });
 </script>
 </body>
-</html>
+  </html>
