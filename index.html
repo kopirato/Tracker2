@@ -3,151 +3,103 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Selelo • Smart Tracker</title>
-
-<!-- Fonts -->
+<title>Selelo — Smart Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg-dark:#07121a;
-  --card:rgba(255,255,255,0.03);
-  --glass: rgba(255,255,255,0.04);
-  --muted: #9aa7b3;
-  --text: #e7f3fb;
-  --accent-1: #6ee7ff; /* cyan */
-  --accent-2: #b38bff; /* purple */
-  --success: #4ade80;
-  --danger: #ff6b6b;
+  --bg:#07121a;
+  --overlay: rgba(3,6,10,0.6);
+  --card: rgba(255,255,255,0.03);
+  --panel:#071826;
+  --muted:#9aa7b3;
+  --text:#e8f3fb;
+  --accent1:#6ee7ff;
+  --accent2:#b38bff;
+  --good:#4ade80;
+  --danger:#ff6b6b;
   --radius:14px;
   --maxw:1100px;
+  --glass: rgba(255,255,255,0.02);
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
 body{
-  background: radial-gradient(ellipse at top left, rgba(0,0,0,0.25), rgba(0,0,0,0.6)), url('2.png') center/cover no-repeat fixed;
-  background-color:var(--bg-dark);
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url('2.png') center/cover no-repeat fixed;
+  background-color:var(--bg);
 }
 
-/* overlay container */
-.shell{
-  min-height:100vh;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  padding:20px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55));
-}
+/* shell & main */
+.shell{min-height:100vh;padding:22px;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
+.app{width:100%;max-width:var(--maxw);border-radius:18px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.02));box-shadow:0 18px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02)}
 
-/* main app card */
-.app{
-  width:100%;
-  max-width:var(--maxw);
-  margin:0 auto;
-  border-radius:18px;
-  padding:14px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  box-shadow: 0 18px 60px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-}
-
-/* header: extremely minimal */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:6px 2px;
-}
+/* header minimal */
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 4px}
 .header-left{display:flex;align-items:center;gap:12px}
-.logo{
-  width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04);box-shadow: 0 8px 28px rgba(2,6,23,0.6);
-}
-.title{
-  line-height:1;
-}
-.title h1{margin:0;font-size:18px;font-weight:600}
-.title p{margin:4px 0 0;font-size:12px;color:var(--muted);font-weight:300}
+.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.6)}
+.title h1{margin:0;font-size:18px;font-weight:700}
+.title p{margin:4px 0 0;font-size:12px;color:var(--muted);display:none}
 
-/* header right: only admin button */
+/* header right: ONLY theme toggle */
 .header-right{display:flex;align-items:center;gap:8px}
-.btn{
-  border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;
-}
-.btn-admin{background:linear-gradient(90deg,var(--accent-1),var(--accent-2)); color:#011; box-shadow:0 10px 24px rgba(99,102,241,0.08)}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.btn{border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-theme{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021224;box-shadow:0 10px 28px rgba(100,120,255,0.06)}
 
-/* action bar under header - compact and center */
-.action-bar{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:center;
-  margin-top:10px;
-  padding:8px 6px;
-  overflow:auto;
-  white-space:nowrap;
-}
-.action{
-  flex:0 0 auto;
-  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;
-  border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  font-weight:700;font-size:13px;color:var(--text);cursor:pointer;
-}
-.action .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));box-shadow:0 6px 18px rgba(110,231,255,0.08)}
+/* action bar (under header) */
+.action-bar{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:8px;border-radius:12px}
+.action{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02);font-weight:700;color:var(--text);cursor:pointer}
 
-/* grid content */
-.grid{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns:1fr 360px;
-  gap:16px;
-}
-@media(max-width:980px){ .grid{grid-template-columns:1fr} }
+/* layout grid */
+.grid{margin-top:14px;display:grid;grid-template-columns:1fr 360px;gap:16px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}}
 
 /* card */
 .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
 .card h2{margin:0 0 8px 0;font-size:16px}
 .card h3{margin:0 0 8px 0;font-size:15px}
 
-/* form */
+/* cute dashboard panel to block wallpaper */
+.dashboard-panel{
+  margin-top:6px;padding:10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.03));backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.02);
+  display:flex;gap:10px;align-items:center;justify-content:space-between;
+}
+.dashboard-panel .left{display:flex;gap:10px;align-items:center}
+.dashboard-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:10px;border-radius:12px;min-width:90px;text-align:center}
+.dashboard-card h4{margin:0;color:var(--muted);font-size:12px}
+.dashboard-card p{margin:6px 0 0;font-weight:800;font-size:16px}
+
+/* form & inputs */
 label{display:block;font-size:12px;color:var(--muted);margin-top:8px}
 input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text);font-size:14px}
 textarea{min-height:80px;resize:vertical}
 .small{font-size:12px;color:var(--muted)}
 
-/* buttons row inside forms */
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-/* stats block */
-.stats{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.stat{flex:1;min-width:110px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));text-align:center}
-.stat h4{margin:0;color:var(--muted);font-size:12px}
-.stat p{margin:8px 0 0;font-size:16px;font-weight:800}
-
-/* table */
+/* transactions table */
 .table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{padding:10px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.02)}
 tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(--text)}
 .action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer}
 
-/* modal */
-.modal{display:none;position:fixed;inset:0;background:rgba(1,4,9,0.6);z-index:999;align-items:center;justify-content:center;padding:16px}
-.panel{width:100%;max-width:520px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.modal .close{float:right}
+/* modals (admin prompt thoughtful) */
+.modal{display:none;position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7));z-index:999;align-items:center;justify-content:center;padding:16px}
+.panel{width:100%;max-width:560px;background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.03));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
+.admin-prompt{font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.admin-prompt .deep{font-weight:600;color:var(--text);font-size:15px;margin-top:6px}
+.modal .controls{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
 
-/* receipt */
+/* receipt printable */
 .printable{background:#fff;color:#000;padding:16px;border-radius:8px}
-.printable img{max-width:180px;display:block;margin:0 auto}
+.printable img{max-width:180px;display:block;margin:6px auto}
 
-/* small screen tweaks */
+/* responsive */
 @media(max-width:520px){
   .logo{width:48px;height:48px}
   .title h1{font-size:16px}
   .action{font-size:13px;padding:8px;border-radius:10px}
   .grid{gap:10px}
   .card{padding:10px}
-  .stat p{font-size:14px}
+  .dashboard-card p{font-size:14px}
   table{font-size:13px}
   input,select,textarea{padding:10px}
 }
@@ -156,37 +108,33 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
 <body>
   <div class="shell">
     <div class="app" role="application" aria-label="Selelo Smart Tracker">
-
-      <!-- header -->
-      <div class="header">
+      <!-- header minimal: only theme toggle -->
+      <div class="header" role="banner">
         <div class="header-left">
           <img src="11.png" alt="logo" class="logo" onerror="this.style.display='none'">
           <div class="title">
             <h1>Selelo</h1>
-            <p style="display:none"> <!-- minimized text intentionally --> </p>
           </div>
         </div>
 
         <div class="header-right">
-          <button id="adminBtn" class="btn btn-admin" title="Admin login">Admin</button>
-          <button id="logoutBtn" class="btn btn-ghost hidden" title="Logout">Logout</button>
+          <button id="themeToggle" class="btn btn-theme" aria-label="Toggle theme">Theme</button>
         </div>
       </div>
 
-      <!-- action bar -->
-      <div class="action-bar" role="toolbar" aria-label="quick actions">
-        <div id="themeAction" class="action" title="Toggle theme"><span class="dot"></span> Theme</div>
-        <div id="csvAction" class="action" title="Export transactions">Export CSV</div>
-        <div id="plAction" class="action" title="Download P&L">P&L PDF</div>
+      <!-- action bar (CSV, P&L etc) -->
+      <div class="action-bar" role="toolbar" aria-label="Quick actions">
+        <div id="exportCsv" class="action" title="Export transactions to CSV">Export CSV</div>
+        <div id="generatePL" class="action" title="Show P&L">Show P&L</div>
+        <div id="downloadPL" class="action" title="Download P&L PDF">Download P&L</div>
       </div>
 
-      <!-- main area -->
+      <!-- main grid -->
       <div class="grid">
-        <!-- left -->
+        <!-- left column -->
         <section>
-          <div class="card" aria-labelledby="addTitle">
-            <h2 id="addTitle">Add Transaction</h2>
-
+          <div class="card">
+            <h2>Add Transaction</h2>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <div style="flex:1">
                 <label for="txDate">Date</label>
@@ -210,27 +158,29 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <textarea id="txNotes" placeholder="Optional"></textarea>
 
             <div class="row" style="margin-top:10px;align-items:center">
-              <button id="addBtn" class="btn btn-admin" disabled>Add</button>
-              <button id="clearBtn" class="btn btn-ghost">Clear</button>
-              <div id="adminHint" class="small" style="color:var(--muted)">Admin required to edit</div>
+              <button id="addTxBtn" class="btn btn-theme" disabled>Add</button>
+              <button id="clearBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Clear</button>
+              <div id="adminHint" class="small" style="color:var(--muted)">Admin required to add/delete</div>
             </div>
 
-            <div id="txMsg" class="small" style="margin-top:8px;color:var(--success)"></div>
+            <div id="txMsg" class="small" style="margin-top:8px;color:var(--good)"></div>
           </div>
 
           <div class="card" style="margin-top:12px">
-            <h3 style="margin-bottom:8px">Transactions</h3>
+            <h3>Transactions</h3>
+
             <div style="display:flex;gap:6px;flex-wrap:wrap">
               <input id="fMonth" type="month" style="min-width:160px">
               <select id="fType"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
               <select id="fCategory"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
             </div>
+
             <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
               <input id="fMin" type="number" placeholder="Min" style="width:100px">
               <input id="fMax" type="number" placeholder="Max" style="width:100px">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
+              <button id="applyFilter" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Apply</button>
+              <button id="resetFilter" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Reset</button>
             </div>
 
             <div class="table-wrap" style="margin-top:12px">
@@ -242,14 +192,22 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
           </div>
         </section>
 
-        <!-- right -->
+        <!-- right column -->
         <aside>
           <div class="card">
-            <h3>Summary</h3>
-            <div class="stats">
-              <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
-              <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
-              <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
+            <h3>Overview</h3>
+
+            <!-- cute dashboard panel blocking wallpaper -->
+            <div class="dashboard-panel" role="region" aria-label="summary">
+              <div class="left">
+                <div class="dashboard-card"><h4>Total Income</h4><p id="statIncome">0</p></div>
+                <div class="dashboard-card"><h4>Total Expense</h4><p id="statExpense">0</p></div>
+                <div class="dashboard-card"><h4>Balance</h4><p id="statBalance">0</p></div>
+              </div>
+              <div style="min-width:120px;text-align:right">
+                <div style="font-size:12px;color:var(--muted)">Admin:</div>
+                <div id="adminStatus" style="font-weight:700">Not signed in</div>
+              </div>
             </div>
             <div id="budgetAlert" class="small" style="margin-top:8px;color:var(--danger)"></div>
           </div>
@@ -258,7 +216,7 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <h3>Budgets</h3>
             <div id="budgetsArea"></div>
             <div style="margin-top:8px">
-              <button id="saveBudgetsBtn" class="btn btn-ghost" disabled>Save Budgets</button>
+              <button id="saveBudgetsBtn" class="btn" disabled style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Save Budgets</button>
             </div>
           </div>
 
@@ -274,175 +232,228 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
             <label for="reportMonth">Month (optional)</label>
             <input id="reportMonth" type="month">
             <div style="display:flex;gap:8px;margin-top:8px">
-              <button id="genPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
+              <button id="genPLBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Show</button>
+              <button id="downloadPLBtn" class="btn btn-theme">Download</button>
             </div>
             <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
           </div>
         </aside>
       </div>
 
-      <div style="height:8px"></div>
+      <div style="height:6px"></div>
       <div style="text-align:center;color:var(--muted);font-size:12px">Made for Selian</div>
+
     </div>
   </div>
 
-  <!-- ADMIN MODAL -->
+  <!-- ADMIN modal (slow, deep, thoughtful prompt) -->
   <div id="adminModal" class="modal" aria-hidden="true">
-    <div class="panel">
-      <h3>Admin</h3>
-      <p class="small" style="color:var(--muted)">Enter password</p>
-      <div style="position:relative;margin-top:10px">
-        <input id="adminInput" type="password" placeholder="Password" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)">
-        <button id="toggleShow" style="position:absolute;right:8px;top:8px;padding:6px;border-radius:8px;border:0;background:transparent;color:var(--muted)">Show</button>
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+      <h2 id="adminTitle">Administrator access</h2>
+      <p class="admin-prompt">
+        This area grants editing control. <span class="deep">Please enter the administrator password slowly — reflect before confirming.</span>
+        <br><br>
+        <small style="color:var(--muted)">Only use this on trusted devices. Session stays active until you sign out.</small>
+      </p>
+
+      <div style="position:relative">
+        <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text)">
+        <button id="adminShow" style="position:absolute;right:8px;top:8px;padding:6px;border-radius:8px;background:transparent;border:0;color:var(--muted)">Show</button>
       </div>
-      <div style="text-align:right;margin-top:12px">
-        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
-        <button id="adminOk" class="btn btn-admin">Login</button>
+
+      <div class="controls" style="margin-top:12px">
+        <button id="adminCancel" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Cancel</button>
+        <button id="adminConfirm" class="btn btn-theme">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- EDIT MODAL -->
+  <!-- EDIT modal -->
   <div id="editModal" class="modal" aria-hidden="true">
     <div class="panel">
-      <h3>Edit</h3>
+      <h3>Edit transaction</h3>
       <label>Date</label><input id="editDate" type="date">
       <label>Type</label><select id="editType"><option>Income</option><option>Expense</option></select>
       <label>Category</label><select id="editCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
       <label>Amount</label><input id="editAmount" type="number">
       <label>Notes</label><textarea id="editNotes"></textarea>
-      <div style="text-align:right;margin-top:8px">
-        <button id="editCancel" class="btn btn-ghost">Cancel</button>
-        <button id="editSave" class="btn btn-admin">Save</button>
+      <div style="text-align:right;margin-top:10px">
+        <button id="editCancel" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Cancel</button>
+        <button id="editSave" class="btn btn-theme">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- RECEIPT MODAL -->
+  <!-- RECEIPT modal -->
   <div id="receiptModal" class="modal" aria-hidden="true">
-    <div class="panel receipt-content" id="receiptInner"></div>
+    <div class="panel" id="receiptInner"></div>
   </div>
 
-  <!-- libs -->
+  <!-- dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- logic -->
+  <!-- SCRIPT: all logic -->
   <script>
-  /* ===== settings & storage keys ===== */
+  // CONFIG
   const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-  const STORAGE_TX = "selelo_vfinal_tx";
-  const STORAGE_BUDGETS = "selelo_vfinal_budgets";
-  const STORAGE_ADMIN = "selelo_vfinal_admin";
-  const STORAGE_THEME = "selelo_vfinal_theme";
+  const KEY_TX = "sel_tx_v2";
+  const KEY_BUD = "sel_bud_v2";
+  const KEY_ADMIN = "sel_admin_v2";
+  const KEY_THEME = "sel_theme_v2";
 
-  let transactions = JSON.parse(localStorage.getItem(STORAGE_TX) || "[]");
-  let budgets = JSON.parse(localStorage.getItem(STORAGE_BUDGETS) || "{}");
-  let isAdmin = localStorage.getItem(STORAGE_ADMIN) === "true";
+  // state
+  let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+  let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
+  let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
   let editIndex = null;
 
-  /* ===== element refs ===== */
-  const adminBtn = document.getElementById('adminBtn'), logoutBtn = document.getElementById('logoutBtn');
-  const adminModal = document.getElementById('adminModal'), adminInput = document.getElementById('adminInput'), adminOk = document.getElementById('adminOk'), adminCancel = document.getElementById('adminCancel'), toggleShow = document.getElementById('toggleShow');
-  const addBtn = document.getElementById('addBtn'), clearBtn = document.getElementById('clearBtn'), txDate = document.getElementById('txDate'), txType = document.getElementById('txType'), txCategory = document.getElementById('txCategory'), txAmount = document.getElementById('txAmount'), txNotes = document.getElementById('txNotes'), txMsg = document.getElementById('txMsg');
+  // elements
+  const themeToggle = document.getElementById('themeToggle');
+  const exportCsv = document.getElementById('exportCsv');
+  const generatePL = document.getElementById('generatePL');
+  const downloadPL = document.getElementById('downloadPL');
+
+  const adminBtn = document.getElementById('adminBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const adminModal = document.getElementById('adminModal');
+  const adminPassword = document.getElementById('adminPassword');
+  const adminShow = document.getElementById('adminShow');
+  const adminCancel = document.getElementById('adminCancel');
+  const adminConfirm = document.getElementById('adminConfirm');
+
+  const addTxBtn = document.getElementById('addTxBtn'), clearBtn = document.getElementById('clearBtn');
+  const txDate = document.getElementById('txDate'), txType = document.getElementById('txType'), txCategory = document.getElementById('txCategory'), txAmount = document.getElementById('txAmount'), txNotes = document.getElementById('txNotes'), txMsg = document.getElementById('txMsg');
+
   const txTbody = document.getElementById('txTbody');
-  const applyFilter = document.getElementById('applyFilter'), resetFilter = document.getElementById('resetFilter'), fMonth = document.getElementById('fMonth'), fType = document.getElementById('fType'), fCategory = document.getElementById('fCategory'), fMin = document.getElementById('fMin'), fMax = document.getElementById('fMax'), fNotes = document.getElementById('fNotes');
-  const statIncome = document.getElementById('statIncome'), statExpense = document.getElementById('statExpense'), statBalance = document.getElementById('statBalance'), budgetAlert = document.getElementById('budgetAlert');
+  const applyFilter = document.getElementById('applyFilter'), resetFilter = document.getElementById('resetFilter');
+  const fMonth = document.getElementById('fMonth'), fType = document.getElementById('fType'), fCategory = document.getElementById('fCategory'), fMin = document.getElementById('fMin'), fMax = document.getElementById('fMax'), fNotes = document.getElementById('fNotes');
+
+  const statIncome = document.getElementById('statIncome'), statExpense = document.getElementById('statExpense'), statBalance = document.getElementById('statBalance'), adminStatus = document.getElementById('adminStatus'), txMsgBox = document.getElementById('txMsg');
   const budgetsArea = document.getElementById('budgetsArea'), saveBudgetsBtn = document.getElementById('saveBudgetsBtn');
+
   const genPLBtn = document.getElementById('genPLBtn'), downloadPLBtn = document.getElementById('downloadPLBtn'), reportMonth = document.getElementById('reportMonth'), plView = document.getElementById('plView');
-  const csvAction = document.getElementById('csvAction') || document.getElementById('csvAction'); // fallback
-  const themeAction = document.getElementById('themeAction'), plAction = document.getElementById('plAction');
+
   const editModal = document.getElementById('editModal'), editDate = document.getElementById('editDate'), editType = document.getElementById('editType'), editCategory = document.getElementById('editCategory'), editAmount = document.getElementById('editAmount'), editNotes = document.getElementById('editNotes'), editCancel = document.getElementById('editCancel'), editSave = document.getElementById('editSave');
+
   const receiptModal = document.getElementById('receiptModal'), receiptInner = document.getElementById('receiptInner');
 
-  /* chart contexts */
   const chartIECtx = document.getElementById('chartIE').getContext('2d'), chartCatCtx = document.getElementById('chartCat').getContext('2d'), chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
   let chartIE, chartCat, chartTrend;
 
-  /* ===== utilities ===== */
-  function saveTx(){ localStorage.setItem(STORAGE_TX, JSON.stringify(transactions)); }
-  function saveBud(){ localStorage.setItem(STORAGE_BUDGETS, JSON.stringify(budgets)); }
-  function setAdmin(v){ isAdmin = !!v; localStorage.setItem(STORAGE_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
-  function notify(msg, color='var(--success)'){ txMsg.style.color = color; txMsg.textContent = msg; setTimeout(()=>{ if(txMsg.textContent===msg) txMsg.textContent=''; },3000); }
-  function openModal(el){ el.style.display='flex'; el.setAttribute('aria-hidden','false'); }
-  function closeModal(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
+  // helpers
+  function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); localStorage.setItem(KEY_BUD, JSON.stringify(budgets)); }
+  function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
+  function notify(msg, color='var(--good)'){ txMsgBox.style.color = color; txMsgBox.textContent = msg; setTimeout(()=>{ if(txMsgBox.textContent===msg) txMsgBox.textContent=''; }, 3500); }
+  function openModal(m){ m.style.display='flex'; m.setAttribute('aria-hidden','false'); }
+  function closeModal(m){ m.style.display='none'; m.setAttribute('aria-hidden','true'); }
   function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click', e=>{ if(e.target===m) closeModal(m); }));
 
-  /* ===== admin flow ===== */
-  adminBtn.addEventListener('click', ()=>{ adminInput.value=''; adminInput.type='password'; toggleShow.textContent='Show'; openModal(adminModal); });
-  adminCancel.addEventListener('click', ()=> closeModal(adminModal));
-  toggleShow.addEventListener('click', ()=> { adminInput.type = adminInput.type === 'password' ? 'text' : 'password'; toggleShow.textContent = adminInput.type==='password' ? 'Show':'Hide'; });
-  adminOk.addEventListener('click', ()=> {
-    const p = (adminInput.value||'').trim();
-    if(!ADMIN_PASSWORDS.includes(p)){ alert('Wrong password'); return; }
-    setAdmin(true); closeModal(adminModal); notify('Admin active');
-  });
-  logoutBtn.addEventListener('click', ()=> {
-    if(!confirm('Logout admin?')) return;
-    setAdmin(false); notify('Logged out', 'orange');
-  });
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m); }));
 
+  // initial UI apply
   function applyAdminUI(){
-    if(isAdmin){
-      addBtn.disabled = false; saveBudgetsBtn.disabled = false;
-      adminBtn.classList.add('hidden'); logoutBtn.classList.remove('hidden'); document.getElementById('adminHint').classList.add('hidden');
-    } else {
-      addBtn.disabled = true; saveBudgetsBtn.disabled = true;
-      adminBtn.classList.remove('hidden'); logoutBtn.classList.add('hidden'); document.getElementById('adminHint').classList.remove('hidden');
-    }
+    addTxBtn.disabled = !isAdmin;
+    saveBudgetsBtn.disabled = !isAdmin;
+    adminStatus.textContent = isAdmin ? 'Signed in' : 'Not signed in';
+    document.getElementById('adminHint').style.display = isAdmin ? 'none' : 'block';
+    // hide/show logout button: we removed logout from header to stay minimal, so show prompt style in dashboard only
+    // leave admin button always visible to sign in again
   }
 
-  /* ===== add/edit/delete ===== */
-  addBtn.addEventListener('click', ()=>{
+  // theme toggle (dark default)
+  (function(){
+    const saved = localStorage.getItem(KEY_THEME) || 'dark';
+    if(saved === 'light'){ document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed'; document.documentElement.style.setProperty('--text','#0b1a20'); document.documentElement.style.setProperty('--muted','#55606a'); }
+    else { /* default dark already */ }
+  })();
+  themeToggle.addEventListener('click', ()=>{
+    const cur = localStorage.getItem(KEY_THEME) || 'dark';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(KEY_THEME, next);
+    if(next === 'light'){
+      document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
+      document.documentElement.style.setProperty('--text','#0b1a20');
+      document.documentElement.style.setProperty('--muted','#55606a');
+      notify('Light theme');
+    } else {
+      document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url(\"2.png\") center/cover no-repeat fixed';
+      document.documentElement.style.setProperty('--text','#e8f3fb');
+      document.documentElement.style.setProperty('--muted','#9aa7b3');
+      notify('Dark theme');
+    }
+  });
+
+  // ADMIN prompt flow (slow, deep, thoughtful)
+  adminBtn.addEventListener('click', ()=>{ adminPassword.value=''; adminPassword.type='password'; adminShow.textContent='Show'; openModal(adminModal); });
+  adminShow.addEventListener('click', ()=>{ adminPassword.type = adminPassword.type === 'password' ? 'text' : 'password'; adminShow.textContent = adminPassword.type === 'password' ? 'Show' : 'Hide'; });
+  adminCancel.addEventListener('click', ()=> closeModal(adminModal));
+  adminConfirm.addEventListener('click', ()=>{
+    const p = (adminPassword.value || '').trim();
+    if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
+    setAdmin(true);
+    closeModal(adminModal);
+    notify('Administrator session started', 'var(--good)');
+  });
+
+  // add transaction (admin-only)
+  addTxBtn.addEventListener('click', ()=>{
     if(!isAdmin){ alert('Admin only'); return; }
-    const date = txDate.value, type = txType.value, category = txCategory.value, amount = parseFloat(txAmount.value), notes = txNotes.value||'';
+    const date = txDate.value, type = txType.value, category = txCategory.value, amount = parseFloat(txAmount.value), notes = txNotes.value || '';
     if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
     transactions.push({date,type,category,amount,notes});
-    saveTx(); renderTransactions(); notify('Added');
+    saveAll(); renderTransactions(); notify('Transaction saved');
     txDate.value=''; txAmount.value=''; txNotes.value='';
   });
 
-  function requestEdit(i){
+  clearBtn.addEventListener('click', ()=>{ txDate.value=''; txAmount.value=''; txNotes.value=''; });
+
+  // edit flow (admin)
+  function openEdit(i){
     if(!isAdmin){ alert('Admin only'); return; }
-    editIndex = i; const t = transactions[i];
-    editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes||'';
+    editIndex = i;
+    const t = transactions[i];
+    editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
     openModal(editModal);
   }
-  editCancel.addEventListener('click', ()=> { closeModal(editModal); editIndex=null; });
-  editSave.addEventListener('click', ()=> {
+  editCancel.addEventListener('click', ()=> { closeModal(editModal); editIndex = null; });
+  editSave.addEventListener('click', ()=>{
     if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
-    if(editIndex==null) return;
-    const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value||'' };
-    if(!nd.date || isNaN(nd.amount) || nd.amount<=0){ alert('Invalid'); return; }
-    transactions[editIndex] = nd; saveTx(); renderTransactions(); closeModal(editModal); notify('Saved'); editIndex=null;
+    if(editIndex == null) return;
+    const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || ''};
+    if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid'); return; }
+    transactions[editIndex] = nd;
+    saveAll(); renderTransactions(); closeModal(editModal); notify('Edited');
+    editIndex = null;
   });
 
-  function requestDelete(i){
+  // delete (admin)
+  function removeTx(i){
     if(!isAdmin){ alert('Admin only'); return; }
-    if(!confirm('Delete?')) return;
-    transactions.splice(i,1); saveTx(); renderTransactions(); notify('Deleted','var(--danger)');
+    if(!confirm('Delete transaction?')) return;
+    transactions.splice(i,1);
+    saveAll(); renderTransactions(); notify('Deleted','var(--danger)');
   }
 
-  /* ===== budgets ===== */
+  // budgets
   const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
-  function cssSafe(n){ return n.replace(/\s+/g,'_'); }
+  function cssSafe(s){ return s.replace(/\s+/g,'_'); }
   function renderBudgetInputs(){
-    budgetsArea.innerHTML=''; CATS.forEach(cat=>{
-      const d = document.createElement('div'); d.style.marginBottom='8px';
-      d.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${cssSafe(cat)}" type="number" style="margin-top:6px">`;
-      budgetsArea.appendChild(d);
-      const el = d.querySelector('input'); if(el) el.value = budgets[cat]||'';
+    budgetsArea.innerHTML = '';
+    CATS.forEach(c => {
+      const wrapper = document.createElement('div'); wrapper.style.marginBottom = '8px';
+      wrapper.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${cssSafe(c)}" type="number" style="margin-top:6px">`;
+      budgetsArea.appendChild(wrapper);
+      const el = wrapper.querySelector('input'); if(el) el.value = budgets[c] || '';
     });
   }
-  saveBudgetsBtn.addEventListener('click', ()=> {
+  saveBudgetsBtn.addEventListener('click', ()=>{
     if(!isAdmin){ alert('Admin only'); return; }
-    CATS.forEach(cat=>{ const v = parseFloat(document.getElementById('b_'+cssSafe(cat)).value)||0; budgets[cat]=v; });
-    saveBud(); renderTransactions(); notify('Budgets saved');
+    CATS.forEach(c => { const v = parseFloat(document.getElementById('b_'+cssSafe(c)).value) || 0; budgets[c] = v; });
+    saveAll(); renderTransactions(); notify('Budgets saved');
   });
 
-  /* ===== filters & render ===== */
+  // filters & render
   applyFilter.addEventListener('click', renderTransactions);
   resetFilter.addEventListener('click', ()=>{ fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
 
@@ -450,118 +461,153 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(-
     if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
     if(fType.value && t.type !== fType.value) return false;
     if(fCategory.value && t.category !== fCategory.value) return false;
-    const min = parseFloat(fMin.value)||-Infinity, max = parseFloat(fMax.value)||Infinity;
+    const min = parseFloat(fMin.value) || -Infinity, max = parseFloat(fMax.value) || Infinity;
     if(t.amount < min || t.amount > max) return false;
-    const nf = (fNotes.value||'').toLowerCase(); if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
+    const nf = (fNotes.value || '').toLowerCase(); if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
     return true;
   }
 
   function renderTransactions(){
-    txTbody.innerHTML=''; let inc=0, exp=0;
-    transactions.forEach((t,i)=>{
+    txTbody.innerHTML = '';
+    let totInc = 0, totExp = 0;
+    transactions.forEach((t,i) => {
       if(!passesFilters(t)) return;
       const tr = document.createElement('tr');
       const actions = [];
-      if(isAdmin) actions.push(`<button class="action-btn" data-action="edit" data-index="${i}" style="background:#f0b429">Edit</button>`, `<button class="action-btn" data-action="delete" data-index="${i}" style="background:var(--danger);color:#000">Del</button>`);
-      actions.push(`<button class="action-btn" data-action="receipt" data-index="${i}" style="background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#001">Receipt</button>`);
+      if(isAdmin){
+        actions.push(`<button class="action-btn" data-act="edit" data-i="${i}" style="background:#f0b429">Edit</button>`);
+        actions.push(`<button class="action-btn" data-act="del" data-i="${i}" style="background:var(--danger);color:#000">Del</button>`);
+      }
+      actions.push(`<button class="action-btn" data-act="rcp" data-i="${i}" style="background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001">Receipt</button>`);
       tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>${t.amount.toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
       txTbody.appendChild(tr);
-      if(t.type==='Income') inc+=t.amount; if(t.type==='Expense') exp+=t.amount;
+      if(t.type === 'Income') totInc += t.amount;
+      if(t.type === 'Expense') totExp += t.amount;
     });
-    statIncome.textContent = inc.toLocaleString(); statExpense.textContent = exp.toLocaleString(); statBalance.textContent = (inc-exp).toLocaleString();
+    statIncome.textContent = totInc.toLocaleString();
+    statExpense.textContent = totExp.toLocaleString();
+    statBalance.textContent = (totInc - totExp).toLocaleString();
     checkBudgetAlerts(); renderCharts();
   }
 
-  txTbody.addEventListener('click', e=>{
-    const b = e.target.closest('button[data-action]'); if(!b) return;
-    const a = b.dataset.action, idx = parseInt(b.dataset.index);
-    if(a==='edit') requestEdit(idx); if(a==='delete') requestDelete(idx); if(a==='receipt') openReceipt(idx);
+  txTbody.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const act = btn.dataset.act, idx = parseInt(btn.dataset.i);
+    if(act === 'edit') openEdit(idx);
+    if(act === 'del') removeTx(idx);
+    if(act === 'rcp') openReceipt(idx);
   });
 
+  // budget alerts
   function checkBudgetAlerts(){
-    let msg=''; CATS.forEach(cat=>{ const spent = transactions.filter(t=>t.type==='Expense' && t.category===cat).reduce((a,b)=>a+b.amount,0); if(budgets[cat] && budgets[cat]>0 && spent>budgets[cat]) msg+=`Budget exceeded ${cat}: ${spent} > ${budgets[cat]}. `; });
-    budgetAlert.textContent = msg;
+    let msg = '';
+    CATS.forEach(c => {
+      const spent = transactions.filter(t => t.type === 'Expense' && t.category === c).reduce((a,b)=>a+b.amount,0);
+      if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded for ${c}: ${spent.toLocaleString()} > ${budgets[c].toLocaleString()}. `;
+    });
+    document.getElementById('budgetAlert').textContent = msg;
   }
 
-  /* ===== charts ===== */
+  // charts
   function renderCharts(){
     const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
     const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
     if(chartIE) chartIE.destroy();
-    chartIE = new Chart(chartIECtx, { type:'doughnut', data:{labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-    const catMap={}; transactions.forEach(t=> catMap[t.category] = (catMap[t.category]||0) + t.amount);
+    chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+    const catMap = {};
+    transactions.forEach(t => catMap[t.category] = (catMap[t.category]||0) + t.amount);
     if(chartCat) chartCat.destroy();
     chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
-    const monthly={}; transactions.forEach(t=>{ const m=t.date.slice(0,7); monthly[m]=monthly[m]||{Income:0,Expense:0}; monthly[m][t.type]+=t.amount; });
-    const months = Object.keys(monthly).sort(); const incArr = months.map(m=>monthly[m].Income||0); const expArr = months.map(m=>monthly[m].Expense||0);
+    const monthly = {};
+    transactions.forEach(t => { const m = t.date.slice(0,7); monthly[m] = monthly[m] || {Income:0,Expense:0}; monthly[m][t.type] += t.amount; });
+    const months = Object.keys(monthly).sort();
+    const incArr = months.map(m => monthly[m].Income || 0);
+    const expArr = months.map(m => monthly[m].Expense || 0);
     if(chartTrend) chartTrend.destroy();
     chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true},{label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}}});
   }
 
-  /* ===== CSV export ===== */
-  document.getElementById('csvAction').addEventListener('click', ()=> {
-    if(!transactions.length){ alert('No transactions'); return; }
+  // CSV export
+  exportCsv.addEventListener('click', ()=>{
+    if(!transactions.length){ alert('No transactions to export'); return; }
     let csv = 'Date,Type,Category,Amount,Notes\n';
-    transactions.forEach(t=> csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
+    transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
     const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download='transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   });
 
-  /* ===== P&L show & PDF ===== */
+  // P&L show & download
   genPLBtn.addEventListener('click', generatePL);
   downloadPLBtn.addEventListener('click', downloadPLPdf);
-  plAction.addEventListener('click', downloadPLPdf);
+  generatePL.addEventListener('click', ()=>{ generatePL(); openModal(document.getElementById('receiptModal')); }); // show in a modal for quick view
+  downloadPL.addEventListener('click', downloadPLPdf);
 
   function generatePL(){
-    const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0); const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
+    const m = reportMonth.value;
+    const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
+    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
+    const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
     let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}`;
-    const breakdown={}; arr.forEach(t=> breakdown[t.category] = (breakdown[t.category]||0)+t.amount);
-    html += '<div style="margin-top:8px"><strong>By category:</strong><ul>'; for(const k in breakdown) html+=`<li>${k}: ${breakdown[k].toLocaleString()}</li>`; html+='</ul></div>';
+    const breakdown = {};
+    arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
+    html += '<div style="margin-top:8px"><strong>Category:</strong><ul>';
+    for(const k in breakdown) html += `<li>${k}: ${breakdown[k].toLocaleString()}</li>`;
+    html += '</ul></div>';
     plView.innerHTML = html;
   }
 
   function downloadPLPdf(){
-    const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0); const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    doc.setFontSize(16); doc.text('Selelo — Profit & Loss',14,20); doc.setFontSize(11); doc.text(`Period: ${m||'All'}`,14,32);
-    doc.text(`Income: ${inc}`,14,44); doc.text(`Expense: ${exp}`,14,52); doc.text(`Net: ${inc-exp}`,14,60);
-    let y=72; doc.text('Category breakdown:',14,y); y+=8; const breakdown={}; arr.forEach(t=> breakdown[t.category]=(breakdown[t.category]||0)+t.amount);
-    for(const k in breakdown){ doc.text(`${k}: ${breakdown[k]}`,16,y); y+=8; if(y>270){ doc.addPage(); y=20; } }
-    doc.save(`PL_${m||'all'}.pdf`);
+    const m = reportMonth.value;
+    const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
+    const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
+    const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16); doc.text('Selelo — Profit & Loss', 14, 20);
+    doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+    doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${(inc-exp)}`, 14, 60);
+    let y = 72;
+    doc.text('Category breakdown:', 14, y); y += 8;
+    const breakdown = {};
+    arr.forEach(t => breakdown[t.category] = (breakdown[t.category]||0) + t.amount);
+    for(const k in breakdown){
+      doc.text(`${k}: ${breakdown[k]}`, 16, y); y += 8;
+      if(y > 270){ doc.addPage(); y = 20; }
+    }
+    doc.save(`PL_${m || 'all'}.pdf`);
   }
 
-  /* ===== receipt ===== */
+  // receipt/print
   function openReceipt(i){
-    const t = transactions[i]; const inv = 'INV-'+(10000+i); const issued = new Date().toLocaleDateString();
-    const html = `<div class="printable"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3><div style="margin-top:10px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div><div style="text-align:center;margin-top:12px"><img src="Business%20Email%20Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div><div style="text-align:center;margin-top:12px"><button id="printRec" class="btn btn-admin">Print</button> <button id="closeRec" class="btn btn-ghost">Close</button></div></div>`;
+    const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
+    const html = `<div class="printable"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3><div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div><div style="text-align:center;margin-top:12px"><img src="Business%20Email%20Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div><div style="text-align:center;margin-top:12px"><button id="printRec" class="btn btn-theme">Print</button> <button id="closeRec" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03)">Close</button></div></div>`;
     receiptInner.innerHTML = html; openModal(receiptModal);
-    document.getElementById('printRec').addEventListener('click', ()=> { const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>'+receiptInner.innerHTML+'</body></html>'); w.document.close(); setTimeout(()=>w.print(),300); });
+    document.getElementById('printRec').addEventListener('click', ()=> {
+      const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=>w.print(),300);
+    });
     document.getElementById('closeRec').addEventListener('click', ()=> closeModal(receiptModal));
   }
 
-  /* ===== theme toggle (dark default) ===== */
-  (function(){ const t = localStorage.getItem(STORAGE_THEME) || 'dark'; if(t==='dark'){ document.documentElement.style.setProperty('--bg-dark','#07121a'); } else { document.documentElement.style.setProperty('--bg-dark','#f4f7fa'); document.body.style.color='#07121a'; } })();
-  themeAction.addEventListener('click', ()=> {
-    const cur = localStorage.getItem(STORAGE_THEME) || 'dark'; const next = cur==='dark' ? 'light':'dark';
-    if(next==='dark'){ document.documentElement.style.setProperty('--bg-dark','#07121a'); document.body.style.color='var(--text)'; } else { document.documentElement.style.setProperty('--bg-dark','#f4f7fa'); document.body.style.color='#07121a'; }
-    localStorage.setItem(STORAGE_THEME, next); notify('Theme updated');
-  });
-
-  /* ===== init ===== */
+  // init
   function init(){
-    isAdmin = localStorage.getItem(STORAGE_ADMIN) === "true";
-    applyAdminUI(); renderBudgetInputs(); renderTransactions();
+    // load admin session
+    isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
+    applyAdminUI();
+    renderBudgetInputs();
+    renderTransactions();
+    renderCharts();
   }
   init();
 
-  /* helper functions already used are defined */
-  function renderBudgetInputs(){ budgetsArea.innerHTML=''; CATS.forEach(cat=>{ const d=document.createElement('div'); d.style.marginBottom='8px'; d.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${cssSafe(cat)}" type="number" style="margin-top:6px">`; budgetsArea.appendChild(d); const el=d.querySelector('input'); if(el) el.value = budgets[cat]||''; }); }
-  function cssSafe(s){ return s.replace(/\s+/g,'_'); }
+  // renderBudgetInputs, renderTransactions, renderCharts, etc. are defined above and used
 
-  /* save on unload */
-  window.addEventListener('beforeunload', ()=> { saveTx(); saveBud(); });
+  // expose remove and edit to window for debug (not necessary normally)
+  window.__SELELO = {transactions, budgets};
+
+  // save on unload
+  window.addEventListener('beforeunload', ()=> { saveAll(); });
+
   </script>
 </body>
-            </html>
+</html>
