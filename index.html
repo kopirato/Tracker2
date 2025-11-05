@@ -3,794 +3,731 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SELELO BUSINESS TRACKER</title>
+<title>SELELO BUSINESS PARK</title>
 
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg-dark: #07121a;
-  --bg-light: #f6fbff;
-  --text-dark: #e8f3fb;
-  --muted-dark: #9aa7b3;
-  --card-bg: rgba(255,255,255,0.03);
-  --glass: rgba(255,255,255,0.03);
-  --accent-cyan: #6ee7ff;
-  --accent-purple: #b38bff;
-  --accent: linear-gradient(90deg,var(--accent-cyan),var(--accent-purple));
-  --success: #4ade80;
-  --danger: #ff6b6b;
-  --radius: 14px;
-  --maxw: 1100px;
-  --shadow: 0 18px 60px rgba(0,0,0,0.6);
-}
+  :root{
+    --bg-dark:#07121a;
+    --glass-veil: rgba(255,255,255,0.04);
+    --glass-strong: rgba(255,255,255,0.06);
+    --muted:#a7b7c4;
+    --text:#eaf6ff;
+    --accent1:#6ee7ff;
+    --accent2:#b38bff;
+    --good:#4ade80;
+    --danger:#ff6b6b;
+    --radius:14px;
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial; -webkit-font-smoothing:antialiased; color:var(--text);}
+  body{
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)),
+      url('2.png') center/cover no-repeat fixed;
+    background-color:var(--bg-dark);
+  }
 
-/* Base reset */
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text-dark);-webkit-font-smoothing:antialiased}
-body{
-  background: radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url('2.png') center/cover no-repeat fixed;
-  background-color:var(--bg-dark);
-  -webkit-font-smoothing:antialiased;
-}
+  /* page shell */
+  .shell{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45));}
 
-/* Shell and main card */
-.shell{min-height:100vh;padding:20px;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.45))}
-.app{width:100%;max-width:var(--maxw);border-radius:18px;padding:14px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.02));box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,0.02)}
+  /* main glass card (covers content area strongly) */
+  .card {
+    width:100%;
+    max-width:var(--maxw);
+    border-radius:18px;
+    padding:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    backdrop-filter: blur(8px) saturate(120%);
+    border: 1px solid rgba(255,255,255,0.03);
+    min-height:84vh; /* stretches to bottom mostly */
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
 
-/* Header minimal */
-.header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 4px}
-.header-left{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:10px;object-fit:cover;border:2px solid rgba(255,255,255,0.04);box-shadow:0 8px 28px rgba(0,0,0,0.6)}
-.title h1{margin:0;font-size:18px;font-weight:700;letter-spacing:0.6px}
-.header-right{display:flex;align-items:center;gap:8px}
+  /* header */
+  .top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .logo {
+    width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(0,0,0,0.6);
+  }
+  h1 { margin:0; font-size:20px; letter-spacing:1px; font-weight:700; text-transform:uppercase; color:var(--text); }
+  .sub { color:var(--muted); font-size:12px; margin-top:2px; }
 
-/* Buttons */
-.btn{border:0;padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
-.btn-theme{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text-dark)}
-.btn-admin{background:var(--accent);color:#021224;box-shadow:0 10px 28px rgba(99,102,241,0.06)}
+  /* top controls */
+  .controls { display:flex; gap:8px; align-items:center; }
+  .btn {
+    border:0; padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px;
+  }
+  .btn-theme { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); }
+  .btn-admin { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; box-shadow:0 12px 30px rgba(99,102,241,0.06); }
 
-/* Action bar */
-.action-bar{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;padding:8px;border-radius:12px}
-.action{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02);font-weight:700;color:var(--text-dark);cursor:pointer}
+  /* layout: main grid */
+  .grid { display:grid; grid-template-columns: 1fr 380px; gap:18px; align-items:start; margin-top:6px; }
+  @media (max-width:980px){ .grid { grid-template-columns: 1fr; } }
 
-/* Grid layout */
-.grid{margin-top:14px;display:grid;grid-template-columns:1fr 360px;gap:16px}
-@media(max-width:980px){ .grid{grid-template-columns:1fr} }
+  /* left column cards */
+  .panel { background:transparent; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.02); }
 
-/* Card */
-.card{background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
-.card h2{margin:0 0 8px 0;font-size:16px}
-.small{font-size:12px;color:var(--muted-dark);}
+  /* Add transaction - admin highlighted */
+  .admin-panel { transition: all 300ms ease; border-radius:12px; padding:12px; position:relative; }
+  .admin-panel.admin-active {
+    box-shadow: 0 20px 60px rgba(110,231,255,0.04), inset 0 0 30px rgba(110,231,255,0.02);
+    border: 1px solid rgba(110,231,255,0.14);
+    background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.01));
+  }
 
-/* =========================
-   ADMIN-FOCUSED VISUALS
-   ========================= */
+  .fields { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+  .field { flex:1; min-width:140px; display:flex; flex-direction:column; gap:6px; }
+  label { font-size:13px; color:var(--muted); font-weight:600; }
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    background:transparent; border:1px solid rgba(255,255,255,0.06); padding:10px 12px; border-radius:10px; color:var(--text); font-size:14px;
+    transition: box-shadow 160ms ease, border-color 160ms ease;
+  }
+  textarea { min-height:72px; resize:vertical; }
+  input:focus, select:focus, textarea:focus {
+    outline:none;
+    border-color:rgba(110,231,255,0.9);
+    box-shadow:0 8px 32px rgba(110,231,255,0.06);
+  }
 
-/* Make the Add-Transaction area more visible (neon border when admin) */
-.admin-panel {
-  transition:all 300ms ease;
-  border-radius:12px;
-  padding:12px;
-  position:relative;
-  border:1px solid rgba(255,255,255,0.03);
-  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.02));
-}
-.admin-panel .admin-title {
-  display:flex;align-items:center;gap:8px;justify-content:space-between;
-}
-.admin-panel.admin-active {
-  box-shadow:0 12px 40px rgba(99,102,241,0.08), 0 0 30px rgba(110,231,255,0.06) inset;
-  border: 2px solid rgba(110,231,255,0.12);
-  background: linear-gradient(180deg, rgba(110,231,255,0.02), rgba(179,139,255,0.02));
-}
+  .actions-row { display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+  .btn-add { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; padding:10px 14px; border-radius:10px; font-weight:800; }
 
-/* Inputs - focus state */
-input:focus, select:focus, textarea:focus {
-  outline:none;
-  border-color: rgba(110,231,255,0.6);
-  box-shadow: 0 6px 22px rgba(110,231,255,0.06);
-}
+  /* table */
+  .table-wrap { margin-top:12px; overflow:auto; border-radius:10px; border:1px solid rgba(255,255,255,0.02); }
+  table { width:100%; border-collapse:collapse; min-width:640px; }
+  thead th { text-align:left; font-size:13px; padding:10px; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.03); }
+  tbody td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.02); color:var(--text); font-size:14px; vertical-align:middle; }
 
-/* Add button - more prominent for admin */
-.btn-add {
-  border-radius:10px;padding:10px 14px;font-weight:800;letter-spacing:0.4px;
-}
+  /* delete button style */
+  .delete-btn { background:transparent; border:1px solid rgba(255,92,92,0.95); color:rgba(255,92,92,0.95); padding:6px 8px; border-radius:8px; font-weight:700; cursor:pointer; }
+  .delete-btn:hover { background:rgba(255,92,92,0.95); color:#fff; box-shadow:0 8px 22px rgba(255,92,92,0.14); }
 
-/* Delete button styling: visible but elegant */
-.delete-btn {
-  background:transparent;
-  border:1px solid rgba(255,92,92,0.9);
-  color:rgba(255,92,92,0.95);
-  padding:6px 8px;border-radius:8px;font-weight:700;cursor:pointer;
-  transition:all 220ms ease;
-}
-.delete-btn:hover {
-  background: rgba(255,92,92,0.95);
-  color:#fff;
-  box-shadow:0 8px 22px rgba(255,92,92,0.18);
-}
+  /* action btn */
+  .action-btn { padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700; }
 
-/* Receipt / action button */
-.action-btn {
-  padding:6px 8px;border-radius:8px;border:0;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-purple));color:#001;
-}
+  /* dashboard right */
+  .dashboard { display:flex; flex-direction:column; gap:12px; }
+  .dashboard .stat-grid { display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; }
+  .stat { flex:1; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01)); padding:10px; border-radius:10px; text-align:center; border:1px solid rgba(255,255,255,0.02); }
+  .stat h4 { margin:0;color:var(--muted); font-size:12px; }
+  .stat p { margin:8px 0 0; font-weight:800; font-size:18px; }
 
-/* Admin-badge for clarity */
-.admin-badge {
-  display:inline-block;padding:6px 10px;border-radius:999px;font-weight:800;color:#021224;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-purple));
-  box-shadow:0 8px 26px rgba(110,231,255,0.06);
-}
+  /* charts */
+  canvas { width:100% !important; height:140px !important; border-radius:8px; background:transparent; }
 
-/* =========================
-   RESPONSIVE & MODAL
-   ========================= */
+  /* modal top-center admin */
+  .modal { position:fixed; left:50%; transform:translateX(-50%); top:6%; width:92%; max-width:420px; z-index:1200; display:none; padding:0; }
+  .modal-panel { border-radius:12px; padding:16px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03)); border:1px solid rgba(255,255,255,0.03); box-shadow:0 30px 80px rgba(0,0,0,0.6); backdrop-filter: blur(8px); }
+  .modal.show { display:block; animation: drop 220ms ease; }
+  @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.995); opacity:0 } to { transform: translateX(-50%) translateY(0) scale(1); opacity:1 } }
+  .modal h3 { margin:0 0 8px 0; font-size:18px; }
+  .modal p { margin:0 0 12px 0; color:var(--muted); font-size:13px; line-height:1.4; }
 
-/* Table */
-.table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-thead th{padding:10px;text-align:left;color:var(--muted-dark);border-bottom:1px solid rgba(255,255,255,0.02)}
-tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.02);color:var(--text-dark)}
+  .modal .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
 
-/* Centered admin modal with animation */
-.modal{display:none;position:fixed;inset:0;background:rgba(3,6,10,0.6);z-index:999;align-items:center;justify-content:center;padding:18px}
-.modal .modal-panel {
-  width:100%;max-width:520px;border-radius:14px;padding:18px;background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
-  border:1px solid rgba(255,255,255,0.03);
-  transform: translateY(-8px) scale(0.98);
-  opacity: 0;
-  transition: transform 260ms cubic-bezier(.2,.9,.3,1), opacity 260ms ease;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-}
-.modal.show .modal-panel { transform: translateY(0) scale(1); opacity:1; }
+  /* receipt printable */
+  .receipt { background:#fff; color:#000; padding:12px; border-radius:8px; }
 
-/* Modal title and prompt */
-.modal h2{margin:0 0 8px 0}
-.admin-prompt{color:var(--muted-dark);line-height:1.45;margin-bottom:12px}
-.modal input{width:100%;padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--text-dark);font-size:15px}
-.modal .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+  /* footer */
+  footer { margin-top:auto; text-align:center; color:var(--muted); font-size:13px; padding-top:12px; }
 
-/* Printable receipt */
-.printable{background:#fff;color:#000;padding:16px;border-radius:8px}
-.printable img{max-width:180px;display:block;margin:8px auto}
-
-/* small screens */
-@media(max-width:520px){
-  .logo{width:48px;height:48px}
-  .title h1{font-size:16px}
-  .grid{gap:10px}
-  .card{padding:10px}
-  .dashboard-card p{font-size:14px}
-  table{font-size:13px}
-  input,select,textarea{padding:10px}
-  .modal .modal-panel{padding:12px}
-}
+  /* small screens */
+  @media (max-width:640px){
+    .logo{width:52px;height:52px}
+    .fields { flex-direction:column; }
+    table{ min-width:520px; }
+    .modal { top:4%; max-width:92%; }
+  }
 </style>
 </head>
 <body>
   <div class="shell">
-    <main class="app" role="application" aria-label="Selelo Business Tracker">
+    <main class="card" role="application" aria-label="Selelo Business Park">
 
-      <!-- HEADER -->
-      <header class="header" role="banner">
-        <div class="header-left">
+      <!-- TOP: header -->
+      <div class="top" role="banner">
+        <div class="brand">
           <img src="11.png" alt="logo" class="logo" onerror="this.style.display='none'">
-          <div class="title"><h1>SELELO BUSINESS TRACKER</h1></div>
+          <div>
+            <h1>SELELO BUSINESS PARK</h1>
+            <div class="sub">Clear, local bookkeeping — offline, private</div>
+          </div>
         </div>
 
-        <div class="header-right" role="navigation" aria-label="Top controls">
-          <button id="adminToggle" class="btn btn-admin" title="Admin sign in/out">Admin Login</button>
-          <button id="themeToggle" class="btn btn-theme" title="Toggle theme">Toggle Theme</button>
+        <div class="controls" role="toolbar" aria-label="Top controls">
+          <button id="adminBtn" class="btn btn-admin" title="Admin sign in / out">Admin Login</button>
+          <button id="themeBtn" class="btn btn-theme" title="Toggle dark/light">Toggle Theme</button>
         </div>
-      </header>
-
-      <!-- ACTION BAR -->
-      <div class="action-bar" role="toolbar" aria-label="Quick actions">
-        <div id="exportCSV" class="action" title="Export transactions to CSV">Export CSV</div>
-        <div id="showPL" class="action" title="Show P&L">Show P&L</div>
-        <div id="downloadPL" class="action" title="Download P&L PDF">Download P&L</div>
       </div>
 
-      <!-- GRID -->
-      <section class="grid">
-        <!-- LEFT: add transaction & list -->
-        <div>
-          <!-- Add transaction panel (visible admin accent) -->
-          <div id="addPanel" class="card admin-panel" aria-labelledby="addTitle">
-            <div class="admin-title">
-              <h2 id="addTitle">Add Transaction</h2>
+      <!-- ACTIONS (export, P&L etc) -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button id="exportCsv" class="btn btn-theme">Export CSV</button>
+        <button id="genPL" class="btn btn-theme">Generate P&L</button>
+        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="grid" role="main">
+
+        <!-- LEFT: Add + Table -->
+        <section>
+          <div id="addPanel" class="panel admin-panel" aria-labelledby="addTitle">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <h2 id="addTitle" style="margin:0;font-size:16px">Add Transaction</h2>
+                <div class="sub">Admin only — sign in to modify</div>
+              </div>
               <div id="adminBadgeWrap"></div>
             </div>
 
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <div style="flex:1">
-                <label for="date">Date</label>
-                <input id="date" type="date" aria-label="Transaction date">
+            <div class="fields" role="form" aria-label="Add transaction form">
+              <div class="field">
+                <label for="txDate">Date</label>
+                <input id="txDate" type="date" />
               </div>
-              <div style="width:140px">
-                <label for="type">Type</label>
-                <select id="type" aria-label="Transaction type"><option>Income</option><option>Expense</option></select>
+
+              <div class="field">
+                <label for="txType">Type</label>
+                <select id="txType">
+                  <option>Income</option>
+                  <option>Expense</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="txCategory">Category</label>
+                <select id="txCategory">
+                  <option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="txAmount">Amount</label>
+                <input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00" />
               </div>
             </div>
 
-            <label for="category">Category</label>
-            <select id="category">
-              <option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
-            </select>
-
-            <label for="amount">Amount</label>
-            <input id="amount" type="number" min="0" step="0.01" placeholder="0.00">
-
-            <label for="notes">Notes</label>
-            <textarea id="notes" placeholder="Optional"></textarea>
-
-            <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">
-              <button id="addBtn" class="btn btn-admin btn-add" disabled>Add Transaction</button>
-              <button id="clear" class="btn btn-theme">Clear</button>
-              <div id="adminHint" class="small" style="color:var(--muted-dark)">Admin required to add/delete</div>
+            <div style="margin-top:10px">
+              <label for="txNotes">Notes</label>
+              <textarea id="txNotes" placeholder="Optional notes..."></textarea>
             </div>
-            <div id="msg" class="small" style="margin-top:8px;color:var(--success)"></div>
+
+            <div class="actions-row">
+              <button id="addBtn" class="btn btn-add" title="Add transaction" disabled>Add</button>
+              <button id="clearBtn" class="btn btn-theme">Clear</button>
+              <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
+            </div>
           </div>
 
           <!-- Transactions list -->
-          <div class="card" style="margin-top:12px">
-            <h3>Transactions</h3>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-              <input id="filterMonth" type="month" style="min-width:160px">
-              <select id="filterType"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
-              <select id="filterCategory"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+          <div class="panel" style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Transactions</h3>
+              <div class="sub">Filter and manage</div>
             </div>
 
-            <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
-              <input id="filterMin" type="number" placeholder="Min" style="width:100px">
-              <input id="filterMax" type="number" placeholder="Max" style="width:100px">
-              <input id="filterNotes" type="text" placeholder="Notes contains" style="flex:1">
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+              <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
+              <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+                <option value="">All Types</option><option>Income</option><option>Expense</option>
+              </select>
+              <select id="fCategory" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
+                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+              </select>
+              <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
+              <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
+              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
               <button id="applyFilter" class="btn btn-theme">Apply</button>
               <button id="resetFilter" class="btn btn-theme">Reset</button>
             </div>
 
             <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="Transactions table">
+              <table aria-label="transactions">
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txBody"></tbody>
+                <tbody id="txTbody"></tbody>
               </table>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- RIGHT: dashboard -->
+        <!-- RIGHT: Dashboard -->
         <aside>
-          <div class="card">
-            <h3>Overview</h3>
-
-            <div class="dashboard-panel" role="region" aria-label="summary">
-              <div style="display:flex;gap:10px;align-items:center">
-                <div class="dashboard-card"><h4>Total Income</h4><p id="sumIncome">0</p></div>
-                <div class="dashboard-card"><h4>Total Expense</h4><p id="sumExpense">0</p></div>
-                <div class="dashboard-card"><h4>Balance</h4><p id="sumBalance">0</p></div>
-              </div>
-              <div style="min-width:120px;text-align:right">
-                <div class="small" style="color:var(--muted-dark)">Admin</div>
-                <div id="adminStatus" style="font-weight:800;color:var(--muted-dark)">Signed out</div>
-              </div>
+          <div class="panel dashboard">
+            <h3 style="margin:0">Overview</h3>
+            <div class="stat-grid" style="margin-top:10px">
+              <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
+              <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
+              <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
             </div>
-
-            <div id="budgetAlert" class="small" style="margin-top:8px;color:var(--danger)"></div>
+            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
 
-          <div class="card" style="margin-top:12px">
-            <h3>Budgets</h3>
-            <div id="budArea"></div>
-            <div style="margin-top:8px">
-              <button id="saveBud" class="btn btn-theme" disabled>Save Budgets</button>
-            </div>
+          <div class="panel" style="margin-top:12px">
+            <h3 style="margin:0">Budgets</h3>
+            <div id="budgetsArea" style="margin-top:8px"></div>
+            <div style="margin-top:8px"><button id="saveBudgets" class="btn btn-theme" disabled>Save Budgets</button></div>
           </div>
 
-          <div class="card" style="margin-top:12px">
-            <h3>Charts</h3>
+          <div class="panel" style="margin-top:12px">
+            <h3 style="margin:0">Charts</h3>
             <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
             <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
             <div style="margin-top:8px"><canvas id="chartTrend" height="140"></canvas></div>
           </div>
 
-          <div class="card" style="margin-top:12px">
-            <h3>Profit & Loss</h3>
-            <label for="reportMonth">Month (optional)</label>
-            <input id="reportMonth" type="month">
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button id="showPLCard" class="btn btn-theme">Show</button>
-              <button id="downloadPLCard" class="btn btn-admin">Download</button>
+          <div class="panel" style="margin-top:12px">
+            <h3 style="margin:0">Profit & Loss</h3>
+            <label for="reportMonth" class="sub" style="display:block;margin-top:8px">Month (optional)</label>
+            <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"/>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button id="showPLBtn" class="btn btn-theme">Show</button>
+              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
             </div>
-            <div id="plArea" style="margin-top:10px;color:var(--muted-dark);font-size:13px"></div>
+            <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
           </div>
         </aside>
-      </section>
+      </div>
 
-      <div style="height:8px"></div>
-      <div style="text-align:center;color:var(--muted-dark);font-size:12px">Made for Selian</div>
+      <!-- footer -->
+      <footer>
+        Proudly developed by Seltec | +254745151968 | Twitter: @Its_SelianFr
+      </footer>
     </main>
   </div>
 
-  <!-- ADMIN MODAL (centered, responsive, animated) -->
-  <div id="adminModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal-panel" role="document">
-      <h2>Administrator access</h2>
-      <p class="admin-prompt">This opens the administration interface — changes allow adding, editing, and deleting transactions. <span style="display:block;margin-top:8px;font-weight:700">Enter admin password carefully.</span></p>
-
-      <div style="position:relative">
-        <input id="adminPass" type="password" placeholder="Admin password" aria-label="Admin password">
-        <button id="togglePass" style="position:absolute;right:8px;top:8px;padding:6px;border-radius:8px;border:0;background:transparent;color:var(--muted-dark)">Show</button>
-      </div>
-
-      <div class="modal-actions" style="margin-top:12px">
+  <!-- ADMIN MODAL top-center -->
+  <div id="adminModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-panel">
+      <h3>Administrator access</h3>
+      <p style="margin:6px 0 10px 0; color:var(--muted)">Enter admin password to unlock add/edit/delete. Session is stored locally on this device.</p>
+      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);"/>
+      <div class="modal-actions">
         <button id="adminCancel" class="btn btn-theme">Cancel</button>
         <button id="adminConfirm" class="btn btn-admin">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- EDIT MODAL -->
-  <div id="editModal" class="modal" aria-hidden="true">
+  <!-- EDIT MODAL (centered on screen) -->
+  <div id="editModal" class="modal" style="top:40%; transform:translateX(-50%) translateY(-50%);" aria-hidden="true">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
-      <label>Date</label><input id="editDate" type="date">
-      <label>Type</label><select id="editType"><option>Income</option><option>Expense</option></select>
-      <label>Category</label><select id="editCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-      <label>Amount</label><input id="editAmount" type="number">
-      <label>Notes</label><textarea id="editNotes"></textarea>
+      <label style="font-size:13px;color:var(--muted);">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"/>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"><option>Income</option><option>Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"/>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px"></textarea>
       <div style="text-align:right;margin-top:10px">
-        <button id="editCancel" class="btn btn-theme">Cancel</button>
-        <button id="editSave" class="btn btn-admin">Save</button>
+        <button id="editCancelBtn" class="btn btn-theme">Cancel</button>
+        <button id="editSaveBtn" class="btn btn-admin">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- RECEIPT MODAL -->
-  <div id="receiptModal" class="modal" aria-hidden="true">
+  <!-- RECEIPT / P&L modal (reuses modal structure) -->
+  <div id="receiptModal" class="modal" style="top:8%;transform:translateX(-50%);" aria-hidden="true">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
-  <!-- Libraries -->
+  <!-- libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- SCRIPT: functionality -->
   <script>
   (function(){
-    /* CONFIG */
+    // ===== config =====
     const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-    const KEY_TX = "selelo_tx_v3";
-    const KEY_BUD = "selelo_bud_v3";
-    const KEY_ADMIN = "selelo_admin_v3";
-    const KEY_THEME = "selelo_theme_v3";
+    const KEY_TX = "sel_tx_v_final";
+    const KEY_BUD = "sel_bud_v_final";
+    const KEY_ADMIN = "sel_admin_v_final";
+    const KEY_THEME = "sel_theme_v_final";
 
-    /* STATE */
+    // ===== state =====
     let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
     let budgets = JSON.parse(localStorage.getItem(KEY_BUD) || "{}");
     let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
     let editIndex = null;
 
-    /* ELEMENTS */
-    const adminToggle = document.getElementById('adminToggle');
-    const themeToggle = document.getElementById('themeToggle');
+    // ===== elements =====
+    const adminBtn = document.getElementById('adminBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const exportCsvBtn = document.getElementById('exportCsv');
+    const genPLBtn = document.getElementById('genPL');
+    const downloadPLBtn = document.getElementById('downloadPL');
 
-    const exportCSV = document.getElementById('exportCSV');
-    const showPL = document.getElementById('showPL');
-    const downloadPL = document.getElementById('downloadPL');
-
+    const txDate = document.getElementById('txDate');
+    const txType = document.getElementById('txType');
+    const txCategory = document.getElementById('txCategory');
+    const txAmount = document.getElementById('txAmount');
+    const txNotes = document.getElementById('txNotes');
     const addBtn = document.getElementById('addBtn');
-    const clearBtn = document.getElementById('clear');
-    const dateEl = document.getElementById('date');
-    const typeEl = document.getElementById('type');
-    const categoryEl = document.getElementById('category');
-    const amountEl = document.getElementById('amount');
-    const notesEl = document.getElementById('notes');
-    const msgEl = document.getElementById('msg');
+    const clearBtn = document.getElementById('clearBtn');
+    const txMsg = document.getElementById('txMsg');
 
-    const txBody = document.getElementById('txBody');
-
+    const txTbody = document.getElementById('txTbody');
+    const fMonth = document.getElementById('fMonth');
+    const fType = document.getElementById('fType');
+    const fCategory = document.getElementById('fCategory');
+    const fMin = document.getElementById('fMin');
+    const fMax = document.getElementById('fMax');
+    const fNotes = document.getElementById('fNotes');
     const applyFilter = document.getElementById('applyFilter');
     const resetFilter = document.getElementById('resetFilter');
-    const filterMonth = document.getElementById('filterMonth');
-    const filterType = document.getElementById('filterType');
-    const filterCategory = document.getElementById('filterCategory');
-    const filterMin = document.getElementById('filterMin');
-    const filterMax = document.getElementById('filterMax');
-    const filterNotes = document.getElementById('filterNotes');
 
-    const sumIncome = document.getElementById('sumIncome');
-    const sumExpense = document.getElementById('sumExpense');
-    const sumBalance = document.getElementById('sumBalance');
-    const adminStatus = document.getElementById('adminStatus');
+    const statIncome = document.getElementById('statIncome');
+    const statExpense = document.getElementById('statExpense');
+    const statBalance = document.getElementById('statBalance');
     const adminBadgeWrap = document.getElementById('adminBadgeWrap');
-    const adminHint = document.getElementById('adminHint');
+    const adminStatus = document.getElementById('adminStatus');
 
-    const budArea = document.getElementById('budArea');
-    const saveBud = document.getElementById('saveBud');
+    const budgetsArea = document.getElementById('budgetsArea');
+    const saveBudgetsBtn = document.getElementById('saveBudgets');
 
-    const chartIECtx = document.getElementById('chartIE').getContext('2d');
-    const chartCatCtx = document.getElementById('chartCat').getContext('2d');
-    const chartTrendCtx = document.getElementById('chartTrend').getContext('2d');
+    // charts
+    const chartIECtx = document.getElementById('chartIE')?.getContext('2d');
+    const chartCatCtx = document.getElementById('chartCat')?.getContext('2d');
+    const chartTrendCtx = document.getElementById('chartTrend')?.getContext('2d');
     let chartIE, chartCat, chartTrend;
 
-    const genPLBtn = document.getElementById('showPL');
-    const downloadPLBtnCard = document.getElementById('downloadPLCard') || document.getElementById('downloadPLCard');
-    const reportMonth = document.getElementById('reportMonth');
-    const plArea = document.getElementById('plArea');
-
-    // admin modal elements
     const adminModal = document.getElementById('adminModal');
-    const adminPass = document.getElementById('adminPass');
-    const togglePass = document.getElementById('togglePass');
+    const adminPassword = document.getElementById('adminPassword');
     const adminCancel = document.getElementById('adminCancel');
     const adminConfirm = document.getElementById('adminConfirm');
 
-    // edit modal elements
     const editModal = document.getElementById('editModal');
     const editDate = document.getElementById('editDate');
     const editType = document.getElementById('editType');
     const editCategory = document.getElementById('editCategory');
     const editAmount = document.getElementById('editAmount');
     const editNotes = document.getElementById('editNotes');
-    const editCancel = document.getElementById('editCancel');
-    const editSave = document.getElementById('editSave');
+    const editCancelBtn = document.getElementById('editCancelBtn');
+    const editSaveBtn = document.getElementById('editSaveBtn');
 
-    // receipt modal
     const receiptModal = document.getElementById('receiptModal');
     const receiptInner = document.getElementById('receiptInner');
 
-    /* UTILITIES */
-    function saveAll(){
-      localStorage.setItem(KEY_TX, JSON.stringify(transactions));
-      localStorage.setItem(KEY_BUD, JSON.stringify(budgets));
-    }
-    function setAdmin(on){
-      isAdmin = !!on;
-      localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false");
-      applyAdminUI();
-    }
-    function openModal(el){ el.classList.add('show'); el.style.display = 'flex'; el.setAttribute('aria-hidden','false'); el.querySelector('.modal-panel')?.focus?.(); }
-    function closeModal(el){ el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
-    function notify(text, color='var(--success)'){ msgEl.style.color = color; msgEl.textContent = text; setTimeout(()=> { if(msgEl.textContent === text) msgEl.textContent = ''; }, 3000); }
-    function esc(s){ return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
+    const reportMonth = document.getElementById('reportMonth');
+    const showPLBtn = document.getElementById('showPLBtn');
+    const downloadPLBtnModal = document.getElementById('downloadPLBtn');
 
+    // util
+    function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); localStorage.setItem(KEY_BUD, JSON.stringify(budgets)); }
+    function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function openModal(el){ el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
+    function closeModal(el){ el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
+    function notify(text, color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = text; setTimeout(()=> { if(txMsg.textContent===text) txMsg.textContent=''; }, 3000); }
+
+    // close modals clicking outside
     document.querySelectorAll('.modal').forEach(m => {
-      m.addEventListener('click', e => { if(e.target === m) closeModal(m); });
+      m.addEventListener('click', (e)=> { if(e.target === m) closeModal(m); });
     });
 
-    /* THEME TOGGLE (default dark) */
-    (function applyTheme(){
+    // theme
+    (function applySavedTheme(){
       const t = localStorage.getItem(KEY_THEME) || 'dark';
       if(t === 'light'){
-        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text-dark', '#07121a');
-        document.documentElement.style.setProperty('--muted-dark', '#55606a');
-      } else {
-        /* dark default */
+        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#07121a');
+        document.documentElement.style.setProperty('--muted','#55606a');
       }
     })();
-    themeToggle.addEventListener('click', ()=>{
+    themeBtn.addEventListener('click', ()=>{
       const cur = localStorage.getItem(KEY_THEME) || 'dark';
-      const nxt = cur === 'dark' ? 'light' : 'dark';
-      localStorage.setItem(KEY_THEME, nxt);
-      if(nxt === 'light'){
-        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text-dark', '#07121a');
-        document.documentElement.style.setProperty('--muted-dark', '#55606a');
-        notify('Light theme', 'var(--accent-cyan)');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(KEY_THEME, next);
+      if(next === 'light'){
+        document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url(\"2.png\") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#07121a');
+        document.documentElement.style.setProperty('--muted','#55606a');
       } else {
-        document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
-        document.documentElement.style.setProperty('--text-dark', '#e8f3fb');
-        document.documentElement.style.setProperty('--muted-dark', '#9aa7b3');
-        notify('Dark theme', 'var(--accent-purple)');
+        document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url(\"2.png\") center/cover no-repeat fixed';
+        document.documentElement.style.setProperty('--text','#eaf6ff');
+        document.documentElement.style.setProperty('--muted','#a7b7c4');
       }
     });
 
-    /* ADMIN LOGIN FLOW */
-    adminToggle.addEventListener('click', ()=>{
+    // admin flow
+    adminBtn.addEventListener('click', ()=>{
       if(isAdmin){
         if(!confirm('Sign out admin?')) return;
         setAdmin(false);
-        notify('Admin signed out', 'var(--muted-dark)');
+        notify('Signed out', 'var(--muted)');
         return;
       }
-      adminPass.value = '';
-      adminPass.type = 'password';
-      togglePass.textContent = 'Show';
+      adminPassword.value = '';
       openModal(adminModal);
-      setTimeout(()=> adminPass.focus(), 120);
-    });
-
-    togglePass.addEventListener('click', ()=>{
-      if(adminPass.type === 'password'){ adminPass.type = 'text'; togglePass.textContent = 'Hide'; }
-      else { adminPass.type = 'password'; togglePass.textContent = 'Show'; }
+      setTimeout(()=> adminPassword.focus(), 120);
     });
 
     adminCancel.addEventListener('click', ()=> closeModal(adminModal));
-
     adminConfirm.addEventListener('click', ()=>{
-      const p = (adminPass.value||'').trim();
+      const p = (adminPassword.value||'').trim();
       if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
       setAdmin(true);
       closeModal(adminModal);
-      notify('Admin session active', 'var(--success)');
+      notify('Admin session active', 'var(--good)');
     });
 
     function applyAdminUI(){
-      // visual indication
+      // card highlight
       const addPanel = document.getElementById('addPanel');
       if(isAdmin){
         addPanel.classList.add('admin-active');
+        adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
         adminStatus.textContent = 'Signed in';
-        adminBadgeWrap.innerHTML = '<span class="admin-badge">ADMIN MODE</span>';
       } else {
         addPanel.classList.remove('admin-active');
-        adminStatus.textContent = 'Signed out';
         adminBadgeWrap.innerHTML = '';
+        adminStatus.textContent = 'Signed out';
       }
-
-      // enable/disable buttons
       addBtn.disabled = !isAdmin;
-      saveBud.disabled = !isAdmin;
-      // inner table rerender to show/hide edit/delete
+      saveBudgetsBtn.disabled = !isAdmin;
       renderTransactions();
     }
 
-    /* ADD TRANSACTION (admin only) */
+    // add transaction
     addBtn.addEventListener('click', ()=>{
       if(!isAdmin){ alert('Admin only'); return; }
-      const date = dateEl.value;
-      const type = typeEl.value;
-      const category = categoryEl.value;
-      const amount = parseFloat(amountEl.value);
-      const notes = notesEl.value || '';
-      if(!date || isNaN(amount) || amount <= 0){ alert('Enter a valid date and amount'); return; }
-      transactions.push({date, type, category, amount, notes});
-      saveAll();
-      renderTransactions();
-      notify('Transaction added');
-      dateEl.value=''; amountEl.value=''; notesEl.value='';
+      const date = txDate.value, type = txType.value, category = txCategory.value;
+      const amount = parseFloat(txAmount.value), notes = txNotes.value || '';
+      if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
+      transactions.push({date,type,category,amount,notes});
+      saveAll(); renderTransactions(); notify('Transaction added');
+      txDate.value=''; txAmount.value=''; txNotes.value='';
     });
 
-    clearBtn.addEventListener('click', ()=> { dateEl.value=''; amountEl.value=''; notesEl.value=''; });
+    clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
 
-    /* EDIT FLOW */
-    function openEdit(i){
+    // edit flow
+    function openEdit(index){
       if(!isAdmin){ alert('Admin only'); return; }
-      editIndex = i;
-      const t = transactions[i];
-      editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes||'';
+      editIndex = index;
+      const t = transactions[index];
+      editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
       openModal(editModal);
     }
-    editCancel.addEventListener('click', ()=> { closeModal(editModal); editIndex = null; });
-    editSave.addEventListener('click', ()=>{
+    editCancelBtn.addEventListener('click', ()=> { closeModal(editModal); editIndex = null; });
+    editSaveBtn.addEventListener('click', ()=>{
       if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
-      if(editIndex === null) return;
-      const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value||'' };
+      if(editIndex == null) return;
+      const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || '' };
       if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid'); return; }
       transactions[editIndex] = nd;
-      saveAll();
-      renderTransactions();
-      closeModal(editModal);
-      notify('Transaction updated');
+      saveAll(); renderTransactions(); closeModal(editModal); notify('Transaction edited');
       editIndex = null;
     });
 
-    /* DELETE */
-    function removeTx(i){
+    // delete
+    function deleteTransaction(index){
       if(!isAdmin){ alert('Admin only'); return; }
       if(!confirm('Delete transaction?')) return;
-      transactions.splice(i,1);
-      saveAll();
-      renderTransactions();
-      notify('Transaction deleted', 'var(--danger)');
+      transactions.splice(index,1);
+      saveAll(); renderTransactions(); notify('Deleted', 'var(--danger)');
     }
 
-    /* BUDGETS */
+    // budgets
     const CATS = ['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
     function safeKey(s){ return s.replace(/\s+/g,'_'); }
-
     function renderBudgetInputs(){
-      budArea.innerHTML = '';
-      CATS.forEach(cat => {
-        const wr = document.createElement('div'); wr.style.marginBottom = '8px';
-        wr.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${safeKey(cat)}" type="number" style="margin-top:6px">`;
-        budArea.appendChild(wr);
-        const el = wr.querySelector('input'); if(el) el.value = budgets[cat] || '';
+      budgetsArea.innerHTML = '';
+      CATS.forEach(c => {
+        const dv = document.createElement('div'); dv.style.marginBottom='8px';
+        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px" />`;
+        budgetsArea.appendChild(dv);
+        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
       });
     }
-
-    saveBud.addEventListener('click', ()=>{
+    saveBudgetsBtn.addEventListener('click', ()=>{
       if(!isAdmin){ alert('Admin only'); return; }
-      CATS.forEach(cat => {
-        const val = parseFloat(document.getElementById('b_'+safeKey(cat)).value) || 0;
-        budgets[cat] = val;
-      });
-      saveAll();
-      renderTransactions();
-      notify('Budgets saved');
+      CATS.forEach(c => { budgets[c] = parseFloat(document.getElementById('b_'+safeKey(c)).value) || 0; });
+      saveAll(); renderTransactions(); notify('Budgets saved');
     });
 
-    /* FILTERS & RENDER */
-    document.getElementById('applyFilter').addEventListener('click', renderTransactions);
-    document.getElementById('resetFilter').addEventListener('click', ()=>{
-      filterMonth.value=''; filterType.value=''; filterCategory.value=''; filterMin.value=''; filterMax.value=''; filterNotes.value=''; renderTransactions();
-    });
+    // filters
+    applyFilter.addEventListener('click', renderTransactions);
+    resetFilter.addEventListener('click', ()=> { fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
 
-    function passes(t){
-      if(filterMonth.value && !t.date.startsWith(filterMonth.value)) return false;
-      if(filterType.value && t.type !== filterType.value) return false;
-      if(filterCategory.value && t.category !== filterCategory.value) return false;
-      const min = parseFloat(filterMin.value) || -Infinity;
-      const max = parseFloat(filterMax.value) || Infinity;
+    function passesFilters(t){
+      if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
+      if(fType.value && t.type !== fType.value) return false;
+      if(fCategory.value && t.category !== fCategory.value) return false;
+      const min = parseFloat(fMin.value) || -Infinity, max = parseFloat(fMax.value) || Infinity;
       if(t.amount < min || t.amount > max) return false;
-      const nf = (filterNotes.value || '').toLowerCase();
+      const nf = (fNotes.value||'').toLowerCase();
       if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
       return true;
     }
 
+    // render transactions
     function renderTransactions(){
-      txBody.innerHTML = '';
-      let totalInc = 0, totalExp = 0;
+      txTbody.innerHTML = '';
+      let inc = 0, exp = 0;
       transactions.forEach((t,i) => {
-        if(!passes(t)) return;
+        if(!passesFilters(t)) return;
         const tr = document.createElement('tr');
-        const cells = [];
-        cells.push(`<td>${esc(t.date)}</td>`);
-        cells.push(`<td>${esc(t.type)}</td>`);
-        cells.push(`<td>${esc(t.category)}</td>`);
-        cells.push(`<td>${t.amount.toLocaleString()}</td>`);
-        cells.push(`<td>${esc(t.notes||'')}</td>`);
         const actions = [];
         if(isAdmin){
           actions.push(`<button class="action-btn" data-act="edit" data-i="${i}">Edit</button>`);
-          actions.push(`<button class="delete-btn" data-act="delete" data-i="${i}">Delete</button>`);
+          actions.push(`<button class="delete-btn" data-act="del" data-i="${i}">Delete</button>`);
         }
-        actions.push(`<button class="action-btn" data-act="receipt" data-i="${i}">Receipt</button>`);
-        cells.push(`<td>${actions.join(' ')}</td>`);
-        tr.innerHTML = cells.join('');
-        txBody.appendChild(tr);
-        if(t.type === 'Income') totalInc += t.amount;
-        if(t.type === 'Expense') totalExp += t.amount;
+        actions.push(`<button class="action-btn" data-act="rcpt" data-i="${i}">Receipt</button>`);
+        tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>KES ${t.amount.toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
+        txTbody.appendChild(tr);
+        if(t.type === 'Income') inc += t.amount;
+        if(t.type === 'Expense') exp += t.amount;
       });
-      sumIncome.textContent = totalInc.toLocaleString();
-      sumExpense.textContent = totalExp.toLocaleString();
-      sumBalance.textContent = (totalInc - totalExp).toLocaleString();
+      statIncome.textContent = inc.toLocaleString();
+      statExpense.textContent = exp.toLocaleString();
+      statBalance.textContent = (inc - exp).toLocaleString();
       checkBudgetAlerts();
       renderCharts();
     }
 
-    // delegation for table actions
-    txBody.addEventListener('click', (e) => {
+    // table action delegation
+    txTbody.addEventListener('click', (e)=>{
       const b = e.target.closest('button[data-act]');
       if(!b) return;
-      const act = b.dataset.act;
-      const idx = parseInt(b.dataset.i);
+      const act = b.dataset.act, idx = parseInt(b.dataset.i);
       if(act === 'edit') openEdit(idx);
-      if(act === 'delete') removeTx(idx);
-      if(act === 'receipt') openReceipt(idx);
+      if(act === 'del') deleteTransaction(idx);
+      if(act === 'rcpt') openReceipt(idx);
     });
 
-    /* BUDGET ALERTS */
+    // budget alerts
     function checkBudgetAlerts(){
       let msg = '';
-      CATS.forEach(cat => {
-        const spent = transactions.filter(t => t.type === 'Expense' && t.category === cat).reduce((a,b)=>a+b.amount,0);
-        if(budgets[cat] && budgets[cat] > 0 && spent > budgets[cat]) msg += `Budget exceeded: ${cat} (${spent.toLocaleString()} > ${budgets[cat].toLocaleString()}). `;
+      CATS.forEach(c => {
+        const spent = transactions.filter(t=>t.type==='Expense' && t.category===c).reduce((a,b)=>a+b.amount,0);
+        if(budgets[c] && budgets[c] > 0 && spent > budgets[c]) msg += `Budget exceeded for ${c}: ${spent.toLocaleString()} > ${budgets[c].toLocaleString()}. `;
       });
       document.getElementById('budgetAlert').textContent = msg;
     }
 
-    /* CHARTS */
+    // charts
     function renderCharts(){
       const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
       if(chartIE) chartIE.destroy();
-      chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}}});
+      chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
       const catMap = {};
-      transactions.forEach(t => catMap[t.category] = (catMap[t.category]||0) + t.amount);
+      transactions.forEach(t=> catMap[t.category] = (catMap[t.category]||0) + t.amount );
       if(chartCat) chartCat.destroy();
-      chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}}});
-      const monthly = {};
-      transactions.forEach(t => { const m = t.date.slice(0,7); monthly[m] = monthly[m] || {Income:0,Expense:0}; monthly[m][t.type] += t.amount; });
-      const months = Object.keys(monthly).sort();
-      const incArr = months.map(m => monthly[m].Income || 0);
-      const expArr = months.map(m => monthly[m].Expense || 0);
+      chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} });
+      const months = {};
+      transactions.forEach(t => { const m = t.date.slice(0,7); months[m] = months[m] || {Income:0,Expense:0}; months[m][t.type] += t.amount; });
+      const keys = Object.keys(months).sort();
+      const incArr = keys.map(k=>months[k].Income||0);
+      const expArr = keys.map(k=>months[k].Expense||0);
       if(chartTrend) chartTrend.destroy();
-      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{ label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true }, { label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true }] }, options:{responsive:true, tension:0.3, plugins:{legend:{position:'bottom'}}}});
+      chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:keys, datasets:[{label:'Income', data:incArr, borderColor:'#4ade80', backgroundColor:'rgba(74,222,128,0.12)', fill:true}, {label:'Expense', data:expArr, borderColor:'#ff6b6b', backgroundColor:'rgba(255,107,107,0.12)', fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} });
     }
 
-    /* EXPORT CSV */
-    exportCSV.addEventListener('click', () => {
-      if(!transactions.length){ alert('No transactions'); return; }
+    // export CSV
+    exportCsvBtn.addEventListener('click', ()=>{
+      if(!transactions.length){ alert('No transactions to export'); return; }
       let csv = 'Date,Type,Category,Amount,Notes\n';
       transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
+      const blob = new Blob([csv], { type:'text/csv' }); const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
 
-    /* P&L */
-    document.getElementById('showPL').addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
-    document.getElementById('downloadPL').addEventListener('click', downloadPLPdf);
-    document.getElementById('downloadPLCard') && document.getElementById('downloadPLCard').addEventListener('click', downloadPLPdf);
+    // P&L
+    genPLBtn.addEventListener('click', generatePL);
+    downloadPLBtn.addEventListener('click', downloadPLPdf);
+    document.getElementById('showPLBtn').addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
 
     function generatePL(){
-      const m = reportMonth.value;
-      const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
+      const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}`;
-      const br = {};
-      arr.forEach(t => br[t.category] = (br[t.category]||0) + t.amount);
-      html += '<div style="margin-top:8px"><strong>By category:</strong><ul>';
+      const br = {}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
+      let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category:</strong><ul>`;
       for(const k in br) html += `<li>${k}: ${br[k].toLocaleString()}</li>`;
       html += '</ul></div>';
-      plArea.innerHTML = html;
+      document.getElementById('plView').innerHTML = html;
+      // also put into receiptInner for quick print
+      receiptInner.innerHTML = `<div><h3>Profit & Loss</h3>${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-theme">Close</button></div></div>`;
+      setTimeout(()=> { const closeBtn = document.getElementById('closePL'); if(closeBtn) closeBtn.addEventListener('click', ()=> closeModal(receiptModal)); }, 50);
     }
 
     function downloadPLPdf(){
-      const m = reportMonth.value;
-      const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
+      const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
       const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
       const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      doc.setFontSize(16); doc.text('SELELO — Profit & Loss', 14, 20);
+      doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
       doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
       doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${inc-exp}`, 14, 60);
-      let y = 72;
-      doc.text('Category breakdown:', 14, y); y += 8;
-      const br = {};
-      arr.forEach(t => br[t.category] = (br[t.category]||0) + t.amount);
-      for(const k in br){
-        doc.text(`${k}: ${br[k]}`, 16, y); y += 8;
-        if(y > 270){ doc.addPage(); y = 20; }
-      }
-      doc.save(`PL_${m || 'all'}.pdf`);
+      let y=72; const br={}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
+      doc.text('Category breakdown:', 14, y); y+=8;
+      for(const k in br){ doc.text(`${k}: ${br[k]}`, 16, y); y+=8; if(y>270){ doc.addPage(); y=20; } }
+      doc.save(`PL_${m||'all'}.pdf`);
     }
 
-    /* RECEIPT */
+    // receipt
     function openReceipt(i){
-      const t = transactions[i];
-      const inv = 'INV-' + (10000 + i);
-      const issued = new Date().toLocaleDateString();
-      let html = `<div class="printable"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
-      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${esc(t.notes||'-')}</div>`;
+      const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
+      let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
+      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${escapeHtml(t.notes||'-')}</div>`;
       html += `<div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div>`;
-      html += `<div style="text-align:center;margin-top:12px"><button id="printBtn" class="btn btn-admin">Print</button> <button id="closeBtn" class="btn btn-theme">Close</button></div></div>`;
-      receiptInner.innerHTML = html;
-      openModal(receiptModal);
-      document.getElementById('printBtn').addEventListener('click', ()=>{
-        const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=> w.print(), 300);
-      });
-      document.getElementById('closeBtn').addEventListener('click', ()=> closeModal(receiptModal));
+      html += `<div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-theme">Close</button></div></div>`;
+      receiptInner.innerHTML = html; openModal(receiptModal);
+      setTimeout(()=> {
+        const pr = document.getElementById('printReceipt'), cl = document.getElementById('closeReceipt');
+        pr.addEventListener('click', ()=> {
+          const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=> w.print(), 300);
+        });
+        cl.addEventListener('click', ()=> closeModal(receiptModal));
+      }, 60);
     }
 
-    /* INIT */
+    // init
     function init(){
       applyAdminUI();
       renderBudgetInputs();
       renderTransactions();
       renderCharts();
     }
+
     init();
 
-    /* helper to render budgets (redeclared to access safeKey) */
+    // utility renderBudgetInputs
     function renderBudgetInputs(){
-      budArea.innerHTML = '';
-      CATS.forEach(cat => {
-        const div = document.createElement('div'); div.style.marginBottom = '8px';
-        div.innerHTML = `<label style="font-weight:700">${cat}</label><input id="b_${safeKey(cat)}" type="number" style="margin-top:6px">`;
-        budArea.appendChild(div);
-        const el = div.querySelector('input'); if(el) el.value = budgets[cat] || '';
+      budgetsArea.innerHTML = '';
+      CATS.forEach(c=> {
+        const dv = document.createElement('div'); dv.style.marginBottom='8px';
+        dv.innerHTML = `<label style="font-weight:700">${c}</label><input id="b_${safeKey(c)}" type="number" style="width:100%;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);margin-top:6px">`;
+        budgetsArea.appendChild(dv);
+        const el = dv.querySelector('input'); if(el) el.value = budgets[c] || '';
       });
     }
 
-    /* save before unload */
-    window.addEventListener('beforeunload', ()=> { saveAll(); });
+    // save on unload
+    window.addEventListener('beforeunload', ()=> saveAll());
+
+    // expose some helpers for debugging (optional)
+    window.__selelo = { transactions, budgets, setAdmin };
+
   })();
   </script>
 </body>
-  </html>
+        </html>
