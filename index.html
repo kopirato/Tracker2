@@ -34,6 +34,7 @@
   input[type="month"]{max-width:300px;margin:auto;display:block;}
   #reportDiv{margin-top:20px;padding:15px;border-radius:12px;background:#f7f7f7;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
   body.dark #reportDiv{background:#2c2c2c;}
+  #transactionMessage{margin:10px 0;font-weight:600;text-align:center;color:#4CAF50;}
   @media(max-width:768px){.dashboard{flex-direction:column;}.card{flex:1 1 100%;}}
 </style>
 </head>
@@ -66,6 +67,7 @@
   <input type="number" id="amount" placeholder="0" required>
 
   <button id="addBtn" class="btn-add">Add Transaction</button>
+  <div id="transactionMessage"></div>
 
   <h2>Filter by Month</h2>
   <input type="month" id="filterMonth">
@@ -127,7 +129,14 @@ document.getElementById('reportDownloadBtn').addEventListener('click', downloadP
 document.getElementById('filterMonth').addEventListener('change', renderTransactions);
 document.getElementById('reportMonth').addEventListener('change', generateReport);
 
-// Add Transaction Function
+// Show transaction message
+function showTransactionMessage(t){
+  const msgDiv = document.getElementById('transactionMessage');
+  msgDiv.innerText = `Transaction Added: ${t.type} – ${t.category} – ${t.amount}`;
+  setTimeout(()=>{ msgDiv.innerText=''; },4000);
+}
+
+// Add Transaction
 function addTransaction(){
   const pass=prompt("Enter your admin password:");
   if(!pass||!adminPasswords.includes(pass.trim())){alert("Incorrect password.");return;}
@@ -139,6 +148,7 @@ function addTransaction(){
   transactions.push({date,type,category,amount});
   localStorage.setItem('transactions',JSON.stringify(transactions));
   renderTransactions();
+  showTransactionMessage({type,category,amount});
   document.getElementById('date').value='';document.getElementById('amount').value='';
 }
 
@@ -182,7 +192,7 @@ function attachDeleteButtons(){
   });
 }
 
-// Render Charts
+// Charts
 function renderCharts(){
   const income=transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const expense=transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
@@ -218,7 +228,7 @@ function exportCSV(){
   const a=document.createElement('a');a.href=url;a.download='transactions.csv';document.body.appendChild(a);a.click();a.remove();
 }
 
-// Generate Monthly Report
+// Monthly Report
 function generateReport(){
   const month=document.getElementById('reportMonth').value;
   if(!month)return;
