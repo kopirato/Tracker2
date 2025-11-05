@@ -24,7 +24,6 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:var(--text);-webkit-font-smoothing:antialiased}
 
-/* Background: use same image 2.png and add an overlay to hide seams */
 body{
   background-image: url('2.png');
   background-size: cover;
@@ -36,19 +35,15 @@ body{
   padding:0;
   min-height:100vh;
 }
-
-/* Overlay hides image seams and adds consistent tint */
 body::before{
   content: "";
   position: fixed;
   inset: 0;
   background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
-  z-index: -1; /* behind page content */
+  z-index: -1;
   pointer-events: none;
   backdrop-filter: blur(2px);
 }
-
-/* Shell */
 .shell{
   min-height:100vh;
   display:flex;
@@ -56,8 +51,6 @@ body::before{
   justify-content:center;
   padding:28px;
 }
-
-/* Main glass card */
 .card{
   width:100%;
   max-width:var(--maxw);
@@ -74,25 +67,17 @@ body::before{
   position:relative;
   z-index: 1;
 }
-
-/* Header */
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:62px;height:62px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(0,0,0,0.6)}
 h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:uppercase}
 .sub{color:var(--muted);font-size:12px}
-
-/* Controls */
 .controls{display:flex;gap:8px;align-items:center}
 .btn{border:0;padding:10px 12px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
 .btn-theme{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)}
 .btn-admin{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;box-shadow:0 12px 30px rgba(99,102,241,0.06)}
-
-/* Grid */
 .grid{display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:8px}
 @media(max-width:980px){.grid{grid-template-columns:1fr}}
-
-/* Panels */
 .panel{background:transparent;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
 .admin-panel{transition:all 240ms ease}
 .admin-panel.admin-active{
@@ -100,8 +85,6 @@ h1{margin:0;font-size:20px;letter-spacing:1px;font-weight:800;text-transform:upp
   border:1px solid rgba(110,231,255,0.12);
   box-shadow:0 16px 48px rgba(110,231,255,0.03), inset 0 0 30px rgba(110,231,255,0.02);
 }
-
-/* Form fields */
 .fields{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .field{flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px}
 label{font-size:13px;color:var(--muted);font-weight:700}
@@ -111,13 +94,9 @@ input[type="text"], input[type="date"], input[type="number"], select, textarea{
 }
 textarea{min-height:72px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:rgba(110,231,255,0.92);box-shadow:0 10px 40px rgba(110,231,255,0.06)}
-
-/* Actions */
 .actions{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .btn-add{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;padding:10px 14px;border-radius:10px;font-weight:800}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:10px 12px;border-radius:10px}
-
-/* Table */
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:10px 12px;border-radius:10px;font-weight:700}
 .table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
 table{width:100%;border-collapse:collapse;min-width:640px}
 thead th{padding:10px;text-align:left;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.02);font-size:13px}
@@ -125,33 +104,21 @@ tbody td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.01);color:var(-
 .action-btn{padding:6px 8px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:700}
 .delete-btn{background:transparent;border:1px solid rgba(255,92,92,0.95);color:rgba(255,92,92,0.95);padding:6px 8px;border-radius:8px;font-weight:700}
 .delete-btn:hover{background:rgba(255,92,92,0.95);color:#fff;box-shadow:0 10px 30px rgba(255,92,92,0.12)}
-
-/* Dashboard */
 .dashboard{display:flex;flex-direction:column;gap:12px}
 .stat-grid{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
 .stat{flex:1;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.01));padding:10px;border-radius:10px;text-align:center;border:1px solid rgba(255,255,255,0.02)}
 .stat h4{margin:0;color:var(--muted);font-size:12px}
 .stat p{margin:8px 0 0;font-weight:800;font-size:18px}
-
-/* Charts hidden until admin */
 .charts{display:none;gap:8px;margin-top:10px}
 .charts.show{display:block}
-
-/* Modal (top center) */
 .modal{position:fixed;left:50%;transform:translateX(-50%);top:7%;width:94%;max-width:460px;z-index:1300;display:none}
 .modal-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.6);backdrop-filter:blur(8px)}
 .modal.show{display:block;animation:drop 240ms ease}
 @keyframes drop{from{transform:translateX(-50%) translateY(-8px) scale(0.996);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
 .modal h3{margin:0 0 8px 0;font-size:18px}
 .modal p{margin:0 0 10px 0;color:var(--muted)}
-
-/* Receipt */
 .receipt{background:#fff;color:#000;padding:12px;border-radius:8px}
-
-/* Footer */
 footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;padding-top:10px}
-
-/* small screens */
 @media (max-width:640px){
   .logo{width:52px;height:52px}
   .fields{flex-direction:column}
@@ -162,475 +129,198 @@ footer{text-align:center;margin-top:auto;color:var(--muted);font-size:13px;paddi
 </style>
 </head>
 <body>
-  <div class="shell">
-    <main class="card" role="application" aria-label="Selelo Business Park">
+<div class="shell">
+<main class="card" role="application" aria-label="Selelo Business Park">
 
-      <!-- Header -->
-      <div class="top">
-        <div class="brand">
-          <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
-          <div>
-            <h1>SELELO BUSINESS PARK</h1>
-            <div class="sub">Local bookkeeping • Private • Offline-ready</div>
-          </div>
-        </div>
-
-        <div class="controls" role="toolbar" aria-label="Top controls">
-          <button id="adminBtn" class="btn btn-admin" title="Admin sign in/out">Admin Login</button>
-          <button id="themeBtn" class="btn btn-theme" title="Toggle dark/light">Toggle Theme</button>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="exportCsv" class="btn btn-theme">Export CSV</button>
-        <button id="genPL" class="btn btn-theme">Generate P&L</button>
-        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
-      </div>
-
-      <!-- Main content grid -->
-      <div class="grid">
-
-        <!-- Left: Form + Table -->
-        <section>
-          <div id="addPanel" class="panel admin-panel" aria-labelledby="addTitle">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <h2 id="addTitle" style="margin:0;font-size:16px">Add Transaction</h2>
-                <div class="sub">Sign in as admin to add, edit or delete</div>
-              </div>
-              <div id="adminBadgeWrap"></div>
-            </div>
-
-            <div class="fields" role="form" aria-label="Add transaction form">
-              <div class="field"><label for="txDate">Date</label><input id="txDate" type="date"></div>
-              <div class="field"><label for="txType">Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-              <div class="field"><label for="txCategory">Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
-              <div class="field"><label for="txAmount">Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
-            </div>
-
-            <div style="margin-top:10px"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
-
-            <div class="actions">
-              <button id="addBtn" class="btn-add" disabled>Add Transaction</button>
-              <button id="clearBtn" class="btn-ghost">Clear</button>
-              <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
-            </div>
-          </div>
-
-          <div class="panel" style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
-            </div>
-
-            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-              <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
-              <select id="fCategory" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-              <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-              <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
-            </div>
-
-            <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="transactions table">
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txTbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- Right -->
-        <aside>
-          <div class="panel dashboard">
-            <h3 style="margin:0">Overview</h3>
-            <div class="stat-grid">
-              <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
-              <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
-              <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
-            </div>
-            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
-          </div>
-
-          <div id="chartsPanel" class="panel charts" aria-hidden="true" style="margin-top:12px">
-            <h3 style="margin:0">Charts</h3>
-            <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartTrend" height="140"></canvas></div>
-          </div>
-
-          <div class="panel" style="margin-top:12px">
-            <h3 style="margin:0">Profit & Loss</h3>
-            <label for="reportMonth" class="sub" style="display:block;margin-top:8px">Month (optional)</label>
-            <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-            <div style="display:flex;gap:8px;margin-top:10px">
-              <button id="showPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
-            </div>
-            <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
-          </div>
-        </aside>
-      </div>
-
-      <footer>Proudly developed by Seltec | +254745151968 | @Its_SelianFr</footer>
-    </main>
+<!-- Header -->
+<div class="top">
+  <div class="brand">
+    <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
+    <div>
+      <h1>SELELO BUSINESS PARK</h1>
+      <p class="sub">Dashboard</p>
+    </div>
   </div>
+  <div class="controls">
+    <button class="btn btn-theme" id="themeToggle">Toggle Theme</button>
+    <button class="btn btn-admin" id="adminPanelToggle">Admin</button>
+  </div>
+</div>
 
-  <!-- Admin modal top-center -->
-  <div id="adminModal" class="modal" aria-hidden="true" role="dialog">
-    <div class="modal-panel">
-      <h3>Administrator access</h3>
-      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
-      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)">
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
-        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
-        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
+<!-- Grid -->
+<div class="grid">
+  <div class="panel dashboard">
+    <div class="stat-grid">
+      <div class="stat">
+        <h4>Total Income</h4>
+        <p id="totalIncome">0</p>
       </div>
+      <div class="stat">
+        <h4>Total Expenses</h4>
+        <p id="totalExpenses">0</p>
+      </div>
+      <div class="stat">
+        <h4>Balance</h4>
+        <p id="balance">0</p>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="transactionsTable">
+          <!-- Transactions will populate here -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Edit modal (center) -->
-  <div id="editModal" class="modal" aria-hidden="true" style="top:40%;transform:translateX(-50%) translateY(-50%)">
-    <div class="modal-panel">
-      <h3>Edit Transaction</h3>
-      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option>Income</option><option>Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)">
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--text)"></textarea>
-      <div style="text-align:right;margin-top:10px">
-        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
-        <button id="editSaveBtn" class="btn btn-admin">Save</button>
+  <!-- Admin Panel -->
+  <div class="panel admin-panel" id="adminPanel">
+    <h3>Admin Controls</h3>
+    <div class="fields">
+      <div class="field">
+        <label for="transactionType">Type</label>
+        <select id="transactionType">
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input type="number" id="amount">
+      </div>
+      <div class="field">
+        <label for="desc">Description</label>
+        <input type="text" id="desc">
+      </div>
+      <div class="field">
+        <label for="date">Date</label>
+        <input type="date" id="date">
       </div>
     </div>
+    <div class="actions">
+      <button class="btn-add" id="addTransaction">Add Transaction</button>
+      <button class="btn-ghost" id="clearTransactions">Clear All</button>
+    </div>
   </div>
+</div>
 
-  <!-- Receipt / P&L modal -->
-  <div id="receiptModal" class="modal" aria-hidden="true" style="top:8%;transform:translateX(-50%)">
-    <div class="modal-panel" id="receiptInner"></div>
-  </div>
+<footer>
+  &copy; 2025 SELELO BUSINESS PARK
+</footer>
+</main>
+</div>
 
-  <!-- libs -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- Firebase Config & Full Script -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-  <!-- App script (DOM ready) -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Config
-    const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-    const KEY_TX = "selelo_tx_final";
-    const KEY_ADMIN = "selelo_admin_final";
-    const KEY_THEME = "selelo_theme_final";
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+  authDomain: "selelo-tracker.firebaseapp.com",
+  projectId: "selelo-tracker",
+  storageBucket: "selelo-tracker.firebasestorage.app",
+  messagingSenderId: "42660826905",
+  appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+};
 
-    // State
-    let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-    let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-    let editIndex = null;
-    let chartIE, chartCat, chartTrend;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    // Elements
-    const adminBtn = document.getElementById('adminBtn');
-    const themeBtn = document.getElementById('themeBtn');
-    const addBtn = document.getElementById('addBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const txDate = document.getElementById('txDate');
-    const txType = document.getElementById('txType');
-    const txCategory = document.getElementById('txCategory');
-    const txAmount = document.getElementById('txAmount');
-    const txNotes = document.getElementById('txNotes');
-    const txMsg = document.getElementById('txMsg');
-    const txTbody = document.getElementById('txTbody');
+// DOM Elements
+const addBtn = document.getElementById('addTransaction');
+const typeEl = document.getElementById('transactionType');
+const amountEl = document.getElementById('amount');
+const descEl = document.getElementById('desc');
+const dateEl = document.getElementById('date');
+const totalIncomeEl = document.getElementById('totalIncome');
+const totalExpensesEl = document.getElementById('totalExpenses');
+const balanceEl = document.getElementById('balance');
+const transactionsTable = document.getElementById('transactionsTable');
+const clearBtn = document.getElementById('clearTransactions');
+const adminPanel = document.getElementById('adminPanel');
+const adminToggle = document.getElementById('adminPanelToggle');
 
-    const fMonth = document.getElementById('fMonth');
-    const fType = document.getElementById('fType');
-    const fCategory = document.getElementById('fCategory');
-    const fMin = document.getElementById('fMin');
-    const fMax = document.getElementById('fMax');
-    const fNotes = document.getElementById('fNotes');
-    const applyFilter = document.getElementById('applyFilter');
-    const resetFilter = document.getElementById('resetFilter');
-
-    const statIncome = document.getElementById('statIncome');
-    const statExpense = document.getElementById('statExpense');
-    const statBalance = document.getElementById('statBalance');
-    const adminBadgeWrap = document.getElementById('adminBadgeWrap');
-    const chartsPanel = document.getElementById('chartsPanel');
-
-    const adminModal = document.getElementById('adminModal');
-    const adminPassword = document.getElementById('adminPassword');
-    const adminCancel = document.getElementById('adminCancel');
-    const adminConfirm = document.getElementById('adminConfirm');
-
-    const editModal = document.getElementById('editModal');
-    const editDate = document.getElementById('editDate');
-    const editType = document.getElementById('editType');
-    const editCategory = document.getElementById('editCategory');
-    const editAmount = document.getElementById('editAmount');
-    const editNotes = document.getElementById('editNotes');
-    const editCancelBtn = document.getElementById('editCancelBtn');
-    const editSaveBtn = document.getElementById('editSaveBtn');
-
-    const receiptModal = document.getElementById('receiptModal');
-    const receiptInner = document.getElementById('receiptInner');
-
-    const exportCsv = document.getElementById('exportCsv');
-    const genPL = document.getElementById('genPL');
-    const downloadPL = document.getElementById('downloadPL');
-    const reportMonth = document.getElementById('reportMonth');
-    const showPLBtn = document.getElementById('showPLBtn');
-
-    const chartIECtx = document.getElementById('chartIE')?.getContext?.('2d');
-    const chartCatCtx = document.getElementById('chartCat')?.getContext?.('2d');
-    const chartTrendCtx = document.getElementById('chartTrend')?.getContext?.('2d');
-
-    // Utilities
-    function saveAll(){ localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-    function setAdmin(v){ isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true":"false"); applyAdminUI(); }
-    function openModal(el){ el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
-    function closeModal(el){ el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden','true'); }
-    function esc(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function notify(msg,color='var(--good)'){ txMsg.style.color = color; txMsg.textContent = msg; setTimeout(()=>{ if(txMsg.textContent===msg) txMsg.textContent=''; },3000); }
-
-    document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if(e.target === m) closeModal(m); }));
-
-    // Theme apply
-    (function applyTheme(){
-      const t = localStorage.getItem(KEY_THEME) || 'dark';
-      if(t === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
-    })();
-    themeBtn.addEventListener('click', ()=>{
-      const cur = localStorage.getItem(KEY_THEME) || 'dark';
-      const next = cur === 'dark' ? 'light' : 'dark';
-      localStorage.setItem(KEY_THEME, next);
-      if(next === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
-      else document.body.style.background = 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
+// Add Transaction
+async function addTransactionToFirestore() {
+  if(amountEl.value && descEl.value && dateEl.value) {
+    await addDoc(collection(db,'transactions'),{
+      type: typeEl.value,
+      amount: parseFloat(amountEl.value),
+      description: descEl.value,
+      date: dateEl.value
     });
+    amountEl.value=''; descEl.value=''; dateEl.value='';
+    loadTransactions();
+  } else {
+    alert('Please fill all fields');
+  }
+}
 
-    // Admin flow
-    adminBtn.addEventListener('click', ()=>{
-      if(isAdmin){
-        if(!confirm('Sign out admin?')) return;
-        setAdmin(false); notify('Admin signed out','var(--muted)'); return;
-      }
-      adminPassword.value = '';
-      openModal(adminModal);
-      setTimeout(()=> adminPassword.focus(),120);
+// Delete Transaction
+async function deleteTransaction(id) {
+  if(confirm('Delete this transaction?')) {
+    await deleteDoc(doc(db,'transactions',id));
+    loadTransactions();
+  }
+}
+
+// Load Transactions
+async function loadTransactions() {
+  const snapshot = await getDocs(collection(db,'transactions'));
+  let income=0, expense=0;
+  transactionsTable.innerHTML='';
+  snapshot.forEach(d=>{
+    const t = d.data();
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${t.date}</td>
+                    <td>${t.type}</td>
+                    <td>${t.description}</td>
+                    <td>${t.amount.toFixed(2)}</td>
+                    <td><button class="delete-btn" onclick="deleteTransaction('${d.id}')">Delete</button></td>`;
+    transactionsTable.appendChild(tr);
+    if(t.type==='Income') income+=t.amount;
+    else if(t.type==='Expense') expense+=t.amount;
+  });
+  totalIncomeEl.textContent = income.toFixed(2);
+  totalExpensesEl.textContent = expense.toFixed(2);
+  balanceEl.textContent = (income-expense).toFixed(2);
+}
+
+// Clear All Transactions
+async function clearAllTransactions() {
+  if(confirm('Clear all transactions?')) {
+    const snapshot = await getDocs(collection(db,'transactions'));
+    snapshot.forEach(async d=>{
+      await deleteDoc(doc(db,'transactions',d.id));
     });
-    adminCancel.addEventListener('click', ()=> closeModal(adminModal));
-    adminConfirm.addEventListener('click', ()=>{
-      const p = (adminPassword.value||'').trim();
-      if(!ADMIN_PASSWORDS.includes(p)){ alert('Incorrect admin password'); return; }
-      // success: close modal and enable admin UI
-      closeModal(adminModal);
-      setAdmin(true);
-      notify('Admin session active','var(--good)');
-    });
+    loadTransactions();
+  }
+}
 
-    // Apply admin UI
-    function applyAdminUI(){
-      const addPanel = document.getElementById('addPanel');
-      if(isAdmin){
-        addPanel.classList.add('admin-active');
-        adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
-        chartsPanel.classList.add('show'); chartsPanel.removeAttribute('aria-hidden');
-      } else {
-        addPanel.classList.remove('admin-active'); adminBadgeWrap.innerHTML = ''; chartsPanel.classList.remove('show'); chartsPanel.setAttribute('aria-hidden','true');
-      }
-      addBtn.disabled = !isAdmin;
-      renderTransactions();
-    }
+// Toggle Admin Panel
+adminToggle.addEventListener('click',()=>{
+  adminPanel.classList.toggle('admin-active');
+});
 
-    // Add
-    addBtn.addEventListener('click', ()=>{
-      if(!isAdmin){ alert('Admin only'); return; }
-      const date = txDate.value, type = txType.value, category = txCategory.value;
-      const amount = parseFloat(txAmount.value), notes = txNotes.value || '';
-      if(!date || isNaN(amount) || amount <= 0){ alert('Enter valid date and amount'); return; }
-      transactions.push({ date, type, category, amount, notes });
-      saveAll(); renderTransactions(); notify('Transaction added');
-      txDate.value=''; txAmount.value=''; txNotes.value='';
-    });
-    clearBtn.addEventListener('click', ()=> { txDate.value=''; txAmount.value=''; txNotes.value=''; });
+// Event Listeners
+addBtn.addEventListener('click',addTransactionToFirestore);
+clearBtn.addEventListener('click',clearAllTransactions);
+window.addEventListener('load',loadTransactions);
 
-    // Edit
-    function openEdit(i){
-      if(!isAdmin){ alert('Admin only'); return; }
-      editIndex = i;
-      const t = transactions[i];
-      editDate.value = t.date; editType.value = t.type; editCategory.value = t.category; editAmount.value = t.amount; editNotes.value = t.notes || '';
-      openModal(editModal);
-    }
-    editCancelBtn.addEventListener('click', ()=> { closeModal(editModal); editIndex = null; });
-    editSaveBtn.addEventListener('click', ()=>{
-      if(!isAdmin){ alert('Admin only'); closeModal(editModal); return; }
-      if(editIndex == null) return;
-      const nd = { date: editDate.value, type: editType.value, category: editCategory.value, amount: parseFloat(editAmount.value), notes: editNotes.value || '' };
-      if(!nd.date || isNaN(nd.amount) || nd.amount <= 0){ alert('Invalid data'); return; }
-      transactions[editIndex] = nd;
-      saveAll(); renderTransactions(); closeModal(editModal); notify('Transaction edited');
-      editIndex = null;
-    });
-
-    // Delete
-    function deleteTx(i){
-      if(!isAdmin){ alert('Admin only'); return; }
-      if(!confirm('Delete this transaction?')) return;
-      transactions.splice(i,1);
-      saveAll(); renderTransactions(); notify('Deleted','var(--danger)');
-    }
-
-    // Filters
-    applyFilter.addEventListener('click', renderTransactions);
-    resetFilter.addEventListener('click', ()=> { fMonth.value=''; fType.value=''; fCategory.value=''; fMin.value=''; fMax.value=''; fNotes.value=''; renderTransactions(); });
-
-    function passesFilters(t){
-      if(fMonth.value && !t.date.startsWith(fMonth.value)) return false;
-      if(fType.value && t.type !== fType.value) return false;
-      if(fCategory.value && t.category !== fCategory.value) return false;
-      const min = parseFloat(fMin.value) || -Infinity, max = parseFloat(fMax.value) || Infinity;
-      if(t.amount < min || t.amount > max) return false;
-      const nf = (fNotes.value||'').toLowerCase();
-      if(nf && !( (t.notes||'').toLowerCase().includes(nf) )) return false;
-      return true;
-    }
-
-    // Render transactions
-    function renderTransactions(){
-      txTbody.innerHTML = '';
-      let inc = 0, exp = 0;
-      transactions.forEach((t,i)=>{
-        if(!passesFilters(t)) return;
-        const tr = document.createElement('tr');
-        const actions = [];
-        if(isAdmin){
-          actions.push(`<button class="action-btn" data-act="edit" data-i="${i}">Edit</button>`);
-          actions.push(`<button class="delete-btn" data-act="del" data-i="${i}">Delete</button>`);
-        }
-        actions.push(`<button class="action-btn" data-act="rcpt" data-i="${i}">Receipt</button>`);
-        tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${t.amount.toLocaleString()}</td><td>${esc(t.notes||'')}</td><td>${actions.join(' ')}</td>`;
-        txTbody.appendChild(tr);
-        if(t.type === 'Income') inc += t.amount;
-        if(t.type === 'Expense') exp += t.amount;
-      });
-      statIncome.textContent = inc.toLocaleString();
-      statExpense.textContent = exp.toLocaleString();
-      statBalance.textContent = (inc - exp).toLocaleString();
-      if(isAdmin) renderCharts();
-    }
-
-    // Table delegation
-    txTbody.addEventListener('click', (e)=>{
-      const b = e.target.closest('button[data-act]');
-      if(!b) return;
-      const act = b.dataset.act, idx = parseInt(b.dataset.i);
-      if(act === 'edit') openEdit(idx);
-      if(act === 'del') deleteTx(idx);
-      if(act === 'rcpt') openReceipt(idx);
-    });
-
-    // Charts (admin-only)
-    function renderCharts(){
-      if(!isAdmin) return;
-      const inc = transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-      const exp = transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      try{ if(chartIE) chartIE.destroy(); chartIE = new Chart(chartIECtx, { type:'doughnut', data:{ labels:['Income','Expense'], datasets:[{ data:[inc,exp], backgroundColor:['#4ade80','#ff6b6b'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} }); }catch(e){}
-      const catMap = {}; transactions.forEach(t=> catMap[t.category] = (catMap[t.category]||0)+t.amount );
-      try{ if(chartCat) chartCat.destroy(); chartCat = new Chart(chartCatCtx, { type:'doughnut', data:{ labels:Object.keys(catMap), datasets:[{ data:Object.values(catMap), backgroundColor:['#6ee7ff','#b38bff','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] }, options:{responsive:true, plugins:{legend:{position:'bottom'}}} }); }catch(e){}
-      const monthly = {}; transactions.forEach(t=>{ const m=t.date.slice(0,7); monthly[m]=monthly[m]||{Income:0,Expense:0}; monthly[m][t.type]+=t.amount; });
-      const months = Object.keys(monthly).sort();
-      const incArr = months.map(m=>monthly[m].Income||0);
-      const expArr = months.map(m=>monthly[m].Expense||0);
-      try{ if(chartTrend) chartTrend.destroy(); chartTrend = new Chart(chartTrendCtx, { type:'line', data:{ labels:months, datasets:[{label:'Income',data:incArr,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.12)',fill:true},{label:'Expense',data:expArr,borderColor:'#ff6b6b',backgroundColor:'rgba(255,107,107,0.12)',fill:true}] }, options:{responsive:true,tension:0.3,plugins:{legend:{position:'bottom'}}} }); }catch(e){}
-    }
-
-    // Export CSV
-    exportCsv.addEventListener('click', ()=>{
-      if(!transactions.length){ alert('No transactions to export'); return; }
-      let csv = 'Date,Type,Category,Amount,Notes\n';
-      transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes||'').replace(/"/g,'""')}"\n`);
-      const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    });
-
-    // P&L
-    genPL.addEventListener('click', generatePL);
-    downloadPL.addEventListener('click', downloadPLPdf);
-    showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(receiptModal); });
-
-    function generatePL(){
-      const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-      const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-      const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      const br = {}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
-      let html = `<strong>Period:</strong> ${m||'All'}<br><strong>Income:</strong> ${inc.toLocaleString()}<br><strong>Expense:</strong> ${exp.toLocaleString()}<br><strong>Net:</strong> ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category:</strong><ul>`;
-      for(const k in br) html += `<li>${k}: ${br[k].toLocaleString()}</li>`;
-      html += '</ul></div>';
-      document.getElementById('plView').innerHTML = html;
-      receiptInner.innerHTML = `<div>${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
-      setTimeout(()=> { const cb = document.getElementById('closePL'); if(cb) cb.addEventListener('click', ()=> closeModal(receiptModal)); },50);
-    }
-
-    function downloadPLPdf(){
-      const m = reportMonth.value; const arr = m ? transactions.filter(t=>t.date.startsWith(m)) : transactions.slice();
-      const inc = arr.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
-      const exp = arr.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
-      const { jsPDF } = window.jspdf; const doc = new jsPDF();
-      doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-      doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-      doc.text(`Income: ${inc}`, 14, 44); doc.text(`Expense: ${exp}`, 14, 52); doc.text(`Net: ${inc-exp}`, 14, 60);
-      let y = 72; const br = {}; arr.forEach(t=> br[t.category] = (br[t.category]||0)+t.amount);
-      doc.text('Category breakdown:', 14, y); y += 8;
-      for(const k in br){ doc.text(`${k}: ${br[k]}`, 16, y); y += 8; if(y > 270){ doc.addPage(); y = 20; } }
-      doc.save(`PL_${m || 'all'}.pdf`);
-    }
-
-    // Receipt
-    function openReceipt(i){
-      const t = transactions[i]; const inv = 'INV-' + (10000 + i); const issued = new Date().toLocaleDateString();
-      let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>`;
-      html += `<div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount}<br><strong>Notes:</strong> ${esc(t.notes||'-')}</div>`;
-      html += `<div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95"></div>`;
-      html += `<div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
-      receiptInner.innerHTML = html; openModal(receiptModal);
-      setTimeout(()=> {
-        document.getElementById('printReceipt')?.addEventListener('click', ()=> {
-          const w = window.open('','_blank','width=700,height=800'); w.document.write('<html><head><title>Receipt</title></head><body>' + receiptInner.innerHTML + '</body></html>'); w.document.close(); setTimeout(()=> w.print(), 300);
-        });
-        document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(receiptModal));
-      },60);
-    }
-
-    // Initial render
-    function init(){
-      applyAdminUI();
-      renderTransactions();
-      // charts not rendered until admin logs in
-    }
-    init();
-
-    // helper applyAdminUI
-    function applyAdminUI(){
-      const addPanel = document.getElementById('addPanel');
-      if(isAdmin){
-        addPanel.classList.add('admin-active');
-        adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
-        chartsPanel.classList.add('show'); chartsPanel.removeAttribute('aria-hidden');
-      } else {
-        addPanel.classList.remove('admin-active'); adminBadgeWrap.innerHTML = ''; chartsPanel.classList.remove('show'); chartsPanel.setAttribute('aria-hidden','true');
-      }
-      addBtn.disabled = !isAdmin;
-    }
-
-    // Save on unload
-    window.addEventListener('beforeunload', ()=> saveAll());
-    // Expose for debug
-    window.__selelo = { transactions, setAdmin };
-
-  }); // DOMContentLoaded
-  </script>
+// Make deleteTransaction globally accessible
+window.deleteTransaction = deleteTransaction;
+</script>
 </body>
-                             </html>
+      </html>
