@@ -43,6 +43,9 @@ body.dark .modal-content{background:#2c2c2c;color:#fff;}
 .modal-buttons{text-align:right;}
 .modal-buttons button{margin-left:10px;}
 @media(max-width:768px){.dashboard{flex-direction:column;}.card{flex:1 1 100%;}}
+.filter-panel{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+.filter-panel input, .filter-panel select{flex:1 1 150px;}
+.budget-alert{color:#FF5252;font-weight:600;margin:10px 0;text-align:center;}
 </style>
 </head>
 <body>
@@ -50,6 +53,7 @@ body.dark .modal-content{background:#2c2c2c;color:#fff;}
   <h1>Selelo Business Smart Tracker</h1>
   <button id="themeBtn" class="btn-theme">Toggle Dark/Light Theme</button>
 
+  <!-- Transaction Form -->
   <h2>Add Transaction</h2>
   <label for="date">Date</label>
   <input type="date" id="date" required>
@@ -78,10 +82,37 @@ body.dark .modal-content{background:#2c2c2c;color:#fff;}
 
   <button id="addBtn" class="btn-add">Add Transaction</button>
   <div id="transactionMessage"></div>
+  <div id="budgetAlert" class="budget-alert"></div>
 
-  <h2>Filter by Month</h2>
-  <input type="month" id="filterMonth">
+  <!-- Budget Management -->
+  <h2>Set Category Budgets</h2>
+  <div id="budgetContainer"></div>
 
+  <!-- Advanced Filter Panel -->
+  <h2>Search / Filter Transactions</h2>
+  <div class="filter-panel">
+    <input type="month" id="filterMonth" placeholder="Filter by month">
+    <select id="filterType">
+      <option value="">All Types</option>
+      <option value="Income">Income</option>
+      <option value="Expense">Expense</option>
+    </select>
+    <select id="filterCategory">
+      <option value="">All Categories</option>
+      <option value="Sales">Sales</option>
+      <option value="Other Income">Other Income</option>
+      <option value="Food">Food</option>
+      <option value="Transport">Transport</option>
+      <option value="Supplies">Supplies</option>
+      <option value="Other Expense">Other Expense</option>
+    </select>
+    <input type="number" id="filterMinAmount" placeholder="Min Amount">
+    <input type="number" id="filterMaxAmount" placeholder="Max Amount">
+    <input type="text" id="filterNotes" placeholder="Notes contains...">
+    <button id="filterBtn" class="btn-theme">Apply Filter</button>
+  </div>
+
+  <!-- Dashboard -->
   <div class="dashboard">
     <div class="card">
       <h3>Total Income</h3>
@@ -112,6 +143,7 @@ body.dark .modal-content{background:#2c2c2c;color:#fff;}
     <tbody id="transactionTable"></tbody>
   </table>
 
+  <!-- Monthly Report -->
   <h2>Monthly Profit & Loss Statement</h2>
   <input type="month" id="reportMonth">
   <button id="reportDownloadBtn" class="btn-export">Download PDF</button>
@@ -139,11 +171,12 @@ body.dark .modal-content{background:#2c2c2c;color:#fff;}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+// ----- JavaScript: Phase 2 features included -----
 let transactions = JSON.parse(localStorage.getItem('transactions'))||[];
+let budgets = JSON.parse(localStorage.getItem('budgets'))||{};
 let isDark=false;
 const adminPasswords=["0742147197","+254 721 235005"];
-let tempAction = null; // store temporary action for modal (add/edit/delete)
-let tempIndex = null;  // store index for edit/delete
+let tempAction=null,tempIndex=null;
 
 // Elements
 const themeBtn=document.getElementById('themeBtn');
@@ -151,30 +184,37 @@ const addBtn=document.getElementById('addBtn');
 const exportBtn=document.getElementById('exportBtn');
 const reportDownloadBtn=document.getElementById('reportDownloadBtn');
 const filterMonth=document.getElementById('filterMonth');
+const filterType=document.getElementById('filterType');
+const filterCategory=document.getElementById('filterCategory');
+const filterMinAmount=document.getElementById('filterMinAmount');
+const filterMaxAmount=document.getElementById('filterMaxAmount');
+const filterNotes=document.getElementById('filterNotes');
+const filterBtn=document.getElementById('filterBtn');
 const reportMonth=document.getElementById('reportMonth');
 const adminModal=document.getElementById('adminModal');
 const adminPasswordInput=document.getElementById('adminPasswordInput');
 const cancelModalBtn=document.getElementById('cancelModalBtn');
 const confirmModalBtn=document.getElementById('confirmModalBtn');
+const budgetContainer=document.getElementById('budgetContainer');
+const budgetAlert=document.getElementById('budgetAlert');
 
-// Theme Toggle
+// ----- Theme toggle -----
 themeBtn.addEventListener('click',()=>{isDark=!isDark;document.body.classList.toggle('dark',isDark);});
 
-// Modal Buttons
+// ----- Admin modal -----
 cancelModalBtn.addEventListener('click',()=>{adminModal.style.display='none';adminPasswordInput.value='';tempAction=null;tempIndex=null;});
 confirmModalBtn.addEventListener('click',()=>{handleAdminConfirm();});
 
-// Button Listeners
+// ----- Buttons -----
 addBtn.addEventListener('click',()=>{tempAction='add';showAdminModal();});
 exportBtn.addEventListener('click',exportCSV);
 reportDownloadBtn.addEventListener('click',downloadPDF);
+filterBtn.addEventListener('click',renderTransactions);
 filterMonth.addEventListener('change',renderTransactions);
 reportMonth.addEventListener('change',generateReport);
 
-// Show Admin Modal
+// ----- Admin modal functions -----
 function showAdminModal(){adminModal.style.display='block';adminPasswordInput.focus();}
-
-// Handle Admin Confirmation
 function handleAdminConfirm(){
   const pass=adminPasswordInput.value.trim();
   if(!adminPasswords.includes(pass)){alert("Incorrect password.");return;}
@@ -182,17 +222,45 @@ function handleAdminConfirm(){
   if(tempAction==='add')processAddTransaction();
   if(tempAction==='delete')processDeleteTransaction(tempIndex);
   if(tempAction==='edit')processEditTransaction(tempIndex);
+  if(tempAction==='setBudget')saveBudgets();
   tempAction=null;tempIndex=null;
 }
 
-// Show transaction message
-function showTransactionMessage(t){
-  const msgDiv=document.getElementById('transactionMessage');
-  msgDiv.innerText=`Transaction ${t.action || 'Added'}: ${t.type} – ${t.category} – ${t.amount}`;
-  setTimeout(()=>{msgDiv.innerText='';},4000);
+// ----- Budget management -----
+const categories=['Sales','Other Income','Food','Transport','Supplies','Other Expense'];
+function renderBudgetInputs(){
+  budgetContainer.innerHTML='';
+  categories.forEach(cat=>{
+    const div=document.createElement('div');
+    div.innerHTML=`<label>${cat} Budget:</label><input type="number" id="budget_${cat}" value="${budgets[cat]||''}" placeholder="0">`;
+    budgetContainer.appendChild(div);
+  });
+  const btn=document.createElement('button');btn.textContent='Save Budgets';btn.className='btn-theme';
+  btn.addEventListener('click',()=>{tempAction='setBudget';showAdminModal();});
+  budgetContainer.appendChild(btn);
+}
+function saveBudgets(){
+  categories.forEach(cat=>{budgets[cat]=parseFloat(document.getElementById(`budget_${cat}`).value)||0;});
+  localStorage.setItem('budgets',JSON.stringify(budgets));
+  alert('Budgets saved.');
+  renderTransactions();
 }
 
-// Add Transaction
+// ----- Transaction functions -----
+function showTransactionMessage(t){
+  const msgDiv=document.getElementById('transactionMessage');
+  msgDiv.innerText=`Transaction ${t.action||'Added'}: ${t.type} – ${t.category} – ${t.amount}`;
+  setTimeout(()=>{msgDiv.innerText='';},4000);
+}
+function checkBudgetAlert(){
+  if(!Object.keys(budgets).length){budgetAlert.innerText='';return;}
+  let alertMsg='';
+  categories.forEach(cat=>{
+    const spent=transactions.filter(t=>t.type==='Expense' && t.category===cat).reduce((a,b)=>a+b.amount,0);
+    if(budgets[cat] && spent>budgets[cat]){alertMsg+=`Budget exceeded for ${cat}! `;}
+  });
+  budgetAlert.innerText=alertMsg;
+}
 function processAddTransaction(){
   const date=document.getElementById('date').value;
   const type=document.getElementById('type').value;
@@ -207,41 +275,42 @@ function processAddTransaction(){
   document.getElementById('date').value='';document.getElementById('amount').value='';document.getElementById('notes').value='';
 }
 
-// Delete Transaction
+// ----- Delete/Edit Transactions -----
 function deleteTransaction(index){tempAction='delete';tempIndex=index;showAdminModal();}
-function processDeleteTransaction(index){
-  if(confirm("Are you sure you want to delete this transaction?")){
-    transactions.splice(index,1);
-    localStorage.setItem('transactions',JSON.stringify(transactions));
-    renderTransactions();
-  }
-}
-
-// Edit Transaction
+function processDeleteTransaction(index){if(confirm("Delete this transaction?")){transactions.splice(index,1);localStorage.setItem('transactions',JSON.stringify(transactions));renderTransactions();}}
 function editTransaction(index){tempAction='edit';tempIndex=index;showAdminModal();}
 function processEditTransaction(index){
   const t=transactions[index];
-  const newDate=prompt("Edit Date:",t.date) || t.date;
-  const newType=prompt("Edit Type (Income/Expense):",t.type) || t.type;
-  const newCategory=prompt("Edit Category:",t.category) || t.category;
+  const newDate=prompt("Edit Date:",t.date)||t.date;
+  const newType=prompt("Edit Type (Income/Expense):",t.type)||t.type;
+  const newCategory=prompt("Edit Category:",t.category)||t.category;
   const newAmount=parseFloat(prompt("Edit Amount:",t.amount))||t.amount;
-  const newNotes=prompt("Edit Notes:",t.notes) || t.notes;
+  const newNotes=prompt("Edit Notes:",t.notes)||t.notes;
   transactions[index]={date:newDate,type:newType,category:newCategory,amount:newAmount,notes:newNotes};
   localStorage.setItem('transactions',JSON.stringify(transactions));
   renderTransactions();
-  showTransactionMessage({...transactions[index], action:'Edited'});
+  showTransactionMessage({...transactions[index],action:'Edited'});
 }
 
-// Render Transactions Table
+// ----- Render Transactions Table -----
 function renderTransactions(){
   const table=document.getElementById('transactionTable');
   table.innerHTML='';
-  const filter=filterMonth.value;
+  const fMonth=filterMonth.value;
+  const fType=filterType.value;
+  const fCat=filterCategory.value;
+  const fMin=parseFloat(filterMinAmount.value)||0;
+  const fMax=parseFloat(filterMaxAmount.value)||Infinity;
+  const fNotes=filterNotes.value.toLowerCase();
   let totalIncome=0,totalExpense=0;
   transactions.forEach((t,i)=>{
-    if(filter&&!t.date.startsWith(filter))return;
+    if(fMonth && !t.date.startsWith(fMonth))return;
+    if(fType && t.type!==fType)return;
+    if(fCat && t.category!==fCat)return;
+    if(t.amount<fMin || t.amount>fMax)return;
+    if(fNotes && !(t.notes||'').toLowerCase().includes(fNotes))return;
     const row=document.createElement('tr');
-    row.innerHTML=`<td>${t.date}</td><td>${t.type}</td><td>${t.category}</td><td>${t.amount}</td><td>${t.notes || ''}</td>
+    row.innerHTML=`<td>${t.date}</td><td>${t.type}</td><td>${t.category}</td><td>${t.amount}</td><td>${t.notes||''}</td>
       <td>
         <button style="background:#FFC107;color:#000;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;" onclick="editTransaction(${i})">Edit</button>
         <button style="background:#FF5252;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;" onclick="deleteTransaction(${i})">Delete</button>
@@ -253,46 +322,45 @@ function renderTransactions(){
   document.getElementById('totalIncome').innerText=totalIncome;
   document.getElementById('totalExpense').innerText=totalExpense;
   document.getElementById('balance').innerText=totalIncome-totalExpense;
+  checkBudgetAlert();
   renderCharts();
 }
 
-// Charts
+// ----- Charts -----
 function renderCharts(){
   const income=transactions.filter(t=>t.type==='Income').reduce((a,b)=>a+b.amount,0);
   const expense=transactions.filter(t=>t.type==='Expense').reduce((a,b)=>a+b.amount,0);
   renderDoughnut('incomeExpenseChart',['Income','Expenses'],[income,expense],['#4CAF50','#FF5252']);
-  const categories={};
-  transactions.forEach(t=>categories[t.category]=(categories[t.category]||0)+t.amount);
-  renderDoughnut('categoryChart',Object.keys(categories),Object.values(categories));
+  const categoriesCount={};
+  transactions.forEach(t=>categoriesCount[t.category]=(categoriesCount[t.category]||0)+t.amount);
+  renderDoughnut('categoryChart',Object.keys(categoriesCount),Object.values(categoriesCount));
   const months={};
   transactions.forEach(t=>{const m=t.date.slice(0,7);months[m]=months[m]||{Income:0,Expense:0};months[m][t.type]+=t.amount;});
   const monthKeys=Object.keys(months).sort();
   renderLine('monthlyTrendChart',monthKeys,monthKeys.map(m=>months[m].Income),monthKeys.map(m=>months[m].Expense));
 }
-
 function renderDoughnut(id,labels,data,colors){
   const ctx=document.getElementById(id).getContext('2d');
   if(window[id])window[id].destroy();
   window[id]=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors||['#4CAF50','#FF5252','#FFC107','#03A9F4','#9C27B0','#FF5722']}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
 }
-
 function renderLine(id,labels,income,expense){
   const ctx=document.getElementById(id).getContext('2d');
   if(window[id])window[id].destroy();
   window[id]=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Income',data:income,borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,0.2)',tension:0.3},{label:'Expense',data:expense,borderColor:'#FF5252',backgroundColor:'rgba(255,82,82,0.2)',tension:0.3}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
 }
 
-// CSV Export
+// ----- CSV Export -----
 function exportCSV(){
   if(!transactions.length){alert("No transactions to export.");return;}
   let csv='Date,Type,Category,Amount,Notes\n';
-  transactions.forEach(t=>{csv+=`"${t.date}","${t.type}","${t.category}","${t.amount}","${t.notes || ''}"\n`;});
+  transactions.forEach(t=>{csv+=`"${t.date}","${t.type}","${t.category}","${t.amount}","${t.notes||''}"\n`;});
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='transactions.csv';document.body.appendChild(a);a.click();a.remove();
 }
 
-// Monthly Report
+// ----- Monthly Report -----
 function generateReport(){
   const month=reportMonth.value;
   if(!month)return;
@@ -303,15 +371,15 @@ function generateReport(){
   document.getElementById('reportIncome').innerText=`Total Income: ${income}`;
   document.getElementById('reportExpense').innerText=`Total Expense: ${expense}`;
   document.getElementById('reportBalance').innerText=`Balance: ${income-expense}`;
+  let html='<h4>Category Breakdown:</h4><ul>';
   const breakdown={};
   filtered.forEach(t=>breakdown[t.category]=(breakdown[t.category]||0)+t.amount);
-  let html='<h4>Category Breakdown:</h4><ul>';
   for(let k in breakdown){html+=`<li>${k}: ${breakdown[k]}</li>`;}
   html+='</ul>';
   document.getElementById('reportCategoryBreakdown').innerHTML=html;
 }
 
-// Download PDF
+// ----- Download PDF -----
 function downloadPDF(){
   const { jsPDF } = window.jspdf;
   const doc=new jsPDF();
@@ -326,7 +394,8 @@ function downloadPDF(){
   doc.save('Monthly_Report.pdf');
 }
 
-// Initial render
+// ----- Initialize -----
+renderBudgetInputs();
 renderTransactions();
 </script>
 </body>
