@@ -4,27 +4,37 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
-  <!-- perf: preconnect to font host -->
+
+  <!-- perf: preconnect / preload -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- preload some external libs you rely on -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script">
+  <link rel="preload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" as="script">
+  <link rel="preload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" as="script">
+
   <style>
     :root {
-      --bg-dark: #1A120B; /* Warmer mocha-black base */
-      --muted: #A89A8F; /* Earthy taupe neutral */
-      --text: #F8F4F0; /* Cozy off-white */
-      --accent1: #E2725B; /* Terracotta pop */
-      --accent2: #D4A574; /* Honey gold gradient */
-      --good: #4ade80; /* Verdant green (retained) */
-      --danger: #D9534F; /* Softer ruby red */
+      --bg-dark: #1A120B;
+      --muted: #A89A8F;
+      --text: #F8F4F0;
+      --accent1: #E2725B;
+      --accent2: #D4A574;
+      --good: #4ade80;
+      --danger: #D9534F;
       --glass-weak: rgba(255,255,255,0.03);
       --glass-strong: rgba(255,255,255,0.07);
       --radius: 14px;
       --maxw: 1200px;
       --focus-ring: 0 0 0 3px rgba(226,114,91,0.12);
+      --toast-bg: rgba(10,12,15,0.92);
+      --spinner-bg: rgba(0,0,0,0.5);
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; color: var(--text); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    /* prefer reduced motion */
     @media (prefers-reduced-motion: reduce) {
       * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
     }
@@ -36,11 +46,7 @@
       background-attachment: fixed;
       background-color: var(--bg-dark);
       margin: 0; padding: 0; min-height: 100vh;
-      /* lighter backdrop filter for perf on low-end devices */
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
-    /* cheaper overlay (avoid heavy blur by default) */
     body::before {
       content: "";
       position: fixed;
@@ -48,7 +54,6 @@
       background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4));
       z-index: -1;
       pointer-events: none;
-      /* reduced blur for speed */
       backdrop-filter: blur(1px);
     }
     .shell { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px; }
@@ -59,7 +64,6 @@
       padding: 24px;
       background: rgba(255,255,255,0.05);
       box-shadow: 0 6px 20px rgba(0,0,0,0.28);
-      /* less blur for perf */
       backdrop-filter: blur(6px);
       border: 1px solid rgba(255,255,255,0.08);
       min-height: 85vh;
@@ -72,7 +76,6 @@
     }
     .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    /* perf: images will be lazy loaded in HTML */
     .logo { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
     h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
     @keyframes subtleGlow { from { text-shadow: 0 0 4px rgba(226,114,91,0.28); } to { text-shadow: 0 0 8px rgba(212,165,116,0.36); } }
@@ -121,18 +124,77 @@
     footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; }
     @media (max-width: 640px) { .logo { width: 52px; height: 52px; } .fields { flex-direction: column; } table { min-width: 520px; } .modal { top: 4%; } .card { padding: 16px; } }
 
-    /* system dark/light awareness - apply lighter background if user prefers light */
+    /* spinner + toast UI */
+    .global-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      pointer-events: none;
+    }
+    .spinner-wrap {
+      display: none;
+      pointer-events: auto;
+      position: fixed;
+      inset: 0;
+      background: var(--spinner-bg);
+      align-items: center;
+      justify-content: center;
+      z-index: 2200;
+      transition: opacity 160ms ease;
+    }
+    .spinner-wrap.show { display: flex; opacity: 1; }
+    .spinner {
+      width: 68px;
+      height: 68px;
+      border-radius: 999px;
+      border: 6px solid rgba(255,255,255,0.08);
+      border-top-color: rgba(226,114,91,0.98); /* accent */
+      animation: spin 900ms linear infinite;
+      box-shadow: 0 6px 22px rgba(226,114,91,0.12);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast-container {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2400;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 220px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--toast-bg);
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: transform 180ms cubic-bezier(.22,.9,.2,1), opacity 180ms ease;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* system dark/light awareness */
     @media (prefers-color-scheme: light) {
-      :root { --text: #0b1220; --muted: #55606a; }
+      :root { --text: #0b1220; --muted: #55606a; --toast-bg: rgba(240,244,248,0.96); }
+      .toast { color: #0b1220; }
+      .spinner { border: 6px solid rgba(0,0,0,0.06); border-top-color: rgba(226,114,91,0.98); }
     }
   </style>
 </head>
 <body>
   <div class="shell">
-    <main class="card">
+    <main class="card" id="mainCard">
       <div class="top">
         <div class="brand">
-          <!-- perf: lazy load images, keep onerror fallback -->
           <img src="11.png" class="logo" alt="logo" loading="lazy" onerror="this.style.display='none'">
           <div>
             <h1>SELELO BUSINESS PARK</h1>
@@ -256,6 +318,12 @@
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
+  <!-- spinner & toast UI elements -->
+  <div class="spinner-wrap" id="spinnerWrap" aria-hidden="true" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
   <!-- Libs (defer for better first paint) -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -267,7 +335,36 @@
   <script>
     // All heavy initialization and event wiring happens after DOMContentLoaded (keeps inline logic intact).
     document.addEventListener('DOMContentLoaded', () => {
-      // Firebase Config
+      // Small helpers for UX: spinner + toast
+      const spinnerWrap = document.getElementById('spinnerWrap');
+      const toastContainer = document.getElementById('toastContainer');
+      let toastTimeouts = [];
+
+      function showSpinner() {
+        spinnerWrap.classList.add('show');
+        spinnerWrap.setAttribute('aria-hidden', 'false');
+      }
+      function hideSpinner() {
+        spinnerWrap.classList.remove('show');
+        spinnerWrap.setAttribute('aria-hidden', 'true');
+      }
+      function showToast(msg, opts = {}) {
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        if (opts.success) el.style.borderLeft = '4px solid var(--good)';
+        if (opts.error) el.style.borderLeft = '4px solid var(--danger)';
+        toastContainer.appendChild(el);
+        // small defer to allow CSS transitions
+        requestAnimationFrame(() => el.classList.add('show'));
+        const t = setTimeout(() => {
+          el.classList.remove('show');
+          setTimeout(() => el.remove(), 220);
+        }, opts.duration || 3000);
+        toastTimeouts.push(t);
+      }
+
+      // Firebase Config (unchanged)
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
         authDomain: "selelo-tracker.firebaseapp.com",
@@ -290,11 +387,9 @@
             firebase.initializeApp(firebaseConfig);
           } catch (e) {
             // if already initialized, ignore
-            // console.warn('firebase init skipped', e);
           }
         }
         // If firebase unavailable, we still continue - the original code assumes firebase is present
-        // db and txRef will be set below (if firebase exists)
       });
 
       // Fallback to localStorage
@@ -308,7 +403,7 @@
       let chartIE, chartCat, chartTrend;
       let usingFirebase = true;
 
-      // Elements (shortened for brevity)
+      // Elements (cached early)
       const els = {
         adminBtn: document.getElementById('adminBtn'),
         addBtn: document.getElementById('addBtn'),
@@ -353,7 +448,8 @@
         reportMonth: document.getElementById('reportMonth'),
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
-        addPanel: document.getElementById('addPanel')
+        addPanel: document.getElementById('addPanel'),
+        chartsPanelCanvas: document.getElementById('chartIE')
       };
 
       // Utils
@@ -363,9 +459,10 @@
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
       function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
       function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
+
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-      // Theme
+      // Theme (kept)
       (function applyTheme() {
         const t = localStorage.getItem(KEY_THEME) || 'dark';
         if (t === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
@@ -381,7 +478,8 @@
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
           if (!confirm('Sign out admin?')) return;
-          setAdmin(false); notify('Admin signed out', 'var(--muted)'); return;
+          setAdmin(false); notify('Admin signed out', 'var(--muted)'); showToast('Admin signed out', { duration: 2000 });
+          return;
         }
         els.adminPassword.value = '';
         openModal(els.adminModal);
@@ -394,6 +492,7 @@
         closeModal(els.adminModal);
         setAdmin(true);
         notify('Admin session active', 'var(--good)');
+        showToast('Admin session active', { success: true });
       });
 
       function applyAdminUI() {
@@ -405,15 +504,14 @@
           els.addPanel.classList.remove('admin-active'); els.adminBadgeWrap.innerHTML = ''; els.chartsPanel.classList.remove('show'); els.chartsPanel.setAttribute('aria-hidden', 'true');
         }
         els.addBtn.disabled = !isAdmin;
-        // Render whenever admin state changes
         renderTransactions();
       }
 
-      // Firebase Sync with Fallback
-      // Attach listener in idle to avoid blocking initial paint if firebase scripts are still loading
+      // Firebase Sync with Fallback (improved UX: spinner + toast)
       doWhenIdle(() => {
         try {
           if (window.firebase && firebase.database) {
+            showSpinner();
             const db = firebase.database();
             const txRef = db.ref('transactions');
 
@@ -422,58 +520,72 @@
               if (data) {
                 transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
                 saveLocal(); // Sync to local too
+              } else {
+                // If no data, keep local (avoid wiping)
+                transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
               }
               renderTransactions();
+              hideSpinner();
             }, (error) => {
               console.error('Firebase error, falling back to local:', error);
               usingFirebase = false;
               transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
               renderTransactions();
-              notify('Using local storage (check internet)', 'var(--danger)');
+              hideSpinner();
+              showToast('Using local storage (check internet)', { error: true });
             });
 
             // expose txRef for push/update/remove used in add/edit/delete paths
             window.__selelo_txRef = txRef;
+            usingFirebase = true;
           } else {
             usingFirebase = false;
             renderTransactions();
+            hideSpinner();
           }
         } catch (e) {
           console.error('Firebase init error', e);
           usingFirebase = false;
           renderTransactions();
+          hideSpinner();
         }
       });
 
-      // Add
+      // Add (optimistic update + spinner)
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         const newTx = { date, type, category, amount, notes };
+
+        // optimistic local push for immediate UI feedback
+        newTx.key = Date.now().toString();
+        transactions.push(newTx);
+        saveLocal();
+        renderTransactions();
+        showToast('Adding transaction...');
+
         if (usingFirebase && window.__selelo_txRef) {
-          window.__selelo_txRef.push(newTx).then(() => {
-            notify('Added (synced to cloud)');
-            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
-            // we rely on realtime listener to update transactions
+          showSpinner();
+          // push to firebase (server-provided key replaced by real one via realtime listener)
+          window.__selelo_txRef.push({ date, type, category, amount, notes }).then(() => {
+            hideSpinner();
+            showToast('Added (synced to cloud)', { success: true });
+            // real-time listener will update with server keys; local optimistic entry may be left,
+            // but our listener will replace transactions array soon.
           }).catch(e => {
             console.error(e);
-            // Fallback add
-            newTx.key = Date.now().toString();
-            transactions.push(newTx);
-            saveLocal();
-            renderTransactions();
-            notify('Added locally (cloud error)', 'var(--danger)');
+            hideSpinner();
+            showToast('Cloud add failed — saved locally', { error: true });
           });
         } else {
-          newTx.key = Date.now().toString();
-          transactions.push(newTx);
-          saveLocal();
-          renderTransactions();
-          notify('Added locally');
+          showToast('Added locally', { success: true });
         }
+        // clear inputs
+        els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
       });
+
       els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
 
       // Edit
@@ -490,25 +602,30 @@
         if (!isAdmin || !editKey) return;
         const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
-        if (usingFirebase && window.__selelo_txRef) {
-          window.__selelo_txRef.child(editKey).update(nd).then(() => {
-            closeModal(els.editModal); notify('Edited (synced)');
-            editKey = null;
-          }).catch(e => {
-            // Fallback
-            const idx = transactions.findIndex(t => t.key === editKey);
-            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
-            saveLocal();
-            renderTransactions();
-            notify('Edited locally', 'var(--danger)');
-          });
-        } else {
-          const idx = transactions.findIndex(t => t.key === editKey);
-          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+
+        // optimistic local update
+        const idxLocal = transactions.findIndex(t => t.key === editKey);
+        if (idxLocal > -1) {
+          transactions[idxLocal] = { key: editKey, ...nd };
           saveLocal();
           renderTransactions();
+        }
+
+        if (usingFirebase && window.__selelo_txRef) {
+          showSpinner();
+          window.__selelo_txRef.child(editKey).update(nd).then(() => {
+            hideSpinner();
+            closeModal(els.editModal);
+            editKey = null;
+            showToast('Edited (synced)', { success: true });
+          }).catch(e => {
+            hideSpinner();
+            showToast('Cloud edit failed — saved locally', { error: true });
+          });
+        } else {
           closeModal(els.editModal);
           notify('Edited');
+          showToast('Edited locally', { success: true });
           editKey = null;
         }
       });
@@ -517,19 +634,30 @@
       function deleteTx(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         if (!confirm('Delete this transaction?')) return;
+
+        // optimistic local delete
+        const backup = transactions.slice();
+        transactions = transactions.filter(t => t.key !== key);
+        saveLocal();
+        renderTransactions();
+        showToast('Deleting...');
+
         if (usingFirebase && window.__selelo_txRef) {
-          window.__selelo_txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
-            // Fallback
-            transactions = transactions.filter(t => t.key !== key);
+          showSpinner();
+          window.__selelo_txRef.child(key).remove().then(() => {
+            hideSpinner();
+            showToast('Deleted (synced)', { success: true });
+          }).catch(e => {
+            console.error(e);
+            hideSpinner();
+            // rollback on failure
+            transactions = backup;
             saveLocal();
             renderTransactions();
-            notify('Deleted locally', 'var(--danger)');
+            showToast('Cloud delete failed — restored locally', { error: true });
           });
         } else {
-          transactions = transactions.filter(t => t.key !== key);
-          saveLocal();
-          renderTransactions();
-          notify('Deleted', 'var(--danger)');
+          showToast('Deleted locally', { success: true });
         }
       }
 
@@ -542,9 +670,10 @@
         };
       }
 
+      // Use same function name as original code (renderTransactions) used later
       const debouncedRender = debounce(renderTransactions, 220);
 
-      // wire quick filter change events for better UX (live filter)
+      // wire quick filter change events
       ['input', 'change'].forEach(evt => {
         els.fNotes.addEventListener('input', debouncedRender);
         els.fMin.addEventListener('input', debouncedRender);
@@ -570,16 +699,13 @@
 
       // Efficient render using DocumentFragment to avoid repeated reflow
       function renderTransactions() {
-        // build rows in fragment
         const frag = document.createDocumentFragment();
         let inc = 0, exp = 0;
 
         const filtered = transactions.filter(passesFilters);
 
-        // If large dataset, avoid blocking main thread; chunked rendering could be implemented here if needed
         filtered.forEach(t => {
           const tr = document.createElement('tr');
-          // Create cells safely (we'll set innerHTML for actions since they are controlled)
           const tdDate = document.createElement('td'); tdDate.textContent = t.date;
           const tdType = document.createElement('td'); tdType.textContent = t.type;
           const tdCat = document.createElement('td'); tdCat.textContent = t.category;
@@ -605,7 +731,6 @@
           if (t.type === 'Expense') exp += Number(t.amount);
         });
 
-        // Replace tbody content in one operation
         els.txTbody.innerHTML = '';
         els.txTbody.appendChild(frag);
 
@@ -615,11 +740,13 @@
 
         // Charts lazy-init: only render when admin and charts panel visible
         if (isAdmin && els.chartsPanel.classList.contains('show') && filtered.length > 0) {
-          // check canvas visibility/size to avoid wasted work
-          const canvas = document.getElementById('chartIE');
-          if (canvas && canvas.clientWidth > 0) {
-            renderCharts();
-          }
+          // defer heavy chart rendering to idle time for smoother UX
+          doWhenIdle(() => {
+            const canvas = document.getElementById('chartIE');
+            if (canvas && canvas.clientWidth > 0) {
+              renderCharts();
+            }
+          });
         }
       }
 
@@ -635,12 +762,10 @@
 
       // Charts (admin only) - small guard checks to avoid heavy Chart.js usage when not needed
       function renderCharts() {
-        if (!window.Chart) return; // Chart.js not loaded yet
+        if (!window.Chart) return;
         const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
         const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
-        try {
-          if (chartIE) chartIE.destroy();
-        } catch (e) { /* ignore */ }
+        try { if (chartIE) chartIE.destroy(); } catch (e) {}
         chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
           data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
@@ -675,7 +800,7 @@
         });
       }
 
-      // Export CSV
+      // Export CSV (unchanged)
       els.exportCsv.addEventListener('click', () => {
         if (!transactions.length) { alert('No transactions to export'); return; }
         let csv = 'Date,Type,Category,Amount,Notes\n';
@@ -683,9 +808,10 @@
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        showToast('CSV exported', { success: true });
       });
 
-      // P&L
+      // P&L (unchanged logic) + small toast
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
@@ -703,7 +829,7 @@
           if (cb) cb.addEventListener('click', () => closeModal(els.receiptModal));
         }, 50);
       }
-      els.genPL.addEventListener('click', generatePL);
+      els.genPL.addEventListener('click', () => { generatePL(); showToast('PL generated'); });
       els.showPLBtn.addEventListener('click', () => { generatePL(); openModal(els.receiptModal); });
 
       // Download P&L (PDF)
@@ -717,25 +843,30 @@
           alert('PDF library not ready yet');
           return;
         }
-        const doc = new jsPDF();
-        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
-        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
-        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
-        let y = 72;
-        const br = {};
-        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        doc.text('Category breakdown:', 14, y); y += 8;
-        for (const k in br) {
-          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y);
-          y += 8;
-          if (y > 270) { doc.addPage(); y = 20; }
-        }
-        doc.save(`PL_${m || 'all'}.pdf`);
+        showSpinner();
+        setTimeout(() => {
+          const doc = new jsPDF();
+          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+          doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+          doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+          doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+          doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+          let y = 72;
+          const br = {};
+          arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+          doc.text('Category breakdown:', 14, y); y += 8;
+          for (const k in br) {
+            doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y);
+            y += 8;
+            if (y > 270) { doc.addPage(); y = 20; }
+          }
+          doc.save(`PL_${m || 'all'}.pdf`);
+          hideSpinner();
+          showToast('P&L downloaded', { success: true });
+        }, 80);
       });
 
-      // Receipt
+      // Receipt (unchanged)
       function openReceipt(key) {
         const t = transactions.find(x => x.key === key);
         if (!t) return;
@@ -764,7 +895,17 @@
       window.addEventListener('beforeunload', saveLocal);
       // initial render
       renderTransactions();
+
+      // small accessibility: allow Enter key to confirm admin modal
+      els.adminPassword.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); }
+      });
+
+      // expose a small API for debugging
+      window.__selelo_showSpinner = showSpinner;
+      window.__selelo_hideSpinner = hideSpinner;
+      window.__selelo_toast = showToast;
     });
   </script>
 </body>
-</html>
+  </html>
