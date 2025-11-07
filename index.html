@@ -4,77 +4,74 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
-  <meta name="description" content="Secure business tracker with offline support and cloud sync">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="data:application/manifest+json,{
-    \"name\": \"Selelo Business Park\",
-    \"short_name\": \"Selelo\",
-    \"description\": \"Business transaction tracker\",
-    \"start_url\": \".\",
-    \"display\": \"standalone\",
-    \"background_color\": \"#1A120B\",
-    \"theme_color\": \"#E2725B\",
-    \"icons\": [
-      {\"src\": \"11.png\", \"sizes\": \"192x192\", \"type\": \"image/png\"},
-      {\"src\": \"11.png\", \"sizes\": \"512x512\", \"type\": \"image/png\"}
-    ]
-  }">
   <style>
     :root {
-      --bg-dark: #1A120B; --muted: #A89A8F; --text: #F8F4F0;
-      --accent1: #E2725B; --accent2: #D4A574; --good: #4ade80; --danger: #D9534F;
-      --radius: 14px; --maxw: 1200px;
+      --bg-dark: #1A120B; /* Warmer mocha-black base */
+      --muted: #A89A8F; /* Earthy taupe neutral */
+      --text: #F8F4F0; /* Cozy off-white */
+      --accent1: #E2725B; /* Terracotta pop */
+      --accent2: #D4A574; /* Honey gold gradient */
+      --good: #4ade80; /* Verdant green (retained) */
+      --danger: #D9534F; /* Softer ruby red */
+      --glass-weak: rgba(255,255,255,0.03);
+      --glass-strong: rgba(255,255,255,0.07);
+      --radius: 14px;
+      --maxw: 1200px;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: Inter, system-ui; color: var(--text); -webkit-font-smoothing: antialiased; }
-    body { background: var(--bg-dark) url('2.png') center/cover fixed; min-height: 100vh; }
-    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4)); backdrop-filter: blur(2px); z-index: -1; }
-    .shell { padding: 28px; display: flex; justify-content: center; min-height: 100vh; }
-    .card { max-width: var(--maxw); width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); display: flex; flex-direction: column; gap: 16px; }
-    h1 { margin: 0; font-size: 24px; font-weight: 800; text-transform: uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
+    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; color: var(--text); -webkit-font-smoothing: antialiased; }
+    body { background-image: url('2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: var(--bg-dark); margin: 0; padding: 0; min-height: 100vh; }
+    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4)); z-index: -1; pointer-events: none; backdrop-filter: blur(2px); }
+    .shell { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px; }
+    .card { width: 100%; max-width: var(--maxw); border-radius: 18px; padding: 24px; background: rgba(255,255,255,0.05); box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); min-height: 85vh; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1; }
+    .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 12px 36px rgba(0,0,0,0.6); }
+    h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
     @keyframes subtleGlow { from { text-shadow: 0 0 4px rgba(226,114,91,0.3); } to { text-shadow: 0 0 8px rgba(212,165,116,0.4); } }
-    .sub { color: var(--muted); font-size: 13px; }
-    .btn { padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; }
+    .sub { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .controls { display: flex; gap: 8px; align-items: center; }
+    .btn { border: 0; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; transition: all 0.2s ease; }
+    .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); }
     .btn-admin, .btn-add { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 4px 16px rgba(226,114,91,0.2); }
-    .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); }
-    .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+    .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); padding: 10px 12px; border-radius: 10px; }
+    .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 8px; }
     @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-    .panel { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
-    .admin-panel.admin-active { background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border-color: rgba(226,114,91,0.15); }
-    .fields { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .panel { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .admin-panel { transition: all 240ms ease; }
+    .admin-panel.admin-active { background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border: 1px solid rgba(226,114,91,0.15); box-shadow: 0 12px 40px rgba(226,114,91,0.1); }
+    .fields { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .field { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
-    input, select, textarea { background: transparent; border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 10px; color: var(--text); }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.1); outline: none; }
-    .table-wrap { margin-top: 12px; overflow-x: auto; border-radius: 10px; }
-    table { width: 100%; min-width: 640px; border-collapse: collapse; }
-    th { padding: 10px; text-align: left; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
-    td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
-    .action-btn { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #001; padding: 6px 8px; border-radius: 8px; font-weight: 700; }
-    .delete-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 8px; border-radius: 8px; }
-    .delete-btn:hover { background: var(--danger); color: #fff; }
-    .stat { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: 0.2s; }
-    .stat:hover { background: linear-gradient(180deg, rgba(212,165,116,0.1), transparent); transform: translateY(-2px); }
-    .modal { position: fixed; top: 7%; left: 50%; transform: translateX(-50%); width: 94%; max-width: 460px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); display: none; z-index: 1300; }
+    label { font-size: 13px; color: var(--muted); font-weight: 700; }
+    input[type="text"], input[type="date"], input[type="number"], select, textarea { background: transparent; border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 10px; color: var(--text); font-size: 14px; transition: all 0.15s ease; }
+    textarea { min-height: 72px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.1); }
+    .actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+    .table-wrap { margin-top: 12px; overflow: auto; border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    thead th { padding: 10px; text-align: left; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
+    tbody td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text); font-size: 14px; }
+    .action-btn { padding: 6px 8px; border-radius: 8px; border: 0; cursor: pointer; background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #001; font-weight: 700; transition: all 0.2s; }
+    .delete-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 8px; border-radius: 8px; font-weight: 700; transition: all 0.2s; }
+    .delete-btn:hover { background: var(--danger); color: #fff; box-shadow: 0 4px 16px rgba(217,83,79,0.3); }
+    .dashboard { display: flex; flex-direction: column; gap: 12px; }
+    .stat-grid { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 8px; }
+    .stat { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s ease; }
+    .stat:hover { background: linear-gradient(180deg, rgba(212,165,116,0.1), transparent); border-color: var(--accent2); transform: translateY(-2px); }
+    .stat h4 { margin: 0; color: var(--muted); font-size: 12px; }
+    .stat p { margin: 8px 0 0; font-weight: 800; font-size: 18px; }
+    .charts { display: none; gap: 8px; margin-top: 10px; }
+    .charts.show { display: block; }
+    .modal { position: fixed; left: 50%; transform: translateX(-50%); top: 7%; width: 94%; max-width: 460px; z-index: 1300; display: none; }
+    .modal-panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
     .modal.show { display: block; animation: drop 240ms ease; }
-    @keyframes drop { from { opacity: 0; transform: translateX(-50%) translateY(-8px); } to { opacity: 1; transform: translateX(-50%); } }
-    .receipt { background: #fff; color: #000; padding: 16px; border-radius: 8px; }
-    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 16px 0; margin-top: auto; background: rgba(0,0,0,0.2); border-radius: 12px; }
-    .back-to-top { position: fixed; bottom: 20px; right: 20px; background: var(--accent1); color: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none; z-index: 1000; }
-    .back-to-top.show { display: block; }
-
-    /* RESPONSIVE & FOLDABLE */
-    @media (max-width: 640px) {
-      .card { padding: 16px; }
-      table { min-width: 100%; font-size: 12px; }
-      th, td { padding: 6px 4px; white-space: nowrap; }
-      td:nth-child(5) { white-space: normal; word-break: break-word; }
-    }
-    .foldable { cursor: pointer; }
-    .foldable::after { content: "Down Arrow"; float: right; font-size: 12px; }
-    .foldable.collapsed::after { content: "Right Arrow"; }
-    .transactions-table { display: none; }
-    .transactions-table.show { display: table; }
+    @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.996); opacity: 0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } }
+    .modal h3 { margin: 0 0 8px 0; font-size: 18px; }
+    .modal p { margin: 0 0 10px 0; color: var(--muted); }
+    .receipt { background: #fff; color: #000; padding: 12px; border-radius: 8px; }
+    footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; }
+    @media (max-width: 640px) { .logo { width: 52px; height: 52px; } .fields { flex-direction: column; } table { min-width: 520px; } .modal { top: 4%; } .card { padding: 16px; } }
   </style>
 </head>
 <body>
@@ -121,9 +118,9 @@
               <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
             </div>
           </div>
-          <div class="panel" style="margin-top:12px" id="transactionsPanel">
-            <div style="display:flex;justify-content:space-between;align-items:center" class="foldable" id="txFold">
-              <h3 style="margin:0">Transactions</h3><div class="sub">Click to expand/collapse</div>
+          <div class="panel" style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
             </div>
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
               <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
@@ -136,7 +133,7 @@
               <button id="resetFilter" class="btn btn-ghost">Reset</button>
             </div>
             <div class="table-wrap" style="margin-top:12px">
-              <table aria-label="transactions table" class="transactions-table" id="txTable">
+              <table aria-label="transactions table">
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
@@ -175,9 +172,6 @@
     </main>
   </div>
 
-  <!-- Back to Top -->
-  <button class="back-to-top" id="backToTop">Up Arrow</button>
-
   <!-- Modals -->
   <div id="adminModal" class="modal" aria-hidden="true" role="dialog">
     <div class="modal-panel">
@@ -211,18 +205,14 @@
   <!-- Libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Firebase Compat (easy, no modules mess) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // Service Worker for PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('data:text/javascript,/* minimal SW */self.addEventListener("install",e=>e.waitUntil(self.skipWaiting()));self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));');
-      });
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
+      // Firebase Config
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
         authDomain: "selelo-tracker.firebaseapp.com",
@@ -235,39 +225,73 @@
       const db = firebase.database();
       const txRef = db.ref('transactions');
 
-      const KEY_TX = "selelo_tx_local", KEY_ADMIN = "selelo_admin_final", KEY_THEME = "selelo_theme_final";
+      // Fallback to localStorage
+      const KEY_TX = "selelo_tx_local";
+      const KEY_ADMIN = "selelo_admin_final";
+      const KEY_THEME = "selelo_theme_final";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
       let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-      let editKey = null, chartIE, chartCat, chartTrend, usingFirebase = true;
+      let editKey = null;
+      let chartIE, chartCat, chartTrend;
+      let usingFirebase = true;
 
+      // Elements (shortened for brevity)
       const els = {
-        adminBtn: document.getElementById('adminBtn'), addBtn: document.getElementById('addBtn'), clearBtn: document.getElementById('clearBtn'),
-        txDate: document.getElementById('txDate'), txType: document.getElementById('txType'), txCategory: document.getElementById('txCategory'),
-        txAmount: document.getElementById('txAmount'), txNotes: document.getElementById('txNotes'), txMsg: document.getElementById('txMsg'),
-        txTbody: document.getElementById('txTbody'), fMonth: document.getElementById('fMonth'), fType: document.getElementById('fType'),
-        fCategory: document.getElementById('fCategory'), fMin: document.getElementById('fMin'), fMax: document.getElementById('fMax'),
-        fNotes: document.getElementById('fNotes'), applyFilter: document.getElementById('applyFilter'), resetFilter: document.getElementById('resetFilter'),
-        statIncome: document.getElementById('statIncome'), statExpense: document.getElementById('statExpense'), statBalance: document.getElementById('statBalance'),
-        adminBadgeWrap: document.getElementById('adminBadgeWrap'), chartsPanel: document.getElementById('chartsPanel'),
-        adminModal: document.getElementById('adminModal'), adminPassword: document.getElementById('adminPassword'),
-        adminCancel: document.getElementById('adminCancel'), adminConfirm: document.getElementById('adminConfirm'),
-        editModal: document.getElementById('editModal'), editDate: document.getElementById('editDate'), editType: document.getElementById('editType'),
-        editCategory: document.getElementById('editCategory'), editAmount: document.getElementById('editAmount'), editNotes: document.getElementById('editNotes'),
-        editCancelBtn: document.getElementById('editCancelBtn'), editSaveBtn: document.getElementById('editSaveBtn'),
-        receiptModal: document.getElementById('receiptModal'), receiptInner: document.getElementById('receiptInner'),
-        exportCsv: document.getElementById('exportCsv'), genPL: document.getElementById('genPL'), downloadPL: document.getElementById('downloadPL'),
-        reportMonth: document.getElementById('reportMonth'), showPLBtn: document.getElementById('showPLBtn'), plView: document.getElementById('plView'),
-        addPanel: document.getElementById('addPanel'), txFold: document.getElementById('txFold'), txTable: document.getElementById('txTable'),
-        backToTop: document.getElementById('backToTop')
+        adminBtn: document.getElementById('adminBtn'),
+        addBtn: document.getElementById('addBtn'),
+        clearBtn: document.getElementById('clearBtn'),
+        txDate: document.getElementById('txDate'),
+        txType: document.getElementById('txType'),
+        txCategory: document.getElementById('txCategory'),
+        txAmount: document.getElementById('txAmount'),
+        txNotes: document.getElementById('txNotes'),
+        txMsg: document.getElementById('txMsg'),
+        txTbody: document.getElementById('txTbody'),
+        fMonth: document.getElementById('fMonth'),
+        fType: document.getElementById('fType'),
+        fCategory: document.getElementById('fCategory'),
+        fMin: document.getElementById('fMin'),
+        fMax: document.getElementById('fMax'),
+        fNotes: document.getElementById('fNotes'),
+        applyFilter: document.getElementById('applyFilter'),
+        resetFilter: document.getElementById('resetFilter'),
+        statIncome: document.getElementById('statIncome'),
+        statExpense: document.getElementById('statExpense'),
+        statBalance: document.getElementById('statBalance'),
+        adminBadgeWrap: document.getElementById('adminBadgeWrap'),
+        chartsPanel: document.getElementById('chartsPanel'),
+        adminModal: document.getElementById('adminModal'),
+        adminPassword: document.getElementById('adminPassword'),
+        adminCancel: document.getElementById('adminCancel'),
+        adminConfirm: document.getElementById('adminConfirm'),
+        editModal: document.getElementById('editModal'),
+        editDate: document.getElementById('editDate'),
+        editType: document.getElementById('editType'),
+        editCategory: document.getElementById('editCategory'),
+        editAmount: document.getElementById('editAmount'),
+        editNotes: document.getElementById('editNotes'),
+        editCancelBtn: document.getElementById('editCancelBtn'),
+        editSaveBtn: document.getElementById('editSaveBtn'),
+        receiptModal: document.getElementById('receiptModal'),
+        receiptInner: document.getElementById('receiptInner'),
+        exportCsv: document.getElementById('exportCsv'),
+        genPL: document.getElementById('genPL'),
+        downloadPL: document.getElementById('downloadPL'),
+        reportMonth: document.getElementById('reportMonth'),
+        showPLBtn: document.getElementById('showPLBtn'),
+        plView: document.getElementById('plView'),
+        addPanel: document.getElementById('addPanel')
       };
 
+      // Utils
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); }
       function openModal(el) { el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden', 'false'); }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
       function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
       function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
+      document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
       // Theme
       (function applyTheme() {
@@ -281,11 +305,11 @@
         document.body.style.background = next === 'light' ? 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed' : 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
       });
 
-      // Admin Login/Logout
+      // Admin
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
-          if (!confirm('Logout as admin?')) return;
-          setAdmin(false); notify('Admin logged out', 'var(--muted)'); return;
+          if (!confirm('Sign out admin?')) return;
+          setAdmin(false); notify('Admin signed out', 'var(--muted)'); return;
         }
         els.adminPassword.value = '';
         openModal(els.adminModal);
@@ -294,10 +318,10 @@
       els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
       els.adminConfirm.addEventListener('click', () => {
         const p = (els.adminPassword.value || '').trim();
-        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect password'); return; }
+        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
         closeModal(els.adminModal);
         setAdmin(true);
-        notify('Admin logged in', 'var(--good)');
+        notify('Admin session active', 'var(--good)');
       });
 
       function applyAdminUI() {
@@ -305,53 +329,129 @@
           els.addPanel.classList.add('admin-active');
           els.adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800">ADMIN</span>';
           els.chartsPanel.classList.add('show'); els.chartsPanel.removeAttribute('aria-hidden');
-          els.txTable.classList.add('show');
-          els.txFold.classList.remove('collapsed');
         } else {
-          els.addPanel.classList.remove('admin-active'); els.adminBadgeWrap.innerHTML = '';
-          els.chartsPanel.classList.remove('show'); els.chartsPanel.setAttribute('aria-hidden', 'true');
-          els.txTable.classList.remove('show');
-          els.txFold.classList.add('collapsed');
+          els.addPanel.classList.remove('admin-active'); els.adminBadgeWrap.innerHTML = ''; els.chartsPanel.classList.remove('show'); els.chartsPanel.setAttribute('aria-hidden', 'true');
         }
         els.addBtn.disabled = !isAdmin;
         renderTransactions();
       }
 
-      // Foldable Transactions
-      els.txFold.addEventListener('click', () => {
-        els.txFold.classList.toggle('collapsed');
-        els.txTable.classList.toggle('show');
-      });
-
-      // Back to Top
-      window.addEventListener('scroll', () => {
-        els.backToTop.classList.toggle('show', window.scrollY > 300);
-      });
-      els.backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-      // Firebase Sync
+      // Firebase Sync with Fallback
       txRef.on('value', (snapshot) => {
         const data = snapshot.val();
-        if (data) { transactions = Object.keys(data).map(key => ({ key, ...data[key] })); saveLocal(); }
+        if (data) {
+          transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+          saveLocal(); // Sync to local too
+        }
         renderTransactions();
       }, (error) => {
-        console.error('Firebase error:', error);
+        console.error('Firebase error, falling back to local:', error);
         usingFirebase = false;
         transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
         renderTransactions();
-        notify('Using local storage', 'var(--danger)');
+        notify('Using local storage (check internet)', 'var(--danger)');
       });
 
-      // Add / Edit / Delete (unchanged logic)
-      els.addBtn.addEventListener('click', () => { /* ... same as before */ });
+      // Add
+      els.addBtn.addEventListener('click', () => {
+        if (!isAdmin) { alert('Admin only'); return; }
+        const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
+        const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
+        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
+        const newTx = { date, type, category, amount, notes };
+        if (usingFirebase) {
+          txRef.push(newTx).then(() => {
+            notify('Added (synced to cloud)');
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          }).catch(e => {
+            console.error(e);
+            // Fallback add
+            newTx.key = Date.now().toString();
+            transactions.push(newTx);
+            saveLocal();
+            renderTransactions();
+            notify('Added locally (cloud error)', 'var(--danger)');
+          });
+        } else {
+          newTx.key = Date.now().toString();
+          transactions.push(newTx);
+          saveLocal();
+          renderTransactions();
+          notify('Added locally');
+        }
+      });
       els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
-      function openEdit(key) { /* ... */ }
-      function deleteTx(key) { /* ... */ }
+
+      // Edit
+      function openEdit(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        editKey = key;
+        const t = transactions.find(t => t.key === key);
+        if (!t) return;
+        els.editDate.value = t.date; els.editType.value = t.type; els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        openModal(els.editModal);
+      }
+      els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
+      els.editSaveBtn.addEventListener('click', () => {
+        if (!isAdmin || !editKey) return;
+        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
+        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
+        if (usingFirebase) {
+          txRef.child(editKey).update(nd).then(() => {
+            closeModal(els.editModal); notify('Edited (synced)');
+            editKey = null;
+          }).catch(e => {
+            // Fallback
+            const idx = transactions.findIndex(t => t.key === editKey);
+            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+            saveLocal();
+            renderTransactions();
+            notify('Edited locally', 'var(--danger)');
+          });
+        } else {
+          const idx = transactions.findIndex(t => t.key === editKey);
+          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+          saveLocal();
+          renderTransactions();
+          closeModal(els.editModal);
+          notify('Edited');
+          editKey = null;
+        }
+      });
+
+      // Delete
+      function deleteTx(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        if (!confirm('Delete this transaction?')) return;
+        if (usingFirebase) {
+          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+            // Fallback
+            transactions = transactions.filter(t => t.key !== key);
+            saveLocal();
+            renderTransactions();
+            notify('Deleted locally', 'var(--danger)');
+          });
+        } else {
+          transactions = transactions.filter(t => t.key !== key);
+          saveLocal();
+          renderTransactions();
+          notify('Deleted', 'var(--danger)');
+        }
+      }
 
       // Filters & Render
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => { els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; renderTransactions(); });
-      function passesFilters(t) { /* ... */ }
+      function passesFilters(t) {
+        if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
+        if (els.fType.value && t.type !== els.fType.value) return false;
+        if (els.fCategory.value && t.category !== els.fCategory.value) return false;
+        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
+        if (t.amount < min || t.amount > max) return false;
+        const nf = (els.fNotes.value || '').toLowerCase();
+        if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
+        return true;
+      }
       function renderTransactions() {
         els.txTbody.innerHTML = '';
         let inc = 0, exp = 0;
@@ -372,10 +472,65 @@
         els.statBalance.textContent = (inc - exp).toLocaleString();
         if (isAdmin) renderCharts();
       }
+      els.txTbody.addEventListener('click', e => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const act = b.dataset.act, key = b.dataset.key;
+        if (act === 'edit') openEdit(key);
+        if (act === 'del') deleteTx(key);
+        if (act === 'rcpt') openReceipt(key);
+      });
 
-      // Charts, Export, P&L, Receipt (unchanged)
-      function renderCharts() { /* ... */ }
-      els.exportCsv.addEventListener('click', () => { /* ... */ });
+      // Charts (admin only)
+      function renderCharts() {
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + b.amount, 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + b.amount, 0);
+        if (chartIE) chartIE.destroy();
+        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const catMap = {};
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + t.amount);
+        if (chartCat) chartCat.destroy();
+        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const monthly = {};
+        transactions.forEach(t => {
+          const m = t.date.slice(0, 7);
+          monthly[m] = monthly[m] || { Income: 0, Expense: 0 };
+          monthly[m][t.type] += t.amount;
+        });
+        const months = Object.keys(monthly).sort();
+        if (chartTrend) chartTrend.destroy();
+        chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: months,
+            datasets: [
+              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill: true },
+              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill: true }
+            ]
+          },
+          options: { responsive: true, tension: 0.3, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      // Export CSV
+      els.exportCsv.addEventListener('click', () => {
+        if (!transactions.length) { alert('No transactions to export'); return; }
+        let csv = 'Date,Type,Category,Amount,Notes\n';
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      });
+
+      // P&L
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
@@ -389,16 +544,59 @@
         els.plView.innerHTML = html;
         els.receiptInner.innerHTML = `<div class="receipt">${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(() => {
-          document.getElementById('closePL')?.addEventListener('click', () => {
-            closeModal(els.receiptModal);
-            els.plView.innerHTML = ''; // Clear P&L view after closing
-          });
+          const cb = document.getElementById('closePL');
+          if (cb) cb.addEventListener('click', () => closeModal(els.receiptModal));
         }, 50);
       }
       els.genPL.addEventListener('click', generatePL);
       els.showPLBtn.addEventListener('click', () => { generatePL(); openModal(els.receiptModal); });
-      els.downloadPL.addEventListener('click', () => { /* ... */ });
-      function openReceipt(key) { /* ... */ }
+      els.downloadPL.addEventListener('click', () => {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + b.amount, 0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + b.amount, 0);
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + t.amount);
+        doc.text('Category breakdown:', 14, y); y += 8;
+        for (const k in br) {
+          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y);
+          y += 8;
+          if (y > 270) { doc.addPage(); y = 20; }
+        }
+        doc.save(`PL_${m || 'all'}.pdf`);
+      });
+
+      // Receipt
+      function openReceipt(key) {
+        const t = transactions.find(x => x.key === key);
+        if (!t) return;
+        const idx = transactions.findIndex(x => x.key === key);
+        const inv = 'INV-' + (10000 + idx);
+        const issued = new Date().toLocaleDateString();
+        let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>
+          <div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount.toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95" onerror="this.style.display='none'"></div>
+          <div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
+        els.receiptInner.innerHTML = html;
+        openModal(els.receiptModal);
+        setTimeout(() => {
+          document.getElementById('printReceipt')?.addEventListener('click', () => {
+            const w = window.open('', '_blank', 'width=700,height=800');
+            w.document.write('<html><head><title>Receipt</title><style>body{font-family:Arial;margin:20px;}</style></head><body>' + els.receiptInner.innerHTML + '</body></html>');
+            w.document.close();
+            setTimeout(() => w.print(), 300);
+          });
+          document.getElementById('closeReceipt')?.addEventListener('click', () => closeModal(els.receiptModal));
+        }, 60);
+      }
 
       // Init
       applyAdminUI();
