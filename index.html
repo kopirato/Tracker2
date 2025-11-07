@@ -70,8 +70,10 @@
     .modal h3 { margin: 0 0 8px 0; font-size: 18px; }
     .modal p { margin: 0 0 10px 0; color: var(--muted); }
     .receipt { background: #fff; color: #000; padding: 12px; border-radius: 8px; }
-    footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; }
-    @media (max-width: 640px) { .logo { width: 52px; height: 52px; } .fields { flex-direction: column; } table { min-width: 520px; } .modal { top: 4%; } .card { padding: 16px; } }
+    footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border: 1px solid rgba(226,114,91,0.15); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-style: italic; }
+    .back-to-top { position: fixed; bottom: 20px; right: 20px; background: var(--accent1); color: #fff; border: none; padding: 10px; border-radius: 50%; cursor: pointer; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; }
+    .back-to-top.show { display: block; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
@@ -118,7 +120,7 @@
               <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
             </div>
           </div>
-          <div class="panel" style="margin-top:12px">
+          <div class="panel hidden" style="margin-top:12px" id="transactionsPanel">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
             </div>
@@ -150,7 +152,7 @@
             </div>
             <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
-          <div id="chartsPanel" class="panel charts" aria-hidden="true" style="margin-top:12px">
+          <div id="chartsPanel" class="panel charts hidden" aria-hidden="true" style="margin-top:12px">
             <h3 style="margin:0">Charts</h3>
             <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
             <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
@@ -162,15 +164,18 @@
             <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
             <div style="display:flex;gap:8px;margin-top:10px">
               <button id="showPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
             </div>
             <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
           </div>
         </aside>
       </div>
-      <footer>Proudly developed by Seltec | +254745151968 | @Its_SelianFr</footer>
+      <footer style="background: linear-gradient(90deg, var(--accent1), var(--accent2)); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: 0 4px 16px rgba(226,114,91,0.2); font-style: italic; letter-spacing: 0.5px; color: #042; margin-top: auto;">
+        Proudly developed by Seltec | +254745151968 | @Its_SelianFr
+      </footer>
     </main>
   </div>
+
+  <button class="back-to-top" id="backToTop">↑</button>
 
   <!-- Modals -->
   <div id="adminModal" class="modal" aria-hidden="true" role="dialog">
@@ -211,8 +216,12 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
+    // Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('data:text/javascript,/* SW */ self.addEventListener("install", e => e.waitUntil(self.skipWaiting())); self.addEventListener("activate", e => e.waitUntil(self.clients.claim())); self.addEventListener("fetch", e => e.respondWith(fetch(e.request)));');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Firebase Config
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
         authDomain: "selelo-tracker.firebaseapp.com",
@@ -225,7 +234,6 @@
       const db = firebase.database();
       const txRef = db.ref('transactions');
 
-      // Fallback to localStorage
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
@@ -544,8 +552,7 @@
         els.plView.innerHTML = html;
         els.receiptInner.innerHTML = `<div class="receipt">${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(() => {
-          const cb = document.getElementById('closePL');
-          if (cb) cb.addEventListener('click', () => closeModal(els.receiptModal));
+          document.getElementById('closePL')?.addEventListener('click', () => closeModal(els.receiptModal));
         }, 50);
       }
       els.genPL.addEventListener('click', generatePL);
