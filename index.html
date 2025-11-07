@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
+  <!-- perf: preconnect to font host -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -18,53 +20,99 @@
       --glass-strong: rgba(255,255,255,0.07);
       --radius: 14px;
       --maxw: 1200px;
+      --focus-ring: 0 0 0 3px rgba(226,114,91,0.12);
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; color: var(--text); -webkit-font-smoothing: antialiased; }
-    body { background-image: url('2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: var(--bg-dark); margin: 0; padding: 0; min-height: 100vh; }
-    body::before { content: ""; position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4)); z-index: -1; pointer-events: none; backdrop-filter: blur(2px); }
+    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; color: var(--text); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    /* prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
+    body {
+      background-image: url('2.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-color: var(--bg-dark);
+      margin: 0; padding: 0; min-height: 100vh;
+      /* lighter backdrop filter for perf on low-end devices */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* cheaper overlay (avoid heavy blur by default) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4));
+      z-index: -1;
+      pointer-events: none;
+      /* reduced blur for speed */
+      backdrop-filter: blur(1px);
+    }
     .shell { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px; }
-    .card { width: 100%; max-width: var(--maxw); border-radius: 18px; padding: 24px; background: rgba(255,255,255,0.05); box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); min-height: 85vh; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1; }
+    .card {
+      width: 100%;
+      max-width: var(--maxw);
+      border-radius: 18px;
+      padding: 24px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
+      /* less blur for perf */
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
     .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .logo { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 12px 36px rgba(0,0,0,0.6); }
+    /* perf: images will be lazy loaded in HTML */
+    .logo { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
     h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
-    @keyframes subtleGlow { from { text-shadow: 0 0 4px rgba(226,114,91,0.3); } to { text-shadow: 0 0 8px rgba(212,165,116,0.4); } }
+    @keyframes subtleGlow { from { text-shadow: 0 0 4px rgba(226,114,91,0.28); } to { text-shadow: 0 0 8px rgba(212,165,116,0.36); } }
     .sub { color: var(--muted); font-size: 13px; line-height: 1.4; }
     .controls { display: flex; gap: 8px; align-items: center; }
-    .btn { border: 0; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; transition: all 0.2s ease; }
+    .btn { border: 0; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; transition: transform 140ms ease, box-shadow 140ms ease; -webkit-tap-highlight-color: transparent; }
+    .btn:active { transform: translateY(1px); }
     .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); }
-    .btn-admin, .btn-add { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 4px 16px rgba(226,114,91,0.2); }
+    .btn-admin, .btn-add { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 4px 12px rgba(226,114,91,0.16); }
     .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); padding: 10px 12px; border-radius: 10px; }
     .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 8px; }
     @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-    .panel { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .panel { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
     .admin-panel { transition: all 240ms ease; }
-    .admin-panel.admin-active { background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border: 1px solid rgba(226,114,91,0.15); box-shadow: 0 12px 40px rgba(226,114,91,0.1); }
+    .admin-panel.admin-active { background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border: 1px solid rgba(226,114,91,0.15); box-shadow: 0 12px 40px rgba(226,114,91,0.08); }
     .fields { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .field { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
     label { font-size: 13px; color: var(--muted); font-weight: 700; }
-    input[type="text"], input[type="date"], input[type="number"], select, textarea { background: transparent; border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 10px; color: var(--text); font-size: 14px; transition: all 0.15s ease; }
+    input[type="text"], input[type="date"], input[type="number"], select, textarea { background: transparent; border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 10px; color: var(--text); font-size: 14px; transition: box-shadow 0.12s ease, border-color 0.12s ease; }
     textarea { min-height: 72px; resize: vertical; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.1); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: var(--focus-ring); }
     .actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-    .table-wrap { margin-top: 12px; overflow: auto; border-radius: 10px; }
+    .table-wrap { margin-top: 12px; overflow: auto; border-radius: 10px; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; min-width: 640px; }
-    thead th { padding: 10px; text-align: left; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; }
+    thead th { padding: 10px; text-align: left; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; position: sticky; top: 0; background: rgba(255,255,255,0.02); backdrop-filter: blur(2px); z-index: 2; }
     tbody td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text); font-size: 14px; }
-    .action-btn { padding: 6px 8px; border-radius: 8px; border: 0; cursor: pointer; background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #001; font-weight: 700; transition: all 0.2s; }
+    .action-btn { padding: 6px 8px; border-radius: 8px; border: 0; cursor: pointer; background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #001; font-weight: 700; transition: transform 120ms ease; }
+    .action-btn:active { transform: translateY(1px); }
     .delete-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 8px; border-radius: 8px; font-weight: 700; transition: all 0.2s; }
     .delete-btn:hover { background: var(--danger); color: #fff; box-shadow: 0 4px 16px rgba(217,83,79,0.3); }
     .dashboard { display: flex; flex-direction: column; gap: 12px; }
     .stat-grid { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 8px; }
-    .stat { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s ease; }
+    .stat { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 120ms ease, box-shadow 120ms ease; will-change: transform; }
     .stat:hover { background: linear-gradient(180deg, rgba(212,165,116,0.1), transparent); border-color: var(--accent2); transform: translateY(-2px); }
     .stat h4 { margin: 0; color: var(--muted); font-size: 12px; }
     .stat p { margin: 8px 0 0; font-weight: 800; font-size: 18px; }
     .charts { display: none; gap: 8px; margin-top: 10px; }
     .charts.show { display: block; }
     .modal { position: fixed; left: 50%; transform: translateX(-50%); top: 7%; width: 94%; max-width: 460px; z-index: 1300; display: none; }
-    .modal-panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+    .modal-panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(6px); }
     .modal.show { display: block; animation: drop 240ms ease; }
     @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.996); opacity: 0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } }
     .modal h3 { margin: 0 0 8px 0; font-size: 18px; }
@@ -72,6 +120,11 @@
     .receipt { background: #fff; color: #000; padding: 12px; border-radius: 8px; }
     footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; }
     @media (max-width: 640px) { .logo { width: 52px; height: 52px; } .fields { flex-direction: column; } table { min-width: 520px; } .modal { top: 4%; } .card { padding: 16px; } }
+
+    /* system dark/light awareness - apply lighter background if user prefers light */
+    @media (prefers-color-scheme: light) {
+      :root { --text: #0b1220; --muted: #55606a; }
+    }
   </style>
 </head>
 <body>
@@ -79,21 +132,22 @@
     <main class="card">
       <div class="top">
         <div class="brand">
-          <img src="11.png" class="logo" alt="logo" onerror="this.style.display='none'">
+          <!-- perf: lazy load images, keep onerror fallback -->
+          <img src="11.png" class="logo" alt="logo" loading="lazy" onerror="this.style.display='none'">
           <div>
             <h1>SELELO BUSINESS PARK</h1>
             <div class="sub">The BizHub</div>
           </div>
         </div>
         <div class="controls">
-          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
-          <button id="themeBtn" class="btn btn-theme">Toggle Theme</button>
+          <button id="adminBtn" class="btn btn-admin" type="button">Admin Login</button>
+          <button id="themeBtn" class="btn btn-theme" type="button">Toggle Theme</button>
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="exportCsv" class="btn btn-theme">Export CSV</button>
-        <button id="genPL" class="btn btn-theme">Generate P&L</button>
-        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
+        <button id="exportCsv" class="btn btn-theme" type="button">Export CSV</button>
+        <button id="genPL" class="btn btn-theme" type="button">Generate P&L</button>
+        <button id="downloadPL" class="btn btn-admin" type="button">Download P&L</button>
       </div>
       <div class="grid">
         <section>
@@ -103,7 +157,7 @@
                 <h2 style="margin:0;font-size:16px">Add Transaction</h2>
                 <div class="sub">Sign in as admin to add, edit or delete</div>
               </div>
-              <div id="adminBadgeWrap"></div>
+              <div id="adminBadgeWrap" aria-hidden="true"></div>
             </div>
             <div class="fields">
               <div class="field"><label for="txDate">Date</label><input id="txDate" type="date"></div>
@@ -113,9 +167,9 @@
             </div>
             <div style="margin-top:10px"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
             <div class="actions">
-              <button id="addBtn" class="btn-add" disabled>Add Transaction</button>
-              <button id="clearBtn" class="btn-ghost">Clear</button>
-              <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)"></div>
+              <button id="addBtn" class="btn-add" disabled type="button">Add Transaction</button>
+              <button id="clearBtn" class="btn-ghost" type="button">Clear</button>
+              <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)" aria-live="polite"></div>
             </div>
           </div>
           <div class="panel" style="margin-top:12px">
@@ -129,12 +183,12 @@
               <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
+              <button id="applyFilter" class="btn btn-ghost" type="button">Apply</button>
+              <button id="resetFilter" class="btn btn-ghost" type="button">Reset</button>
             </div>
             <div class="table-wrap" style="margin-top:12px">
               <table aria-label="transactions table">
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+                <thead><tr><th scope="col">Date</th><th scope="col">Type</th><th scope="col">Category</th><th scope="col">Amount</th><th scope="col">Notes</th><th scope="col">Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
             </div>
@@ -144,25 +198,25 @@
           <div class="panel dashboard">
             <h3 style="margin:0">Overview</h3>
             <div class="stat-grid">
-              <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
-              <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
-              <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
+              <div class="stat" role="group" aria-label="Total Income"><h4>Total Income</h4><p id="statIncome">0</p></div>
+              <div class="stat" role="group" aria-label="Total Expense"><h4>Total Expense</h4><p id="statExpense">0</p></div>
+              <div class="stat" role="group" aria-label="Balance"><h4>Balance</h4><p id="statBalance">0</p></div>
             </div>
             <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
           <div id="chartsPanel" class="panel charts" aria-hidden="true" style="margin-top:12px">
             <h3 style="margin:0">Charts</h3>
-            <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartTrend" height="140"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartIE" height="140" aria-hidden="true"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartCat" height="140" aria-hidden="true"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartTrend" height="140" aria-hidden="true"></canvas></div>
           </div>
           <div class="panel" style="margin-top:12px">
             <h3 style="margin:0">Profit & Loss</h3>
             <label for="reportMonth" class="sub" style="display:block;margin-top:8px">Month (optional)</label>
             <input id="reportMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
             <div style="display:flex;gap:8px;margin-top:10px">
-              <button id="showPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
+              <button id="showPLBtn" class="btn btn-ghost" type="button">Show</button>
+              <button id="downloadPLBtn" class="btn btn-admin" type="button">Download</button>
             </div>
             <div id="plView" style="margin-top:10px;color:var(--muted);font-size:13px"></div>
           </div>
@@ -179,8 +233,8 @@
       <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
       <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text)">
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
-        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
-        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
+        <button id="adminCancel" class="btn btn-ghost" type="button">Cancel</button>
+        <button id="adminConfirm" class="btn btn-admin" type="button">Confirm</button>
       </div>
     </div>
   </div>
@@ -193,8 +247,8 @@
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)"></textarea>
       <div style="text-align:right;margin-top:10px">
-        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
-        <button id="editSaveBtn" class="btn btn-admin">Save</button>
+        <button id="editCancelBtn" class="btn btn-ghost" type="button">Cancel</button>
+        <button id="editSaveBtn" class="btn btn-admin" type="button">Save</button>
       </div>
     </div>
   </div>
@@ -202,15 +256,16 @@
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
-  <!-- Libs -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Libs (defer for better first paint) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Firebase Compat (easy, no modules mess) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Firebase Compat (easy, no modules mess) - defer -->
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
+    // All heavy initialization and event wiring happens after DOMContentLoaded (keeps inline logic intact).
     document.addEventListener('DOMContentLoaded', () => {
       // Firebase Config
       const firebaseConfig = {
@@ -221,9 +276,26 @@
         messagingSenderId: "42660826905",
         appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
       };
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
-      const txRef = db.ref('transactions');
+
+      // Perf: initialize firebase rest of work in idle to avoid blocking paint on slow devices
+      function doWhenIdle(fn) {
+        if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 500 });
+        else setTimeout(fn, 300);
+      }
+
+      // Do firebase init & listeners in idle time
+      doWhenIdle(() => {
+        if (window.firebase && firebase.initializeApp) {
+          try {
+            firebase.initializeApp(firebaseConfig);
+          } catch (e) {
+            // if already initialized, ignore
+            // console.warn('firebase init skipped', e);
+          }
+        }
+        // If firebase unavailable, we still continue - the original code assumes firebase is present
+        // db and txRef will be set below (if firebase exists)
+      });
 
       // Fallback to localStorage
       const KEY_TX = "selelo_tx_local";
@@ -333,23 +405,44 @@
           els.addPanel.classList.remove('admin-active'); els.adminBadgeWrap.innerHTML = ''; els.chartsPanel.classList.remove('show'); els.chartsPanel.setAttribute('aria-hidden', 'true');
         }
         els.addBtn.disabled = !isAdmin;
+        // Render whenever admin state changes
         renderTransactions();
       }
 
       // Firebase Sync with Fallback
-      txRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
-          saveLocal(); // Sync to local too
+      // Attach listener in idle to avoid blocking initial paint if firebase scripts are still loading
+      doWhenIdle(() => {
+        try {
+          if (window.firebase && firebase.database) {
+            const db = firebase.database();
+            const txRef = db.ref('transactions');
+
+            txRef.on('value', (snapshot) => {
+              const data = snapshot.val();
+              if (data) {
+                transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+                saveLocal(); // Sync to local too
+              }
+              renderTransactions();
+            }, (error) => {
+              console.error('Firebase error, falling back to local:', error);
+              usingFirebase = false;
+              transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+              renderTransactions();
+              notify('Using local storage (check internet)', 'var(--danger)');
+            });
+
+            // expose txRef for push/update/remove used in add/edit/delete paths
+            window.__selelo_txRef = txRef;
+          } else {
+            usingFirebase = false;
+            renderTransactions();
+          }
+        } catch (e) {
+          console.error('Firebase init error', e);
+          usingFirebase = false;
+          renderTransactions();
         }
-        renderTransactions();
-      }, (error) => {
-        console.error('Firebase error, falling back to local:', error);
-        usingFirebase = false;
-        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-        renderTransactions();
-        notify('Using local storage (check internet)', 'var(--danger)');
       });
 
       // Add
@@ -359,10 +452,11 @@
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         const newTx = { date, type, category, amount, notes };
-        if (usingFirebase) {
-          txRef.push(newTx).then(() => {
+        if (usingFirebase && window.__selelo_txRef) {
+          window.__selelo_txRef.push(newTx).then(() => {
             notify('Added (synced to cloud)');
             els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+            // we rely on realtime listener to update transactions
           }).catch(e => {
             console.error(e);
             // Fallback add
@@ -396,8 +490,8 @@
         if (!isAdmin || !editKey) return;
         const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
-        if (usingFirebase) {
-          txRef.child(editKey).update(nd).then(() => {
+        if (usingFirebase && window.__selelo_txRef) {
+          window.__selelo_txRef.child(editKey).update(nd).then(() => {
             closeModal(els.editModal); notify('Edited (synced)');
             editKey = null;
           }).catch(e => {
@@ -423,8 +517,8 @@
       function deleteTx(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         if (!confirm('Delete this transaction?')) return;
-        if (usingFirebase) {
-          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+        if (usingFirebase && window.__selelo_txRef) {
+          window.__selelo_txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
             // Fallback
             transactions = transactions.filter(t => t.key !== key);
             saveLocal();
@@ -439,9 +533,30 @@
         }
       }
 
-      // Filters & Render
+      // Filters & Render - add debounce to avoid excessive renders while typing
+      function debounce(fn, wait = 250) {
+        let t = null;
+        return (...args) => {
+          clearTimeout(t);
+          t = setTimeout(() => fn.apply(this, args), wait);
+        };
+      }
+
+      const debouncedRender = debounce(renderTransactions, 220);
+
+      // wire quick filter change events for better UX (live filter)
+      ['input', 'change'].forEach(evt => {
+        els.fNotes.addEventListener('input', debouncedRender);
+        els.fMin.addEventListener('input', debouncedRender);
+        els.fMax.addEventListener('input', debouncedRender);
+        els.fType.addEventListener('change', debouncedRender);
+        els.fCategory.addEventListener('change', debouncedRender);
+        els.fMonth.addEventListener('change', debouncedRender);
+      });
+
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => { els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; renderTransactions(); });
+
       function passesFilters(t) {
         if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
         if (els.fType.value && t.type !== els.fType.value) return false;
@@ -452,26 +567,63 @@
         if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
         return true;
       }
+
+      // Efficient render using DocumentFragment to avoid repeated reflow
       function renderTransactions() {
-        els.txTbody.innerHTML = '';
+        // build rows in fragment
+        const frag = document.createDocumentFragment();
         let inc = 0, exp = 0;
-        transactions.filter(passesFilters).forEach(t => {
+
+        const filtered = transactions.filter(passesFilters);
+
+        // If large dataset, avoid blocking main thread; chunked rendering could be implemented here if needed
+        filtered.forEach(t => {
           const tr = document.createElement('tr');
-          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          // Create cells safely (we'll set innerHTML for actions since they are controlled)
+          const tdDate = document.createElement('td'); tdDate.textContent = t.date;
+          const tdType = document.createElement('td'); tdType.textContent = t.type;
+          const tdCat = document.createElement('td'); tdCat.textContent = t.category;
+          const tdAmt = document.createElement('td'); tdAmt.textContent = 'KES ' + Number(t.amount).toLocaleString();
+          const tdNotes = document.createElement('td'); tdNotes.textContent = t.notes || '';
+          const tdAction = document.createElement('td');
+
+          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}" type="button">Receipt</button>`];
           if (isAdmin) {
-            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
-            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
+            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}" type="button">Edit</button>`);
+            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}" type="button">Delete</button>`);
           }
-          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${t.amount.toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
-          els.txTbody.appendChild(tr);
-          if (t.type === 'Income') inc += t.amount;
-          if (t.type === 'Expense') exp += t.amount;
+          tdAction.innerHTML = actions.join(' ');
+          tr.appendChild(tdDate);
+          tr.appendChild(tdType);
+          tr.appendChild(tdCat);
+          tr.appendChild(tdAmt);
+          tr.appendChild(tdNotes);
+          tr.appendChild(tdAction);
+          frag.appendChild(tr);
+
+          if (t.type === 'Income') inc += Number(t.amount);
+          if (t.type === 'Expense') exp += Number(t.amount);
         });
+
+        // Replace tbody content in one operation
+        els.txTbody.innerHTML = '';
+        els.txTbody.appendChild(frag);
+
         els.statIncome.textContent = inc.toLocaleString();
         els.statExpense.textContent = exp.toLocaleString();
         els.statBalance.textContent = (inc - exp).toLocaleString();
-        if (isAdmin) renderCharts();
+
+        // Charts lazy-init: only render when admin and charts panel visible
+        if (isAdmin && els.chartsPanel.classList.contains('show') && filtered.length > 0) {
+          // check canvas visibility/size to avoid wasted work
+          const canvas = document.getElementById('chartIE');
+          if (canvas && canvas.clientWidth > 0) {
+            renderCharts();
+          }
+        }
       }
+
+      // Event delegation for tbody actions
       els.txTbody.addEventListener('click', e => {
         const b = e.target.closest('button[data-act]');
         if (!b) return;
@@ -481,19 +633,22 @@
         if (act === 'rcpt') openReceipt(key);
       });
 
-      // Charts (admin only)
+      // Charts (admin only) - small guard checks to avoid heavy Chart.js usage when not needed
       function renderCharts() {
-        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + b.amount, 0);
-        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + b.amount, 0);
-        if (chartIE) chartIE.destroy();
+        if (!window.Chart) return; // Chart.js not loaded yet
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        try {
+          if (chartIE) chartIE.destroy();
+        } catch (e) { /* ignore */ }
         chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
           data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
           options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
         const catMap = {};
-        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + t.amount);
-        if (chartCat) chartCat.destroy();
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch (e) {}
         chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
           type: 'doughnut',
           data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
@@ -503,10 +658,10 @@
         transactions.forEach(t => {
           const m = t.date.slice(0, 7);
           monthly[m] = monthly[m] || { Income: 0, Expense: 0 };
-          monthly[m][t.type] += t.amount;
+          monthly[m][t.type] += Number(t.amount);
         });
         const months = Object.keys(monthly).sort();
-        if (chartTrend) chartTrend.destroy();
+        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
         chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
           type: 'line',
           data: {
@@ -534,10 +689,10 @@
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + b.amount, 0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + b.amount, 0);
+        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
         const br = {};
-        arr.forEach(t => br[t.category] = (br[t.category] || 0) + t.amount);
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
         let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc - exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
         for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
         html += '</ul></div>';
@@ -550,12 +705,18 @@
       }
       els.genPL.addEventListener('click', generatePL);
       els.showPLBtn.addEventListener('click', () => { generatePL(); openModal(els.receiptModal); });
+
+      // Download P&L (PDF)
       els.downloadPL.addEventListener('click', () => {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + b.amount, 0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + b.amount, 0);
-        const { jsPDF } = window.jspdf;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF) {
+          alert('PDF library not ready yet');
+          return;
+        }
         const doc = new jsPDF();
         doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
         doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
@@ -564,7 +725,7 @@
         doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
         let y = 72;
         const br = {};
-        arr.forEach(t => br[t.category] = (br[t.category] || 0) + t.amount);
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
         doc.text('Category breakdown:', 14, y); y += 8;
         for (const k in br) {
           doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y);
@@ -581,9 +742,9 @@
         const idx = transactions.findIndex(x => x.key === key);
         const inv = 'INV-' + (10000 + idx);
         const issued = new Date().toLocaleDateString();
-        let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>
-          <div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${t.amount.toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
-          <div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95" onerror="this.style.display='none'"></div>
+        let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px" loading="lazy" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>
+          <div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95" loading="lazy" onerror="this.style.display='none'"></div>
           <div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
@@ -601,7 +762,9 @@
       // Init
       applyAdminUI();
       window.addEventListener('beforeunload', saveLocal);
+      // initial render
+      renderTransactions();
     });
   </script>
 </body>
-  </html>
+</html>
