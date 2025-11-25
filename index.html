@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
 
-  <!-- PWA manifest (provide manifest.json at project root) -->
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
 
@@ -28,158 +28,194 @@
       --focus: 0 0 0 3px rgba(226,114,91,0.12);
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system,'Segoe UI',Roboto,Arial; color: var(--text); -webkit-font-smoothing:antialiased; }
+    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system,'Segoe UI',Roboto,Arial; color: var(--text); -webkit-font-smoothing:antialiased; scroll-behavior: smooth; }
     body { background-image: url('2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: var(--bg-dark); min-height: 100vh; }
     body::before { content:""; position:fixed; inset:0; background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4)); z-index:-1; pointer-events:none; backdrop-filter: blur(2px); }
+
     .shell { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:28px; }
     .card { width:100%; max-width:var(--maxw); border-radius:18px; padding:24px; background:rgba(255,255,255,0.05); box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.08); min-height:85vh; display:flex; flex-direction:column; gap:16px; position:relative; z-index:1; }
-    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    
+    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
     .brand { display:flex; align-items:center; gap:12px; }
     .logo { width:62px; height:62px; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 36px rgba(0,0,0,0.6); }
     h1 { margin:0; font-size:24px; letter-spacing:0.5px; font-weight:800; text-transform:uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
     @keyframes subtleGlow { from{ text-shadow:0 0 4px rgba(226,114,91,0.3);} to{ text-shadow:0 0 8px rgba(212,165,116,0.4);} }
     .sub { color:var(--muted); font-size:13px; line-height:1.4; }
 
-    /* Header nav (new) */
-    .header-row { display:flex; align-items:center; gap:12px; }
-    .nav-icons { display:flex; gap:8px; align-items:center; margin-right:8px; }
-    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); cursor:pointer; min-width:64px; text-align:center; font-size:11px; color:var(--text); }
-    .nav-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
-    .nav-icon { font-size:18px; display:block; }
-    .install-btn { padding:8px 10px; border-radius:10px; border:0; background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; font-weight:700; cursor:pointer; }
+    /* === PREMIUM HEADER NAV === */
+    .header-row { display:flex; align-items:center; gap:12px; flex:1; justify-content:flex-end; flex-wrap:wrap; }
+    .nav-icons { display:flex; gap:10px; align-items:center; }
+    .nav-item {
+      position: relative;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+      padding:12px 14px; border-radius:12px; min-width:68px;
+      background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06);
+      cursor:pointer; text-decoration:none; color:var(--text);
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow:hidden;
+    }
+    .nav-item.premium::before {
+      content:''; position:absolute; inset:0; border-radius:12px;
+      background: linear-gradient(135deg, rgba(226,114,91,0.18), rgba(212,165,116,0.1));
+      opacity:0; transition:opacity 0.3s ease; pointer-events:none;
+    }
+    .nav-item:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,0.35); }
+    .nav-item:hover::before { opacity:1; }
+    .nav-item:hover .nav-icon-svg { stroke:var(--accent1); transform:translateY(-2px) scale(1.15); }
+    .nav-item:hover span { color:var(--accent1); font-weight:700; }
+
+    .nav-icon-svg { width:24px; height:24px; stroke:currentColor; stroke-width:2; transition:all 0.25s ease; }
+
+    .install-btn {
+      padding:9px 12px; border-radius:10px; border:0;
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#042; font-weight:700; font-size:12px; cursor:pointer;
+      display:flex; align-items:center; gap:6px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .nav-item span { display:none; }
+      .nav-item { min-width:56px; padding:12px 10px; }
+      .nav-icon-svg { width:26px; height:26px; }
+    }
+    @media (max-width: 480px) {
+      .top { flex-direction:column; align-items:stretch; }
+      .header-row { justify-content:center; }
+      .nav-icons { gap:8px; }
+      .install-btn { align-self:center; }
+    }
 
     .controls { display:flex; gap:8px; align-items:center; }
-    .btn { border:0; padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition: all .18s ease; }
+    .btn { border:0; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition: all .18s ease; }
     .btn-theme { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); }
     .btn-admin { background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; box-shadow:0 4px 16px rgba(226,114,91,0.2); }
-    .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); padding:10px 12px; border-radius:10px; }
+    .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); }
 
-    .grid { display:grid; grid-template-columns:1fr 380px; gap:24px; margin-top:8px; }
-    @media (max-width:980px) { .grid { grid-template-columns:1fr; } .nav-item span { display:none; } }
-    .panel { background: rgba(255,255,255,0.05); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 32px rgba(0,0,0,0.3); }
-    .fields { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .grid { display:grid; grid-template-columns:1fr 380px; gap:24px; margin-top:16px; }
+    @media (max-width:980px) { .grid { grid-template-columns:1fr; } }
+
+    .panel { background: rgba(255,255,255,0.05); padding:18px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+    .fields { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     .field { flex:1; min-width:140px; display:flex; flex-direction:column; gap:6px; }
     label { font-size:13px; color:var(--muted); font-weight:700; }
     input, select, textarea { background:transparent; border:1px solid rgba(255,255,255,0.08); padding:10px 12px; border-radius:10px; color:var(--text); font-size:14px; }
-    textarea { min-height:72px; resize:vertical; }
-    input:focus, select:focus, textarea:focus { outline:none; box-shadow: var(--focus); border-color:var(--accent1); }
+    input:focus, select:focus, textarea:focus { outline:none; box-shadow:var(--focus); border-color:var(--accent1); }
 
     .table-wrap { margin-top:12px; overflow:auto; border-radius:10px; }
     table { width:100%; border-collapse:collapse; min-width:640px; }
-    thead th { padding:10px; text-align:left; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.08); font-size:13px; position:sticky; top:0; background: rgba(255,255,255,0.02); }
+    thead th { padding:12px; text-align:left; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.08); font-size:13px; position:sticky; top:0; background: rgba(255,255,255,0.02); }
     tbody td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text); font-size:14px; }
 
-    /* small utilities */
-    .right { margin-left:auto; }
-
-    .modal { position:fixed; left:50%; transform:translateX(-50%); top:7%; width:94%; max-width:460px; z-index:1300; display:none; }
-    .modal-panel { background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+    .modal { position:fixed; left:50%; top:7%; width:94%; max-width:460px; z-index:1300; display:none; transform:translateX(-50%); }
+    .modal-panel { background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:20px; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
     .modal.show { display:block; animation: drop 240ms ease; }
-    @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.996); opacity:0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity:1; } }
+    @keyframes drop { from { transform: translateX(-50%) translateY(-12px) scale(0.99); opacity:0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity:1; } }
 
-    footer { text-align:center; margin-top:auto; color:var(--muted); font-size:13px; padding-top:10px; }
+    footer { text-align:center; margin-top:auto; color:var(--muted); font-size:13px; padding-top:16px; }
 
-    @media (max-width:640px) { .logo { width:52px; height:52px; } .fields { flex-direction:column; } table { min-width:520px; } .modal { top:4%; } .card { padding:16px; } }
+    @media (max-width:640px) { .logo { width:52px; height:52px; } .card { padding:16px; } }
+    .stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:10px; }
+    .stat { background: rgba(255,255,255,0.03); padding:10px; border-radius:8px; text-align:center; }
+    .stat h4 { margin:0 0 4px; font-size:13px; color:var(--muted); }
+    .stat p { margin:0; font-weight:700; }
+    .admin-panel.admin-active .btn-add { opacity:1; cursor:pointer; }
+    .action-btn { background:var(--glass-strong); border:0; padding:6px 10px; border-radius:6px; color:var(--text); font-size:12px; cursor:pointer; }
+    .delete-btn { background:var(--danger); color:#fff; }
   </style>
 </head>
 <body>
   <div class="shell">
     <main class="card" role="application" aria-label="Selelo Business Park">
 
-      <!-- TOP -->
+      <!-- TOP HEADER -->
       <div class="top">
-        <div style="display:flex;align-items:center;gap:12px;width:100%">
-          <div class="brand" aria-hidden="false">
-            <img src="11.png" class="logo" alt="logo" loading="lazy" onerror="this.style.display='none'">
-            <div>
-              <h1>SELELO BUSINESS PARK</h1>
-              <div class="sub">The BizHub</div>
-            </div>
-          </div>
-
-          <!-- header nav + icons (new) -->
-          <div class="header-row right" style="flex:1;align-items:center;gap:12px">
-            <div class="nav-icons" role="navigation" aria-label="Primary">
-              <div class="nav-item" id="nav-transactions" title="Transactions" tabindex="0">
-                <span class="nav-icon">📂</span>
-                <span>Transactions</span>
-              </div>
-              <div class="nav-item" id="nav-marketplace" title="Marketplace" tabindex="0">
-                <span class="nav-icon">🛍️</span>
-                <span>Marketplace</span>
-              </div>
-              <div class="nav-item" id="nav-contacts" title="Contacts" tabindex="0">
-                <span class="nav-icon">📇</span>
-                <span>Contacts</span>
-              </div>
-            </div>
-
-            <!-- install button shown when browser signals install prompt available -->
-            <button id="installBtn" class="install-btn" style="display:none;margin-right:8px" aria-hidden="true">Install App</button>
+        <div class="brand">
+          <img src="11.png" class="logo" alt="SBK Logo" loading="lazy" onerror="this.style.display='none'">
+          <div>
+            <h1>SELELO BUSINESS PARK</h1>
+            <div class="sub">The BizHub</div>
           </div>
         </div>
 
-        <!-- controls (right-most) -->
+        <!-- PREMIUM NAVIGATION -->
+        <div class="header-row">
+          <div class="nav-icons" role="navigation" aria-label="Main navigation">
+            <a href="#transactions" class="nav-item" title="Transactions" aria-label="View Transactions">
+              <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 14h6"/></svg>
+              <span>Transactions</span>
+            </a>
+            <a href="marketplace.html" class="nav-item premium" title="Marketplace" aria-label="Go to Marketplace">
+              <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              <span>Marketplace</span>
+            </a>
+            <a href="contacts.html" class="nav-item premium" title="Contacts" aria-label="Go to Contacts">
+              <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Contacts</span>
+            </a>
+          </div>
+
+          <button id="installBtn" class="install-btn" style="display:none" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Install
+          </button>
+        </div>
+
         <div class="controls">
-          <button id="adminBtn" class="btn btn-admin" type="button">Admin Login</button>
-          <button id="themeBtn" class="btn btn-theme" type="button">Toggle Theme</button>
+          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
+          <button id="themeBtn" class="btn btn-theme">Toggle Theme</button>
         </div>
       </div>
 
-      <!-- quick-action row -->
+      <!-- Quick Actions -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="exportCsv" class="btn btn-theme" type="button">Export CSV</button>
-        <button id="genPL" class="btn btn-theme" type="button">Generate P&L</button>
-        <button id="downloadPL" class="btn btn-admin" type="button">Download P&L</button>
+        <button id="exportCsv" class="btn btn-theme">Export CSV</button>
+        <button id="genPL" class="btn btn-theme">Generate P&L</button>
+        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
       </div>
+
+      <!-- Anchor for smooth scroll -->
+      <a id="transactions"></a>
 
       <!-- MAIN GRID -->
       <div class="grid">
         <section>
+          <!-- Add Transaction Panel -->
           <div id="addPanel" class="panel admin-panel">
             <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <h2 style="margin:0;font-size:16px">Add Transaction</h2>
-                <div class="sub">Sign in as admin to add, edit or delete</div>
-              </div>
-              <div id="adminBadgeWrap" aria-hidden="true"></div>
+              <div><h2 style="margin:0;font-size:16px">Add Transaction</h2><div class="sub">Sign in as admin to add, edit or delete</div></div>
+              <div id="adminBadgeWrap"></div>
             </div>
-
-            <div class="fields" role="form" aria-label="Add transaction form">
+            <div class="fields" role="form">
               <div class="field"><label for="txDate">Date</label><input id="txDate" type="date"></div>
               <div class="field"><label for="txType">Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
               <div class="field"><label for="txCategory">Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
               <div class="field"><label for="txAmount">Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
             </div>
-
             <div style="margin-top:10px"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
-
-            <div class="actions">
-              <button id="addBtn" class="btn btn-admin btn-add" disabled type="button">Add Transaction</button>
-              <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
-              <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)" aria-live="polite"></div>
+            <div class="actions" style="margin-top:12px;display:flex;gap:8px;align-items:center">
+              <button id="addBtn" class="btn btn-admin btn-add" disabled>Add Transaction</button>
+              <button id="clearBtn" class="btn btn-ghost">Clear</button>
+              <div id="txMsg" class="sub" style="color:var(--good)" aria-live="polite"></div>
             </div>
           </div>
 
-          <div class="panel" style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
-            </div>
-
+          <!-- Transactions Table -->
+          <div class="panel" style="margin-top:16px">
+            <h3 style="margin:0">Transactions</h3>
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
+              <input id="fMonth" type="month" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
               <select id="fCategory" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)"><option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
               <input id="fMin" type="number" placeholder="Min" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <input id="fMax" type="number" placeholder="Max" style="width:100px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
-              <button id="applyFilter" class="btn btn-ghost" type="button">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost" type="button">Reset</button>
+              <button id="applyFilter" class="btn btn-ghost">Apply</button>
+              <button id="resetFilter" class="btn btn-ghost">Reset</button>
             </div>
-
             <div class="table-wrap" style="margin-top:12px">
               <table aria-label="transactions table">
-                <thead><tr><th scope="col">Date</th><th scope="col">Type</th><th scope="col">Category</th><th scope="col">Amount</th><th scope="col">Notes</th><th scope="col">Action</th></tr></thead>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
             </div>
@@ -261,15 +297,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- App script (keeps your original logic, plus header + install wiring) -->
+  <!-- App script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      /* ---------------------------
-         Existing Firebase + app logic
-         (kept — only extended slightly)
-         --------------------------- */
-
-      // Firebase Config (unchanged)
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
         authDomain: "selelo-tracker.firebaseapp.com",
@@ -278,10 +308,8 @@
         messagingSenderId: "42660826905",
         appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
       };
-      // init firebase safely
       try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) { /* already init */ }
 
-      // Recreate the txRef like your original code expects
       let txRef;
       try {
         const db = firebase.database();
@@ -290,7 +318,6 @@
         console.warn('Firebase DB unavailable', e);
       }
 
-      // Keys & state
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
@@ -301,7 +328,6 @@
       let chartIE, chartCat, chartTrend;
       let usingFirebase = !!txRef;
 
-      // Elements
       const els = {
         adminBtn: document.getElementById('adminBtn'),
         addBtn: document.getElementById('addBtn'),
@@ -347,13 +373,9 @@
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
         addPanel: document.getElementById('addPanel'),
-        installBtn: document.getElementById('installBtn'),
-        navTransactions: document.getElementById('nav-transactions'),
-        navMarketplace: document.getElementById('nav-marketplace'),
-        navContacts: document.getElementById('nav-contacts')
+        installBtn: document.getElementById('installBtn')
       };
 
-      // Utility helpers (kept)
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); updateAdminBtnLabel(); }
       function openModal(el) { el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden', 'false'); }
@@ -363,26 +385,23 @@
 
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-      // Theme apply (kept)
       (function applyTheme() {
         const t = localStorage.getItem(KEY_THEME) || 'dark';
         if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
       })();
-      document.getElementById('themeBtn').addEventListener('click', () => {
+      els.themeBtn.addEventListener('click', () => {
         const cur = localStorage.getItem(KEY_THEME) || 'dark';
         const next = cur === 'dark' ? 'light' : 'dark';
         localStorage.setItem(KEY_THEME, next);
         if (next === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)'; else document.body.style.filter = '';
       });
 
-      // Admin button text update (shows sign out if admin)
       function updateAdminBtnLabel() {
         if (isAdmin) els.adminBtn.textContent = 'Admin (Sign out)';
         else els.adminBtn.textContent = 'Admin Login';
       }
       updateAdminBtnLabel();
 
-      // Admin flow
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
           if (!confirm('Sign out admin?')) return;
@@ -416,7 +435,6 @@
       }
       applyAdminUI();
 
-      // Firebase real-time sync (if available)
       if (usingFirebase && txRef) {
         txRef.on('value', (snapshot) => {
           const data = snapshot.val();
@@ -424,7 +442,6 @@
             transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
             saveLocal();
           } else {
-            // keep local if remote empty
             transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
           }
           renderTransactions();
@@ -436,12 +453,10 @@
           notify('Using local storage (check internet)', 'var(--danger)');
         });
       } else {
-        // no firebase — rely on local
         usingFirebase = false;
         transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       }
 
-      // Add transaction (kept logic but add optimistic key when local)
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
@@ -454,7 +469,6 @@
             els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
           }).catch(e => {
             console.error(e);
-            // fallback local add
             newTx.key = Date.now().toString();
             transactions.push(newTx);
             saveLocal();
@@ -470,10 +484,8 @@
         }
       });
 
-      // Clear
       els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
 
-      // Edit flow
       function openEdit(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         editKey = key;
@@ -509,7 +521,6 @@
         }
       });
 
-      // Delete
       function deleteTx(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         if (!confirm('Delete this transaction?')) return;
@@ -528,7 +539,6 @@
         }
       }
 
-      // Filters
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => { els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; renderTransactions(); });
 
@@ -543,7 +553,6 @@
         return true;
       }
 
-      // Render
       function renderTransactions() {
         els.txTbody.innerHTML = '';
         let inc = 0, exp = 0;
@@ -565,7 +574,6 @@
         if (isAdmin) renderCharts();
       }
 
-      // tbody delegation
       els.txTbody.addEventListener('click', e => {
         const b = e.target.closest('button[data-act]');
         if (!b) return;
@@ -575,7 +583,6 @@
         if (act === 'rcpt') openReceipt(key);
       });
 
-      // Charts (only when admin)
       function renderCharts() {
         if (!window.Chart) return;
         const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
@@ -615,7 +622,6 @@
         });
       }
 
-      // Export CSV
       els.exportCsv.addEventListener('click', () => {
         if (!transactions.length) { alert('No transactions to export'); return; }
         let csv = 'Date,Type,Category,Amount,Notes\n';
@@ -626,7 +632,6 @@
         notify('CSV exported', 'var(--good)');
       });
 
-      // P&L generation & download (kept)
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
@@ -671,7 +676,6 @@
         doc.save(`PL_${m || 'all'}.pdf`);
       });
 
-      // Receipt
       function openReceipt(key) {
         const t = transactions.find(x => x.key === key);
         if (!t) return;
@@ -694,20 +698,15 @@
         },60);
       }
 
-      // Initial render & persist handlers
       renderTransactions();
       window.addEventListener('beforeunload', saveLocal);
 
-      // Allow Enter in password to submit
       els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
 
-      // ---------- New: PWA install prompt handling ----------
       let deferredPrompt = null;
       window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent the mini-infobar from appearing on mobile
         e.preventDefault();
         deferredPrompt = e;
-        // show our install button
         els.installBtn.style.display = 'inline-block';
         els.installBtn.setAttribute('aria-hidden', 'false');
       });
@@ -717,7 +716,6 @@
         try {
           deferredPrompt.prompt();
           const { outcome } = await deferredPrompt.userChoice;
-          // outcome is 'accepted' or 'dismissed'
           if (outcome === 'accepted') {
             console.log('User accepted the install prompt');
           } else {
@@ -731,34 +729,15 @@
         }
       });
 
-      // Register service worker (if sw.js exists in same root)
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(reg => {
           console.log('Service Worker registered:', reg.scope);
         }).catch(err => console.warn('SW registration failed:', err));
       }
 
-      // ---------- New: Header nav click placeholders ----------
-      els.navTransactions.addEventListener('click', () => {
-        // scroll to transactions table / panel
-        document.getElementById('txTbody')?.scrollIntoView({ behavior:'smooth', block:'center' });
-      });
-      els.navMarketplace.addEventListener('click', () => {
-        alert('Marketplace section coming soon — you can wire this to a page or modal.');
-      });
-      els.navContacts.addEventListener('click', () => {
-        alert('Contacts coming soon — you can wire this to a page or modal.');
-      });
-
-      // small accessibility focus handlers (keyboard)
-      [els.navTransactions, els.navMarketplace, els.navContacts].forEach(node => {
-        node.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); node.click(); } });
-      });
-
-      // Expose debug helpers (optional)
       window.__selelo_debug = { transactions, usingFirebase, setAdmin };
 
-    }); // DOMContentLoaded
+    });
   </script>
   <script>
 if ("serviceWorker" in navigator) {
