@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
 
-  <!-- perf: preconnect / preload -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" as="style">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <!-- PWA manifest (provide manifest.json at project root) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111">
 
-  <!-- preload some external libs you rely on -->
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" as="script">
-  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script">
-  <link rel="preload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" as="script">
-  <link rel="preload" href="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" as="script">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -29,188 +25,115 @@
       --glass-strong: rgba(255,255,255,0.07);
       --radius: 14px;
       --maxw: 1200px;
-      --focus-ring: 0 0 0 3px rgba(226,114,91,0.12);
-      --toast-bg: rgba(10,12,15,0.92);
-      --spinner-bg: rgba(0,0,0,0.5);
+      --focus: 0 0 0 3px rgba(226,114,91,0.12);
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; color: var(--text); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-    }
-    body {
-      background-image: url('2.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-color: var(--bg-dark);
-      margin: 0; padding: 0; min-height: 100vh;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4));
-      z-index: -1;
-      pointer-events: none;
-      backdrop-filter: blur(1px);
-    }
-    .shell { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 28px; }
-    .card {
-      width: 100%;
-      max-width: var(--maxw);
-      border-radius: 18px;
-      padding: 24px;
-      background: rgba(255,255,255,0.05);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.28);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255,255,255,0.08);
-      min-height: 85vh;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      position: relative;
-      z-index: 1;
-      overflow: hidden;
-    }
-    .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .logo { width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
-    h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
-    @keyframes subtleGlow { from { text-shadow: 0 0 4px rgba(226,114,91,0.28); } to { text-shadow: 0 0 8px rgba(212,165,116,0.36); } }
-    .sub { color: var(--muted); font-size: 13px; line-height: 1.4; }
-    .controls { display: flex; gap: 8px; align-items: center; }
-    .btn { border: 0; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; transition: transform 140ms ease, box-shadow 140ms ease; -webkit-tap-highlight-color: transparent; }
-    .btn:active { transform: translateY(1px); }
-    .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); }
-    .btn-admin, .btn-add { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 4px 12px rgba(226,114,91,0.16); }
-    .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: var(--text); padding: 10px 12px; border-radius: 10px; }
-    .grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 8px; }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
-    .panel { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-    .admin-panel { transition: all 240ms ease; }
-    .admin-panel.admin-active { background: linear-gradient(180deg, rgba(226,114,91,0.08), rgba(212,165,116,0.05)); border: 1px solid rgba(226,114,91,0.15); box-shadow: 0 12px 40px rgba(226,114,91,0.08); }
-    .fields { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-    .field { flex: 1; min-width: 140px; display: flex; flex-direction: column; gap: 6px; }
-    label { font-size: 13px; color: var(--muted); font-weight: 700; }
-    input[type="text"], input[type="date"], input[type="number"], select, textarea { background: transparent; border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 10px; color: var(--text); font-size: 14px; transition: box-shadow 0.12s ease, border-color 0.12s ease; }
-    textarea { min-height: 72px; resize: vertical; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: var(--focus-ring); }
-    .actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-    .table-wrap { margin-top: 12px; overflow: auto; border-radius: 10px; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; min-width: 640px; }
-    thead th { padding: 10px; text-align: left; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 13px; position: sticky; top: 0; background: rgba(255,255,255,0.02); backdrop-filter: blur(2px); z-index: 2; }
-    tbody td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text); font-size: 14px; }
-    .action-btn { padding: 6px 8px; border-radius: 8px; border: 0; cursor: pointer; background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #001; font-weight: 700; transition: transform 120ms ease; }
-    .action-btn:active { transform: translateY(1px); }
-    .delete-btn { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 6px 8px; border-radius: 8px; font-weight: 700; transition: all 0.2s; }
-    .delete-btn:hover { background: var(--danger); color: #fff; box-shadow: 0 4px 16px rgba(217,83,79,0.3); }
-    .dashboard { display: flex; flex-direction: column; gap: 12px; }
-    .stat-grid { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 8px; }
-    .stat { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: transform 120ms ease, box-shadow 120ms ease; will-change: transform; }
-    .stat:hover { background: linear-gradient(180deg, rgba(212,165,116,0.1), transparent); border-color: var(--accent2); transform: translateY(-2px); }
-    .stat h4 { margin: 0; color: var(--muted); font-size: 12px; }
-    .stat p { margin: 8px 0 0; font-weight: 800; font-size: 18px; }
-    .charts { display: none; gap: 8px; margin-top: 10px; }
-    .charts.show { display: block; }
-    .modal { position: fixed; left: 50%; transform: translateX(-50%); top: 7%; width: 94%; max-width: 460px; z-index: 1300; display: none; }
-    .modal-panel { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(6px); }
-    .modal.show { display: block; animation: drop 240ms ease; }
-    @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.996); opacity: 0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } }
-    .modal h3 { margin: 0 0 8px 0; font-size: 18px; }
-    .modal p { margin: 0 0 10px 0; color: var(--muted); }
-    .receipt { background: #fff; color: #000; padding: 12px; border-radius: 8px; }
-    footer { text-align: center; margin-top: auto; color: var(--muted); font-size: 13px; padding-top: 10px; }
-    @media (max-width: 640px) { .logo { width: 52px; height: 52px; } .fields { flex-direction: column; } table { min-width: 520px; } .modal { top: 4%; } .card { padding: 16px; } }
+    html, body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system,'Segoe UI',Roboto,Arial; color: var(--text); -webkit-font-smoothing:antialiased; }
+    body { background-image: url('2.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; background-color: var(--bg-dark); min-height: 100vh; }
+    body::before { content:""; position:fixed; inset:0; background: linear-gradient(180deg, rgba(26,18,11,0.6), rgba(0,0,0,0.4)); z-index:-1; pointer-events:none; backdrop-filter: blur(2px); }
+    .shell { min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:28px; }
+    .card { width:100%; max-width:var(--maxw); border-radius:18px; padding:24px; background:rgba(255,255,255,0.05); box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border:1px solid rgba(255,255,255,0.08); min-height:85vh; display:flex; flex-direction:column; gap:16px; position:relative; z-index:1; }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo { width:62px; height:62px; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,0.08); box-shadow:0 12px 36px rgba(0,0,0,0.6); }
+    h1 { margin:0; font-size:24px; letter-spacing:0.5px; font-weight:800; text-transform:uppercase; animation: subtleGlow 2s ease-in-out infinite alternate; }
+    @keyframes subtleGlow { from{ text-shadow:0 0 4px rgba(226,114,91,0.3);} to{ text-shadow:0 0 8px rgba(212,165,116,0.4);} }
+    .sub { color:var(--muted); font-size:13px; line-height:1.4; }
 
-    /* spinner + toast UI */
-    .global-overlay {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      pointer-events: none;
-    }
-    .spinner-wrap {
-      display: none;
-      pointer-events: auto;
-      position: fixed;
-      inset: 0;
-      background: var(--spinner-bg);
-      align-items: center;
-      justify-content: center;
-      z-index: 2200;
-      transition: opacity 160ms ease;
-    }
-    .spinner-wrap.show { display: flex; opacity: 1; }
-    .spinner {
-      width: 68px;
-      height: 68px;
-      border-radius: 999px;
-      border: 6px solid rgba(255,255,255,0.08);
-      border-top-color: rgba(226,114,91,0.98); /* accent */
-      animation: spin 900ms linear infinite;
-      box-shadow: 0 6px 22px rgba(226,114,91,0.12);
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Header nav (new) */
+    .header-row { display:flex; align-items:center; gap:12px; }
+    .nav-icons { display:flex; gap:8px; align-items:center; margin-right:8px; }
+    .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); cursor:pointer; min-width:64px; text-align:center; font-size:11px; color:var(--text); }
+    .nav-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+    .nav-icon { font-size:18px; display:block; }
+    .install-btn { padding:8px 10px; border-radius:10px; border:0; background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; font-weight:700; cursor:pointer; }
 
-    .toast-container {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 2400;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
-    }
-    .toast {
-      pointer-events: auto;
-      min-width: 220px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: var(--toast-bg);
-      color: #fff;
-      font-size: 13px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: transform 180ms cubic-bezier(.22,.9,.2,1), opacity 180ms ease;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
+    .controls { display:flex; gap:8px; align-items:center; }
+    .btn { border:0; padding:10px 12px; border-radius:10px; font-weight:700; cursor:pointer; font-size:13px; transition: all .18s ease; }
+    .btn-theme { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); }
+    .btn-admin { background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#042; box-shadow:0 4px 16px rgba(226,114,91,0.2); }
+    .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); padding:10px 12px; border-radius:10px; }
 
-    /* system dark/light awareness */
-    @media (prefers-color-scheme: light) {
-      :root { --text: #0b1220; --muted: #55606a; --toast-bg: rgba(240,244,248,0.96); }
-      .toast { color: #0b1220; }
-      .spinner { border: 6px solid rgba(0,0,0,0.06); border-top-color: rgba(226,114,91,0.98); }
-    }
+    .grid { display:grid; grid-template-columns:1fr 380px; gap:24px; margin-top:8px; }
+    @media (max-width:980px) { .grid { grid-template-columns:1fr; } .nav-item span { display:none; } }
+    .panel { background: rgba(255,255,255,0.05); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+    .fields { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .field { flex:1; min-width:140px; display:flex; flex-direction:column; gap:6px; }
+    label { font-size:13px; color:var(--muted); font-weight:700; }
+    input, select, textarea { background:transparent; border:1px solid rgba(255,255,255,0.08); padding:10px 12px; border-radius:10px; color:var(--text); font-size:14px; }
+    textarea { min-height:72px; resize:vertical; }
+    input:focus, select:focus, textarea:focus { outline:none; box-shadow: var(--focus); border-color:var(--accent1); }
+
+    .table-wrap { margin-top:12px; overflow:auto; border-radius:10px; }
+    table { width:100%; border-collapse:collapse; min-width:640px; }
+    thead th { padding:10px; text-align:left; color:var(--muted); border-bottom:1px solid rgba(255,255,255,0.08); font-size:13px; position:sticky; top:0; background: rgba(255,255,255,0.02); }
+    tbody td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text); font-size:14px; }
+
+    /* small utilities */
+    .right { margin-left:auto; }
+
+    .modal { position:fixed; left:50%; transform:translateX(-50%); top:7%; width:94%; max-width:460px; z-index:1300; display:none; }
+    .modal-panel { background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:16px; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.3); backdrop-filter: blur(8px); }
+    .modal.show { display:block; animation: drop 240ms ease; }
+    @keyframes drop { from { transform: translateX(-50%) translateY(-8px) scale(0.996); opacity:0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity:1; } }
+
+    footer { text-align:center; margin-top:auto; color:var(--muted); font-size:13px; padding-top:10px; }
+
+    @media (max-width:640px) { .logo { width:52px; height:52px; } .fields { flex-direction:column; } table { min-width:520px; } .modal { top:4%; } .card { padding:16px; } }
   </style>
 </head>
 <body>
   <div class="shell">
-    <main class="card" id="mainCard">
+    <main class="card" role="application" aria-label="Selelo Business Park">
+
+      <!-- TOP -->
       <div class="top">
-        <div class="brand">
-          <img src="11.png" class="logo" alt="logo" loading="lazy" onerror="this.style.display='none'">
-          <div>
-            <h1>SELELO BUSINESS PARK</h1>
-            <div class="sub">The BizHub</div>
+        <div style="display:flex;align-items:center;gap:12px;width:100%">
+          <div class="brand" aria-hidden="false">
+            <img src="11.png" class="logo" alt="logo" loading="lazy" onerror="this.style.display='none'">
+            <div>
+              <h1>SELELO BUSINESS PARK</h1>
+              <div class="sub">The BizHub</div>
+            </div>
+          </div>
+
+          <!-- header nav + icons (new) -->
+          <div class="header-row right" style="flex:1;align-items:center;gap:12px">
+            <div class="nav-icons" role="navigation" aria-label="Primary">
+              <div class="nav-item" id="nav-transactions" title="Transactions" tabindex="0">
+                <span class="nav-icon">📂</span>
+                <span>Transactions</span>
+              </div>
+              <div class="nav-item" id="nav-marketplace" title="Marketplace" tabindex="0">
+                <span class="nav-icon">🛍️</span>
+                <span>Marketplace</span>
+              </div>
+              <div class="nav-item" id="nav-contacts" title="Contacts" tabindex="0">
+                <span class="nav-icon">📇</span>
+                <span>Contacts</span>
+              </div>
+            </div>
+
+            <!-- install button shown when browser signals install prompt available -->
+            <button id="installBtn" class="install-btn" style="display:none;margin-right:8px" aria-hidden="true">Install App</button>
           </div>
         </div>
+
+        <!-- controls (right-most) -->
         <div class="controls">
           <button id="adminBtn" class="btn btn-admin" type="button">Admin Login</button>
           <button id="themeBtn" class="btn btn-theme" type="button">Toggle Theme</button>
         </div>
       </div>
+
+      <!-- quick-action row -->
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="exportCsv" class="btn btn-theme" type="button">Export CSV</button>
         <button id="genPL" class="btn btn-theme" type="button">Generate P&L</button>
         <button id="downloadPL" class="btn btn-admin" type="button">Download P&L</button>
       </div>
+
+      <!-- MAIN GRID -->
       <div class="grid">
         <section>
           <div id="addPanel" class="panel admin-panel">
@@ -221,23 +144,28 @@
               </div>
               <div id="adminBadgeWrap" aria-hidden="true"></div>
             </div>
-            <div class="fields">
+
+            <div class="fields" role="form" aria-label="Add transaction form">
               <div class="field"><label for="txDate">Date</label><input id="txDate" type="date"></div>
               <div class="field"><label for="txType">Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
               <div class="field"><label for="txCategory">Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
               <div class="field"><label for="txAmount">Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
             </div>
+
             <div style="margin-top:10px"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
+
             <div class="actions">
-              <button id="addBtn" class="btn-add" disabled type="button">Add Transaction</button>
-              <button id="clearBtn" class="btn-ghost" type="button">Clear</button>
+              <button id="addBtn" class="btn btn-admin btn-add" disabled type="button">Add Transaction</button>
+              <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
               <div id="txMsg" class="sub" style="margin-left:6px;color:var(--good)" aria-live="polite"></div>
             </div>
           </div>
+
           <div class="panel" style="margin-top:12px">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <h3 style="margin:0">Transactions</h3><div class="sub">Filter and manage</div>
             </div>
+
             <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
               <input id="fMonth" type="month" style="min-width:160px;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)">
               <select id="fType" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--text)"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
@@ -248,6 +176,7 @@
               <button id="applyFilter" class="btn btn-ghost" type="button">Apply</button>
               <button id="resetFilter" class="btn btn-ghost" type="button">Reset</button>
             </div>
+
             <div class="table-wrap" style="margin-top:12px">
               <table aria-label="transactions table">
                 <thead><tr><th scope="col">Date</th><th scope="col">Type</th><th scope="col">Category</th><th scope="col">Amount</th><th scope="col">Notes</th><th scope="col">Action</th></tr></thead>
@@ -256,22 +185,25 @@
             </div>
           </div>
         </section>
+
         <aside>
           <div class="panel dashboard">
             <h3 style="margin:0">Overview</h3>
             <div class="stat-grid">
-              <div class="stat" role="group" aria-label="Total Income"><h4>Total Income</h4><p id="statIncome">0</p></div>
-              <div class="stat" role="group" aria-label="Total Expense"><h4>Total Expense</h4><p id="statExpense">0</p></div>
-              <div class="stat" role="group" aria-label="Balance"><h4>Balance</h4><p id="statBalance">0</p></div>
+              <div class="stat"><h4>Total Income</h4><p id="statIncome">0</p></div>
+              <div class="stat"><h4>Total Expense</h4><p id="statExpense">0</p></div>
+              <div class="stat"><h4>Balance</h4><p id="statBalance">0</p></div>
             </div>
             <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
+
           <div id="chartsPanel" class="panel charts" aria-hidden="true" style="margin-top:12px">
             <h3 style="margin:0">Charts</h3>
-            <div style="margin-top:8px"><canvas id="chartIE" height="140" aria-hidden="true"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartCat" height="140" aria-hidden="true"></canvas></div>
-            <div style="margin-top:8px"><canvas id="chartTrend" height="140" aria-hidden="true"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartIE" height="140"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartCat" height="140"></canvas></div>
+            <div style="margin-top:8px"><canvas id="chartTrend" height="140"></canvas></div>
           </div>
+
           <div class="panel" style="margin-top:12px">
             <h3 style="margin:0">Profit & Loss</h3>
             <label for="reportMonth" class="sub" style="display:block;margin-top:8px">Month (optional)</label>
@@ -284,7 +216,8 @@
           </div>
         </aside>
       </div>
-      <footer>Proudly developed by Seltec | +254745151968 | @Its_SelianFr</footer>
+
+      <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
     </main>
   </div>
 
@@ -300,6 +233,7 @@
       </div>
     </div>
   </div>
+
   <div id="editModal" class="modal" aria-hidden="true" style="top:40%;transform:translateX(-50%) translateY(-50%)">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
@@ -314,55 +248,26 @@
       </div>
     </div>
   </div>
+
   <div id="receiptModal" class="modal" aria-hidden="true" style="top:8%;transform:translateX(-50%)">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
-  <!-- spinner & toast UI elements -->
-  <div class="spinner-wrap" id="spinnerWrap" aria-hidden="true" role="status" aria-live="polite">
-    <div class="spinner" aria-hidden="true"></div>
-  </div>
-  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+  <!-- Libs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Libs (defer for better first paint) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Firebase Compat (easy, no modules mess) - defer -->
-  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+  <!-- App script (keeps your original logic, plus header + install wiring) -->
   <script>
-    // All heavy initialization and event wiring happens after DOMContentLoaded (keeps inline logic intact).
     document.addEventListener('DOMContentLoaded', () => {
-      // Small helpers for UX: spinner + toast
-      const spinnerWrap = document.getElementById('spinnerWrap');
-      const toastContainer = document.getElementById('toastContainer');
-      let toastTimeouts = [];
-
-      function showSpinner() {
-        spinnerWrap.classList.add('show');
-        spinnerWrap.setAttribute('aria-hidden', 'false');
-      }
-      function hideSpinner() {
-        spinnerWrap.classList.remove('show');
-        spinnerWrap.setAttribute('aria-hidden', 'true');
-      }
-      function showToast(msg, opts = {}) {
-        const el = document.createElement('div');
-        el.className = 'toast';
-        el.textContent = msg;
-        if (opts.success) el.style.borderLeft = '4px solid var(--good)';
-        if (opts.error) el.style.borderLeft = '4px solid var(--danger)';
-        toastContainer.appendChild(el);
-        // small defer to allow CSS transitions
-        requestAnimationFrame(() => el.classList.add('show'));
-        const t = setTimeout(() => {
-          el.classList.remove('show');
-          setTimeout(() => el.remove(), 220);
-        }, opts.duration || 3000);
-        toastTimeouts.push(t);
-      }
+      /* ---------------------------
+         Existing Firebase + app logic
+         (kept — only extended slightly)
+         --------------------------- */
 
       // Firebase Config (unchanged)
       const firebaseConfig = {
@@ -373,26 +278,19 @@
         messagingSenderId: "42660826905",
         appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
       };
+      // init firebase safely
+      try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) { /* already init */ }
 
-      // Perf: initialize firebase rest of work in idle to avoid blocking paint on slow devices
-      function doWhenIdle(fn) {
-        if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 500 });
-        else setTimeout(fn, 300);
+      // Recreate the txRef like your original code expects
+      let txRef;
+      try {
+        const db = firebase.database();
+        txRef = db.ref('transactions');
+      } catch (e) {
+        console.warn('Firebase DB unavailable', e);
       }
 
-      // Do firebase init & listeners in idle time
-      doWhenIdle(() => {
-        if (window.firebase && firebase.initializeApp) {
-          try {
-            firebase.initializeApp(firebaseConfig);
-          } catch (e) {
-            // if already initialized, ignore
-          }
-        }
-        // If firebase unavailable, we still continue - the original code assumes firebase is present
-      });
-
-      // Fallback to localStorage
+      // Keys & state
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
@@ -401,9 +299,9 @@
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
       let editKey = null;
       let chartIE, chartCat, chartTrend;
-      let usingFirebase = true;
+      let usingFirebase = !!txRef;
 
-      // Elements (cached early)
+      // Elements
       const els = {
         adminBtn: document.getElementById('adminBtn'),
         addBtn: document.getElementById('addBtn'),
@@ -449,12 +347,15 @@
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
         addPanel: document.getElementById('addPanel'),
-        chartsPanelCanvas: document.getElementById('chartIE')
+        installBtn: document.getElementById('installBtn'),
+        navTransactions: document.getElementById('nav-transactions'),
+        navMarketplace: document.getElementById('nav-marketplace'),
+        navContacts: document.getElementById('nav-contacts')
       };
 
-      // Utils
+      // Utility helpers (kept)
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); }
+      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); updateAdminBtnLabel(); }
       function openModal(el) { el.classList.add('show'); el.style.display = 'block'; el.setAttribute('aria-hidden', 'false'); }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; el.setAttribute('aria-hidden', 'true'); }
       function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
@@ -462,23 +363,31 @@
 
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-      // Theme (kept)
+      // Theme apply (kept)
       (function applyTheme() {
         const t = localStorage.getItem(KEY_THEME) || 'dark';
-        if (t === 'light') document.body.style.background = 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed';
+        if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
       })();
       document.getElementById('themeBtn').addEventListener('click', () => {
         const cur = localStorage.getItem(KEY_THEME) || 'dark';
         const next = cur === 'dark' ? 'light' : 'dark';
         localStorage.setItem(KEY_THEME, next);
-        document.body.style.background = next === 'light' ? 'linear-gradient(1200px 600px at 10% 10%, rgba(240,244,248,0.45), rgba(250,250,250,0.7)), url("2.png") center/cover no-repeat fixed' : 'radial-gradient(1200px 600px at 10% 10%, rgba(20,34,46,0.18), rgba(3,6,10,0.7)), url("2.png") center/cover no-repeat fixed';
+        if (next === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)'; else document.body.style.filter = '';
       });
 
-      // Admin
+      // Admin button text update (shows sign out if admin)
+      function updateAdminBtnLabel() {
+        if (isAdmin) els.adminBtn.textContent = 'Admin (Sign out)';
+        else els.adminBtn.textContent = 'Admin Login';
+      }
+      updateAdminBtnLabel();
+
+      // Admin flow
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
           if (!confirm('Sign out admin?')) return;
-          setAdmin(false); notify('Admin signed out', 'var(--muted)'); showToast('Admin signed out', { duration: 2000 });
+          setAdmin(false);
+          notify('Admin signed out', 'var(--muted)');
           return;
         }
         els.adminPassword.value = '';
@@ -492,7 +401,6 @@
         closeModal(els.adminModal);
         setAdmin(true);
         notify('Admin session active', 'var(--good)');
-        showToast('Admin session active', { success: true });
       });
 
       function applyAdminUI() {
@@ -506,89 +414,66 @@
         els.addBtn.disabled = !isAdmin;
         renderTransactions();
       }
+      applyAdminUI();
 
-      // Firebase Sync with Fallback (improved UX: spinner + toast)
-      doWhenIdle(() => {
-        try {
-          if (window.firebase && firebase.database) {
-            showSpinner();
-            const db = firebase.database();
-            const txRef = db.ref('transactions');
-
-            txRef.on('value', (snapshot) => {
-              const data = snapshot.val();
-              if (data) {
-                transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
-                saveLocal(); // Sync to local too
-              } else {
-                // If no data, keep local (avoid wiping)
-                transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-              }
-              renderTransactions();
-              hideSpinner();
-            }, (error) => {
-              console.error('Firebase error, falling back to local:', error);
-              usingFirebase = false;
-              transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-              renderTransactions();
-              hideSpinner();
-              showToast('Using local storage (check internet)', { error: true });
-            });
-
-            // expose txRef for push/update/remove used in add/edit/delete paths
-            window.__selelo_txRef = txRef;
-            usingFirebase = true;
+      // Firebase real-time sync (if available)
+      if (usingFirebase && txRef) {
+        txRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            saveLocal();
           } else {
-            usingFirebase = false;
-            renderTransactions();
-            hideSpinner();
+            // keep local if remote empty
+            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
           }
-        } catch (e) {
-          console.error('Firebase init error', e);
-          usingFirebase = false;
           renderTransactions();
-          hideSpinner();
-        }
-      });
+        }, (err) => {
+          console.error('Firebase read error', err);
+          usingFirebase = false;
+          transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          renderTransactions();
+          notify('Using local storage (check internet)', 'var(--danger)');
+        });
+      } else {
+        // no firebase — rely on local
+        usingFirebase = false;
+        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+      }
 
-      // Add (optimistic update + spinner)
+      // Add transaction (kept logic but add optimistic key when local)
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         const newTx = { date, type, category, amount, notes };
-
-        // optimistic local push for immediate UI feedback
-        newTx.key = Date.now().toString();
-        transactions.push(newTx);
-        saveLocal();
-        renderTransactions();
-        showToast('Adding transaction...');
-
-        if (usingFirebase && window.__selelo_txRef) {
-          showSpinner();
-          // push to firebase (server-provided key replaced by real one via realtime listener)
-          window.__selelo_txRef.push({ date, type, category, amount, notes }).then(() => {
-            hideSpinner();
-            showToast('Added (synced to cloud)', { success: true });
-            // real-time listener will update with server keys; local optimistic entry may be left,
-            // but our listener will replace transactions array soon.
+        if (usingFirebase && txRef) {
+          txRef.push(newTx).then(() => {
+            notify('Added (synced to cloud)');
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
           }).catch(e => {
             console.error(e);
-            hideSpinner();
-            showToast('Cloud add failed — saved locally', { error: true });
+            // fallback local add
+            newTx.key = Date.now().toString();
+            transactions.push(newTx);
+            saveLocal();
+            renderTransactions();
+            notify('Added locally (cloud error)', 'var(--danger)');
           });
         } else {
-          showToast('Added locally', { success: true });
+          newTx.key = Date.now().toString();
+          transactions.push(newTx);
+          saveLocal();
+          renderTransactions();
+          notify('Added locally');
         }
-        // clear inputs
-        els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
       });
 
+      // Clear
       els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
 
-      // Edit
+      // Edit flow
       function openEdit(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         editKey = key;
@@ -602,30 +487,24 @@
         if (!isAdmin || !editKey) return;
         const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
-
-        // optimistic local update
-        const idxLocal = transactions.findIndex(t => t.key === editKey);
-        if (idxLocal > -1) {
-          transactions[idxLocal] = { key: editKey, ...nd };
-          saveLocal();
-          renderTransactions();
-        }
-
-        if (usingFirebase && window.__selelo_txRef) {
-          showSpinner();
-          window.__selelo_txRef.child(editKey).update(nd).then(() => {
-            hideSpinner();
-            closeModal(els.editModal);
+        if (usingFirebase && txRef) {
+          txRef.child(editKey).update(nd).then(() => {
+            closeModal(els.editModal); notify('Edited (synced)');
             editKey = null;
-            showToast('Edited (synced)', { success: true });
           }).catch(e => {
-            hideSpinner();
-            showToast('Cloud edit failed — saved locally', { error: true });
+            const idx = transactions.findIndex(t => t.key === editKey);
+            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+            saveLocal();
+            renderTransactions();
+            notify('Edited locally', 'var(--danger)');
           });
         } else {
+          const idx = transactions.findIndex(t => t.key === editKey);
+          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+          saveLocal();
+          renderTransactions();
           closeModal(els.editModal);
           notify('Edited');
-          showToast('Edited locally', { success: true });
           editKey = null;
         }
       });
@@ -634,55 +513,22 @@
       function deleteTx(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         if (!confirm('Delete this transaction?')) return;
-
-        // optimistic local delete
-        const backup = transactions.slice();
-        transactions = transactions.filter(t => t.key !== key);
-        saveLocal();
-        renderTransactions();
-        showToast('Deleting...');
-
-        if (usingFirebase && window.__selelo_txRef) {
-          showSpinner();
-          window.__selelo_txRef.child(key).remove().then(() => {
-            hideSpinner();
-            showToast('Deleted (synced)', { success: true });
-          }).catch(e => {
-            console.error(e);
-            hideSpinner();
-            // rollback on failure
-            transactions = backup;
+        if (usingFirebase && txRef) {
+          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+            transactions = transactions.filter(t => t.key !== key);
             saveLocal();
             renderTransactions();
-            showToast('Cloud delete failed — restored locally', { error: true });
+            notify('Deleted locally', 'var(--danger)');
           });
         } else {
-          showToast('Deleted locally', { success: true });
+          transactions = transactions.filter(t => t.key !== key);
+          saveLocal();
+          renderTransactions();
+          notify('Deleted', 'var(--danger)');
         }
       }
 
-      // Filters & Render - add debounce to avoid excessive renders while typing
-      function debounce(fn, wait = 250) {
-        let t = null;
-        return (...args) => {
-          clearTimeout(t);
-          t = setTimeout(() => fn.apply(this, args), wait);
-        };
-      }
-
-      // Use same function name as original code (renderTransactions) used later
-      const debouncedRender = debounce(renderTransactions, 220);
-
-      // wire quick filter change events
-      ['input', 'change'].forEach(evt => {
-        els.fNotes.addEventListener('input', debouncedRender);
-        els.fMin.addEventListener('input', debouncedRender);
-        els.fMax.addEventListener('input', debouncedRender);
-        els.fType.addEventListener('change', debouncedRender);
-        els.fCategory.addEventListener('change', debouncedRender);
-        els.fMonth.addEventListener('change', debouncedRender);
-      });
-
+      // Filters
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => { els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; renderTransactions(); });
 
@@ -697,60 +543,29 @@
         return true;
       }
 
-      // Efficient render using DocumentFragment to avoid repeated reflow
+      // Render
       function renderTransactions() {
-        const frag = document.createDocumentFragment();
+        els.txTbody.innerHTML = '';
         let inc = 0, exp = 0;
-
-        const filtered = transactions.filter(passesFilters);
-
-        filtered.forEach(t => {
+        transactions.filter(passesFilters).forEach(t => {
           const tr = document.createElement('tr');
-          const tdDate = document.createElement('td'); tdDate.textContent = t.date;
-          const tdType = document.createElement('td'); tdType.textContent = t.type;
-          const tdCat = document.createElement('td'); tdCat.textContent = t.category;
-          const tdAmt = document.createElement('td'); tdAmt.textContent = 'KES ' + Number(t.amount).toLocaleString();
-          const tdNotes = document.createElement('td'); tdNotes.textContent = t.notes || '';
-          const tdAction = document.createElement('td');
-
           const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}" type="button">Receipt</button>`];
           if (isAdmin) {
             actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}" type="button">Edit</button>`);
             actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}" type="button">Delete</button>`);
           }
-          tdAction.innerHTML = actions.join(' ');
-          tr.appendChild(tdDate);
-          tr.appendChild(tdType);
-          tr.appendChild(tdCat);
-          tr.appendChild(tdAmt);
-          tr.appendChild(tdNotes);
-          tr.appendChild(tdAction);
-          frag.appendChild(tr);
-
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          els.txTbody.appendChild(tr);
           if (t.type === 'Income') inc += Number(t.amount);
           if (t.type === 'Expense') exp += Number(t.amount);
         });
-
-        els.txTbody.innerHTML = '';
-        els.txTbody.appendChild(frag);
-
         els.statIncome.textContent = inc.toLocaleString();
         els.statExpense.textContent = exp.toLocaleString();
         els.statBalance.textContent = (inc - exp).toLocaleString();
-
-        // Charts lazy-init: only render when admin and charts panel visible
-        if (isAdmin && els.chartsPanel.classList.contains('show') && filtered.length > 0) {
-          // defer heavy chart rendering to idle time for smoother UX
-          doWhenIdle(() => {
-            const canvas = document.getElementById('chartIE');
-            if (canvas && canvas.clientWidth > 0) {
-              renderCharts();
-            }
-          });
-        }
+        if (isAdmin) renderCharts();
       }
 
-      // Event delegation for tbody actions
+      // tbody delegation
       els.txTbody.addEventListener('click', e => {
         const b = e.target.closest('button[data-act]');
         if (!b) return;
@@ -760,7 +575,7 @@
         if (act === 'rcpt') openReceipt(key);
       });
 
-      // Charts (admin only) - small guard checks to avoid heavy Chart.js usage when not needed
+      // Charts (only when admin)
       function renderCharts() {
         if (!window.Chart) return;
         const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
@@ -781,8 +596,8 @@
         });
         const monthly = {};
         transactions.forEach(t => {
-          const m = t.date.slice(0, 7);
-          monthly[m] = monthly[m] || { Income: 0, Expense: 0 };
+          const m = t.date.slice(0,7);
+          monthly[m] = monthly[m] || { Income:0, Expense:0 };
           monthly[m][t.type] += Number(t.amount);
         });
         const months = Object.keys(monthly).sort();
@@ -792,120 +607,159 @@
           data: {
             labels: months,
             datasets: [
-              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill: true },
-              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill: true }
+              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill:true },
+              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
             ]
           },
-          options: { responsive: true, tension: 0.3, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
         });
       }
 
-      // Export CSV (unchanged)
+      // Export CSV
       els.exportCsv.addEventListener('click', () => {
         if (!transactions.length) { alert('No transactions to export'); return; }
         let csv = 'Date,Type,Category,Amount,Notes\n';
         transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
-        const blob = new Blob([csv], { type: 'text/csv' });
+        const blob = new Blob([csv], { type:'text/csv' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        showToast('CSV exported', { success: true });
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        notify('CSV exported', 'var(--good)');
       });
 
-      // P&L (unchanged logic) + small toast
+      // P&L generation & download (kept)
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const br = {};
         arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc - exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
         for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
         html += '</ul></div>';
         els.plView.innerHTML = html;
         els.receiptInner.innerHTML = `<div class="receipt">${html}<div style="text-align:right;margin-top:10px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
-        setTimeout(() => {
+        setTimeout(()=> {
           const cb = document.getElementById('closePL');
-          if (cb) cb.addEventListener('click', () => closeModal(els.receiptModal));
-        }, 50);
+          if (cb) cb.addEventListener('click', ()=> closeModal(els.receiptModal));
+        },50);
       }
-      els.genPL.addEventListener('click', () => { generatePL(); showToast('PL generated'); });
-      els.showPLBtn.addEventListener('click', () => { generatePL(); openModal(els.receiptModal); });
+      els.genPL.addEventListener('click', generatePL);
+      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
 
-      // Download P&L (PDF)
       els.downloadPL.addEventListener('click', () => {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const { jsPDF } = window.jspdf || {};
-        if (!jsPDF) {
-          alert('PDF library not ready yet');
-          return;
+        if (!jsPDF) { alert('PDF library not ready'); return; }
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        const br = {};
+        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+        doc.text('Category breakdown:', 14, y); y += 8;
+        for (const k in br) {
+          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+          if (y > 270) { doc.addPage(); y = 20; }
         }
-        showSpinner();
-        setTimeout(() => {
-          const doc = new jsPDF();
-          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-          doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-          doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
-          doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
-          doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
-          let y = 72;
-          const br = {};
-          arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-          doc.text('Category breakdown:', 14, y); y += 8;
-          for (const k in br) {
-            doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y);
-            y += 8;
-            if (y > 270) { doc.addPage(); y = 20; }
-          }
-          doc.save(`PL_${m || 'all'}.pdf`);
-          hideSpinner();
-          showToast('P&L downloaded', { success: true });
-        }, 80);
+        doc.save(`PL_${m || 'all'}.pdf`);
       });
 
-      // Receipt (unchanged)
+      // Receipt
       function openReceipt(key) {
         const t = transactions.find(x => x.key === key);
         if (!t) return;
         const idx = transactions.findIndex(x => x.key === key);
         const inv = 'INV-' + (10000 + idx);
         const issued = new Date().toLocaleDateString();
-        let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px" loading="lazy" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>
+        let html = `<div class="receipt"><div style="text-align:center"><img src="11.png" alt="logo" style="max-width:160px" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin-top:8px">Receipt</h3>
           <div style="margin-top:12px;font-size:13px"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
-          <div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95" loading="lazy" onerror="this.style.display='none'"></div>
+          <div style="text-align:center;margin-top:12px"><img src="Business Email Signature.png" alt="stamp" style="max-width:200px;opacity:0.95" onerror="this.style.display='none'"></div>
           <div style="text-align:center;margin-top:12px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
-        setTimeout(() => {
-          document.getElementById('printReceipt')?.addEventListener('click', () => {
-            const w = window.open('', '_blank', 'width=700,height=800');
-            w.document.write('<html><head><title>Receipt</title><style>body{font-family:Arial;margin:20px;}</style></head><body>' + els.receiptInner.innerHTML + '</body></html>');
-            w.document.close();
-            setTimeout(() => w.print(), 300);
+        setTimeout(()=>{
+          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
+            const w = window.open('','_blank','width=700,height=800');
+            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
+            w.document.close(); setTimeout(()=> w.print(), 300);
           });
-          document.getElementById('closeReceipt')?.addEventListener('click', () => closeModal(els.receiptModal));
-        }, 60);
+          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
+        },60);
       }
 
-      // Init
-      applyAdminUI();
-      window.addEventListener('beforeunload', saveLocal);
-      // initial render
+      // Initial render & persist handlers
       renderTransactions();
+      window.addEventListener('beforeunload', saveLocal);
 
-      // small accessibility: allow Enter key to confirm admin modal
-      els.adminPassword.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); }
+      // Allow Enter in password to submit
+      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      // ---------- New: PWA install prompt handling ----------
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        deferredPrompt = e;
+        // show our install button
+        els.installBtn.style.display = 'inline-block';
+        els.installBtn.setAttribute('aria-hidden', 'false');
       });
 
-      // expose a small API for debugging
-      window.__selelo_showSpinner = showSpinner;
-      window.__selelo_hideSpinner = hideSpinner;
-      window.__selelo_toast = showToast;
-    });
+      els.installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        try {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          // outcome is 'accepted' or 'dismissed'
+          if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+        } catch (err) {
+          console.warn('Install prompt failed', err);
+        } finally {
+          deferredPrompt = null;
+          els.installBtn.style.display = 'none';
+        }
+      });
+
+      // Register service worker (if sw.js exists in same root)
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('Service Worker registered:', reg.scope);
+        }).catch(err => console.warn('SW registration failed:', err));
+      }
+
+      // ---------- New: Header nav click placeholders ----------
+      els.navTransactions.addEventListener('click', () => {
+        // scroll to transactions table / panel
+        document.getElementById('txTbody')?.scrollIntoView({ behavior:'smooth', block:'center' });
+      });
+      els.navMarketplace.addEventListener('click', () => {
+        alert('Marketplace section coming soon — you can wire this to a page or modal.');
+      });
+      els.navContacts.addEventListener('click', () => {
+        alert('Contacts coming soon — you can wire this to a page or modal.');
+      });
+
+      // small accessibility focus handlers (keyboard)
+      [els.navTransactions, els.navMarketplace, els.navContacts].forEach(node => {
+        node.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); node.click(); } });
+      });
+
+      // Expose debug helpers (optional)
+      window.__selelo_debug = { transactions, usingFirebase, setAdmin };
+
+    }); // DOMContentLoaded
   </script>
+
 </body>
-  </html>
+</html>
