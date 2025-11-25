@@ -4,7 +4,7 @@ const urlsToCache = [
   "/index.html",
   "/manifest.json",
   "/logo192.jpeg",
-  "/logo512.png"
+  "/logo512.jpeg"
 ];
 
 // INSTALL SW — Cache essential files
