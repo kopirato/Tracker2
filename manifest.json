@@ -6,7 +6,7 @@
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
-    {"src": "11.png, "sizes": "512×512", "type": "image/png"},
+    {"src": "11.png, "sizes": "800×800", "type": "image/png"},
     {"src": "2.png", "sizes": "512x512", "type": "image/png"}
   ]
 }
