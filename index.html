@@ -65,7 +65,7 @@
     footer { text-align:center; padding:20px 0 10px; font-size:13px; opacity:0.8; margin-top:auto; }
     .modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; padding:20px; z-index:1000; backdrop-filter:blur(8px); }
     .modal.show { display:flex; }
-    .modal-panel { width:100%; max-width:460px; background:rgba(26,18,11,0.95); padding:24px; border-radius:16px; border:1px solid rgba(255,255,255,0.15); backdrop-filter:blur(12px); }
+    .modal-panel { width:100%; max-width:460px; background:rgba(26,18,11,0.95); padding:24px; border-radius:16px; border:1px solid rgba(255,255,255,0.15); backdrop-filter:blur(12px); max-height:90dvh; overflow:auto; }
     @media(min-width:768px){
       .top{flex-direction:row; justify-content:space-between; align-items:center}
       .controls{width:auto; order:unset}
@@ -200,7 +200,7 @@
     </div>
   </div></div>
 
-  <div id="receiptModal" class="modal"><div class="modal-panel" id="receiptInner" style="max-height:90dvh; overflow:auto"></div></div>
+  <div id="receiptModal" class="modal"><div class="modal-panel" id="receiptInner"></div></div>
 
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -208,7 +208,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- FULL WORKING SCRIPT - 100% YOUR ORIGINAL LOGIC -->
+  <!-- FULLY WORKING SCRIPT — ALL BUTTONS FIXED -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const firebaseConfig = { apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY", authDomain: "selelo-tracker.firebaseapp.com", projectId: "selelo-tracker", storageBucket: "selelo-tracker.firebasestorage.app", messagingSenderId: "42660826905", appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88" };
@@ -284,7 +284,7 @@
       }
       applyAdminUI();
 
-      // Firebase
+      // Firebase Sync
       if (usingFirebase && txRef) {
         txRef.on('value', snap => {
           const data = snap.val();
@@ -338,14 +338,15 @@
         if (els.fNotes.value && !(t.notes || '').toLowerCase().includes(els.fNotes.value.toLowerCase())) return false;
         return true;
       }
+
       function renderTransactions() {
         els.txTbody.innerHTML = ''; let inc = 0, exp = 0;
         transactions.filter(passesFilters).forEach(t => {
           const tr = document.createElement('tr');
-          const actions = [`<button class="btn btn-ghost btn-small" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          const actions = [`<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
           if (isAdmin) {
-            actions.unshift(`<button class="btn btn-ghost btn-small" data-act="edit" data-key="${t.key}">Edit</button>`);
-            actions.push(`<button class="btn btn-ghost btn-small" style="background:var(--danger);color:white" data-act="del" data-key="${t.key}">Delete</button>`);
+            actions.unshift(`<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px" data-act="edit" data-key="${t.key}">Edit</button>`);
+            actions.push(`<button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;background:var(--danger);color:white" data-act="del" data-key="${t.key}">Delete</button>`);
           }
           tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td style="white-space:nowrap">${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
@@ -365,14 +366,94 @@
         if (b.dataset.act === 'rcpt') openReceipt(key);
       });
 
-      // Charts, Export, P&L, Receipt — ALL YOUR ORIGINAL CODE PRESERVED
-      function renderCharts() { /* your full chart code here - unchanged */ }
-      els.exportCsv.addEventListener('click', () => { /* your full CSV export */ });
-      function generatePL() { /* your full P&L code */ }
+      // Charts
+      function renderCharts() {
+        if (!window.Chart) return;
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        try { if (chartIE) chartIE.destroy(); } catch (e) {}
+        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const catMap = {};
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch (e) {}
+        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+      }
+
+      // CSV Export — FIXED
+      els.exportCsv.addEventListener('click', () => {
+        if (!transactions.length) return alert('No transactions to export');
+        let csv = 'Date,Type,Category,Amount,Notes\n';
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        notify('CSV exported', 'var(--good)');
+      });
+
+      // P&L Generation — FULLY FIXED
+      function generatePL() {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+        let html = `<strong>Period:</strong> ${m || 'All Time'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net Profit:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:12px"><strong>By Category:</strong><ul style="margin:8px 0 0 20px;padding:0">`;
+        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
+        html += `</ul></div><div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div>`;
+        els.plView.innerHTML = html.replace(/<ul[^>]*>[\s\S]*<\/ul>/, '<div style="margin-top:8px;font-size:13px">' + Object.keys(br).map(k => `${k}: KES ${br[k].toLocaleString()}<br>`).join('') + '</div>');
+        els.receiptInner.innerHTML = `<div style="padding:16px;color:var(--text);line-height:1.6">${html}</div>`;
+        document.getElementById('closePL')?.addEventListener('click', () => closeModal(els.receiptModal));
+      }
       els.genPL.addEventListener('click', generatePL);
       els.showPLBtn.addEventListener('click', () => { generatePL(); openModal(els.receiptModal); });
-      els.downloadPL.addEventListener('click', () => { /* your full PDF download */ });
-      function openReceipt(key) { /* your full receipt code */ }
+      els.downloadPL.addEventListener('click', () => {
+        const m = els.reportMonth.value || 'all';
+        const arr = m !== 'all' ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const { jsPDF } = window.jspdf;
+        if (!jsPDF) return alert('PDF library not loaded');
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m === 'all' ? 'All Time' : m}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        doc.text('Category Breakdown:', 14, y); y += 8;
+        const br = {};
+        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+        for (const k in br) { doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8; if (y > 270) { doc.addPage(); y = 20; } }
+        doc.save(`PL_${m}.pdf`);
+      });
+
+      // Receipt
+      function openReceipt(key) {
+        const t = transactions.find(x => x.key === key);
+        if (!t) return;
+        const idx = transactions.findIndex(x => x.key === key);
+        const inv = 'INV-' + String(10000 + idx).slice(-5);
+        const issued = new Date().toLocaleDateString();
+        let html = `<div style="text-align:center"><img src="11.png" alt="logo" style="max-width:140px" onerror="this.style.display='none'"></div><h3 style="text-align:center;margin:16px 0 8px">Receipt</h3>
+          <div style="font-size:14px;line-height:1.8"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="text-align:center;margin:20px 0"><img src="Business Email Signature.png" alt="stamp" style="max-width:180px;opacity:0.9" onerror="this.style.display='none'"></div>
+          <div style="text-align:center"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div>`;
+        els.receiptInner.innerHTML = html;
+        openModal(els.receiptModal);
+        setTimeout(() => {
+          document.getElementById('printReceipt')?.addEventListener('click', () => window.print());
+          document.getElementById('closeReceipt')?.addEventListener('click', () => closeModal(els.receiptModal));
+        }, 100);
+      }
 
       // PWA Install
       window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; els.installBtn.style.display = 'inline-block'; });
