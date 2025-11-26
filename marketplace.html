@@ -1,333 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketplace</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marketplace</title>
 
-<!-- Firebase v8 -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #f5f5f5;
+    }
 
-<style>
-  body {
-    margin: 0;
-    background: #000;
-    font-family: Arial, sans-serif;
-    color: #fff;
-  }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      padding: 20px;
+    }
 
-  header {
-    padding: 15px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    background: #111;
-    border-bottom: 1px solid #333;
-  }
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+    }
 
-  #backBtn {
-    position: absolute;
-    left: 15px;
-    top: 15px;
-    padding: 8px 14px;
-    background: #444;
-    color: #fff;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      outline: none;
+    }
 
-  #adminBtn {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    padding: 8px 14px;
-    background: #444;
-    color: #fff;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
+    input::placeholder, textarea::placeholder {
+      color: #bbb;
+    }
 
-  /* Item grid */
-  #itemsContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
-    gap: 15px;
-    padding: 20px;
-  }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #ffcc00;
+      font-weight: bold;
+      color: #000;
+      margin-top: 10px;
+    }
 
-  .item-card {
-    background: #111;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #222;
-  }
+    #backBtn {
+      background: #444;
+      color: #fff;
+      margin-bottom: 20px;
+    }
 
-  .item-card img {
-    width: 100%;
-    border-radius: 6px;
-    height: 160px;
-    object-fit: cover;
-  }
-
-  .actions {
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  button {
-    cursor: pointer;
-  }
-
-  /* Modal */
-  .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: none;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-box {
-    background: #111;
-    padding: 20px;
-    width: 90%;
-    max-width: 420px;
-    border-radius: 10px;
-    border: 1px solid #333;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 7px;
-    margin-bottom: 12px;
-    background: #222;
-    border: 1px solid #333;
-    color: white;
-    border-radius: 6px;
-  }
-
-  .closeBtn {
-    float: right;
-    background: #822;
-    color: #fff;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 6px;
-  }
-
-  #spinner {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-  }
-</style>
+    #imagePreview {
+      margin-top: 10px;
+      width: 100%;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
+<div class="container">
 
-<header>MARKETPLACE</header>
+  <button id="backBtn" onclick="location.href='index.html'">⬅ Back to Home</button>
+  <h2>Post to Marketplace</h2>
 
-<button id="backBtn" onclick="location.href='index.html'">BACK</button>
-<button id="adminBtn">ADMIN</button>
+  <form id="marketForm">
+    <input type="text" id="title" placeholder="Item Name" required />
+    <textarea id="description" placeholder="Description" rows="4" required></textarea>
+    <input type="number" id="price" placeholder="Price (KES)" required />
 
-<div id="itemsContainer"></div>
+    <label style="color:#ccc;">Upload Image</label>
+    <input type="file" id="itemImage" accept="image/*" />
 
-<!-- ADD / EDIT modal -->
-<div id="itemModal" class="modal">
-  <div class="modal-box">
-    <button class="closeBtn" onclick="closeModal(itemModal)">X</button>
-    <h3 id="modalTitle">Add Item</h3>
+    <img id="imagePreview" src="#" alt="Preview" />
 
-    <form id="itemForm">
-      <input type="text" id="itemTitle" placeholder="Title">
-      <input type="number" id="itemPrice" placeholder="Price">
-      <select id="itemCategory">
-        <option>General</option>
-        <option>Electronics</option>
-        <option>Clothes</option>
-        <option>Livestock</option>
-      </select>
-      <textarea id="itemDesc" placeholder="Description"></textarea>
-      <input type="text" id="itemContact" placeholder="Seller phone or WhatsApp">
+    <button type="submit">Upload Item</button>
+  </form>
 
-      <label style="color:#ccc;">Image (optional)</label>
-      <input type="file" id="itemImage" accept="image/*">
-
-      <button type="submit" style="width:100%;background:#0a84ff;padding:10px;border:none;border-radius:6px;margin-top:10px;">SAVE</button>
-    </form>
-  </div>
 </div>
 
-<!-- SPINNER -->
-<div id="spinner">Saving...</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
 <script>
-/* -----------------------------
-   Firebase config
------------------------------- */
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_APP.firebaseapp.com",
-  databaseURL: "https://YOUR_APP.firebaseio.com",
-  projectId: "YOUR_APP",
-  storageBucket: "YOUR_APP.appspot.com",
-  messagingSenderId: "000000000",
-  appId: "YOUR_APP_ID"
-};
-firebase.initializeApp(firebaseConfig);
+  const firebaseConfig = {
+    apiKey: "YOUR_KEY",
+    authDomain: "YOUR_DOMAIN",
+    projectId: "YOUR_PID",
+    storageBucket: "YOUR_BUCKET",
+    messagingSenderId: "YOUR_SENDER",
+    appId: "YOUR_APPID"
+  };
 
-const db = firebase.database();
-const storage = firebase.storage();
-const itemsRef = db.ref("marketplace_items");
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-let isAdmin = false;
-let editingKey = null;
+  const imgInput = document.getElementById("itemImage");
+  const imgPreview = document.getElementById("imagePreview");
 
-/* Utility */
-function showSpinner(){ spinner.style.display = "flex"; }
-function hideSpinner(){ spinner.style.display = "none"; }
-function openModal(m){ m.style.display = "flex"; }
-function closeModal(m){ m.style.display = "none"; editingKey = null; itemForm.reset(); }
-
-adminBtn.onclick = () => {
-  const pass = prompt("Enter Admin Password:");
-  if(pass === "0742147197" || pass === "0721235005") {
-    isAdmin = true;
-    alert("Admin logged in");
-    loadItems();
-  } else {
-    alert("Incorrect password");
-  }
-};
-
-/* Load items */
-function loadItems(){
-  itemsRef.on("value", snap=>{
-    const data = snap.val() || {};
-    const list = Object.entries(data).map(([key,val])=>({key,...val}));
-    renderItems(list);
+  imgInput.addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = e => {
+        imgPreview.src = e.target.result;
+        imgPreview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
   });
-}
 
-loadItems();
+  document.getElementById("marketForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-/* Render cards */
-function renderItems(items){
-  itemsContainer.innerHTML = "";
-  items.forEach(item=>{
-    const card = document.createElement("div");
-    card.className = "item-card";
+    const title = document.getElementById("title").value;
+    const desc = document.getElementById("description").value;
+    const price = document.getElementById("price").value;
+    const file = document.getElementById("itemImage").files[0];
 
-    card.innerHTML = `
-      <img src="${item.imageUrl || ''}">
-      <h3>${item.title}</h3>
-      <p>KES ${item.price}</p>
-      <p>${item.category}</p>
-      <p>${item.desc}</p>
-      <p>📞 ${item.contact}</p>
-
-      ${ isAdmin ? `
-      <div class="actions">
-        <button onclick="editItem('${item.key}')">Edit</button>
-        <button onclick="deleteItem('${item.key}','${item.imagePath || ''}')">Del</button>
-      </div>` : "" }
-    `;
-
-    itemsContainer.appendChild(card);
-  });
-}
-
-/* Edit */
-function editItem(key){
-  editingKey = key;
-  itemsRef.child(key).once("value", snap=>{
-    const d = snap.val();
-    itemTitle.value = d.title;
-    itemPrice.value = d.price;
-    itemCategory.value = d.category;
-    itemDesc.value = d.desc;
-    itemContact.value = d.contact;
-    modalTitle.innerText = "Edit Item";
-    openModal(itemModal);
-  });
-}
-
-/* Delete */
-function deleteItem(key, imgPath){
-  if(!confirm("Delete item?")) return;
-
-  itemsRef.child(key).remove();
-
-  if(imgPath){
-    storage.ref(imgPath).delete();
-  }
-}
-
-/* Save (Add + Edit) */
-itemForm.addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  if(!isAdmin){ alert("Admin only"); return; }
-
-  const title = itemTitle.value.trim();
-  const price = parseFloat(itemPrice.value) || 0;
-  const category = itemCategory.value;
-  const desc = itemDesc.value.trim();
-  const contact = itemContact.value.trim();
-  const file = itemImage.files[0];
-
-  if(!title || price <= 0){
-    alert("Enter valid title and price");
-    return;
-  }
-
-  showSpinner();
-
-  try {
-    let imageUrl = "";
-    let imagePath = "";
+    let imageURL = "";
 
     if(file){
-      const safe = Date.now() + "_" + file.name.replace(/[^a-z0-9\.\-_]/gi,"_");
-      imagePath = "marketplace/" + safe;
-      const ref = storage.ref(imagePath);
-      const upload = await ref.put(file);
-      imageUrl = await upload.ref.getDownloadURL();
+      const ref = storage.ref(`marketplace/${Date.now()}_${file.name}`);
+      await ref.put(file);
+      imageURL = await ref.getDownloadURL();
     }
 
-    const itemData = {
-      title, price, category, desc, contact,
-      imageUrl, imagePath,
-      timestamp: Date.now()
-    };
+    await db.collection("marketplace").add({
+      title,
+      desc,
+      price,
+      imageURL,
+      createdAt: new Date()
+    });
 
-    if(editingKey){
-      await itemsRef.child(editingKey).update(itemData);
-    } else {
-      await itemsRef.push(itemData);
-    }
-
-    closeModal(itemModal);
-  }
-  catch(err){
-    console.error(err);
-    alert("Error, see console.");
-  }
-
-  hideSpinner();
-});
+    alert("Item uploaded!");
+    location.reload();
+  });
 </script>
-
 </body>
 </html>
