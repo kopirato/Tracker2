@@ -742,122 +742,63 @@
     });
   </script>
 
-<!-- Login Gate Modal -->
-<style>
-  #authGate {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    backdrop-filter: blur(6px);
-  }
-
-  #authPanel {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    padding: 30px;
-    border-radius: 22px;
-    width: 90%;
-    max-width: 360px;
-    text-align: center;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.55);
-    animation: rise 0.45s ease;
-  }
-
-  #authPanel h2 {
-    font-size: 22px;
-    margin-bottom: 18px;
-    font-weight: 800;
-    letter-spacing: 1px;
-  }
-
-  .auth-btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 700;
-    margin-top: 12px;
-    cursor: pointer;
-    border: none;
-    transition: 0.2s;
-  }
-
-  .auth-login {
-    background: linear-gradient(90deg, var(--accent1), var(--accent2));
-    color: #031;
-    box-shadow: 0 8px 30px rgba(226,114,91,0.35);
-  }
-
-  .auth-quit {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.18);
-  }
-
-  .auth-quit:hover {
-    background: rgba(255,255,255,0.08);
-  }
-
-  @keyframes rise {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-</style>
-
-<div id="authGate">
-  <div id="authPanel">
-    <h2>Welcome</h2>
-    <p style="opacity:0.8;margin-bottom:18px">Choose how to proceed</p>
-    <button class="auth-btn auth-login" onclick="openAdmin()">Login as Admin</button>
-    <button class="auth-btn auth-quit" onclick="closeApp()">Quit App</button>
-  </div>
-</div>
 
 <script>
-  // Hide ALL content until admin logs in
-  document.querySelector(".shell").style.display = "none";
+  // Hide entire app until login
+  const appShell = document.querySelector(".shell");
+  const hiddenSections = [
+    "#addPanel",
+    "#transactions",
+    ".dashboard",
+    "#chartsPanel",
+    "#plView",
+    "#statIncome",
+    "#statExpense",
+    "#statBalance",
+    ".panel",
+    "table",
+  ];
 
-  // Show popup after splash finishes (3.8s)
-  setTimeout(() => {
-    document.getElementById("authGate").style.display = "flex";
-  }, 3800);
-
-  function openAdmin() {
-    document.getElementById("authGate").style.display = "none";
-    document.querySelector(".shell").style.display = "block";
-    document.getElementById("adminBtn").click();
-  }
-
-  function closeApp() {
-    // For PWA or browser — close tab/redirect
-    window.location.href = "about:blank";
-  }
-
-  // Hide all sensitive panels
-  window.onload = () => {
-    const hideSections = [
-      "#addPanel",
-      "#transactions",
-      ".dashboard",
-      "#chartsPanel",
-      "#plView",
-      "#statIncome",
-      "#statExpense",
-      "#statBalance",
-      ".panel",
-      "table",
-    ];
-    hideSections.forEach(sel => {
+  // Function to hide all app content
+  function hideAllContent() {
+    appShell.style.display = "none";
+    hiddenSections.forEach(sel => {
       document.querySelectorAll(sel).forEach(el => {
         el.style.display = "none";
       });
     });
-  };
-</script>
+  }
+
+  // Function to show all app content
+  function showAllContent() {
+    appShell.style.display = "block";
+    hiddenSections.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        el.style.display = "block";
+      });
+    });
+  }
+
+  // Initially hide everything
+  hideAllContent();
+
+  // Show login popup after splash screen
+  setTimeout(() => {
+    document.getElementById("authGate").style.display = "flex";
+  }, 3800);
+
+  // Login function
+  function openAdmin() {
+    document.getElementById("authGate").style.display = "none";
+    showAllContent();   // ENABLE EVERYTHING
+    document.getElementById("adminBtn").click();
+  }
+
+  // Quit app
+  function closeApp() {
+    window.location.href = "about:blank";
+  }
+</script> 
   
 </body>
 </html>
