@@ -7,7 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-<!-- Firebase v8 (compat mode) -->
+<!-- Firebase v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -26,7 +26,7 @@
     }
     body::before {
         content: ""; position: fixed; inset: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+        background: linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.6));
         backdrop-filter: blur(3px);
     }
     .container {
@@ -39,7 +39,7 @@
     header {
         text-align: center;
         padding: 30px 0 10px;
-        font-size: 2.2rem;
+        font-size: 2.4rem;
         font-weight: 900;
         letter-spacing: 2px;
         background: linear-gradient(90deg, #00eaff, #a855f7);
@@ -51,7 +51,7 @@
         display: block;
         width: fit-content;
         margin: 20px auto;
-        padding: 12px 24px;
+        padding: 12px 28px;
         background: rgba(0,238,255,0.15);
         border: 1px solid var(--accent);
         color: var(--accent);
@@ -63,7 +63,7 @@
     .back-btn:hover { background: var(--accent); color: #000; }
 
     h2 {
-        margin: 30px 0 16px;
+        margin: 35px 0 16px;
         font-weight: 700;
         color: var(--accent);
         text-align: center;
@@ -71,7 +71,7 @@
 
     input, textarea, button {
         width: 100%;
-        padding: 14px;
+        padding: 15px;
         margin: 10px 0;
         background: rgba(255,255,255,0.08);
         border: 1px solid rgba(255,255,255,0.2);
@@ -90,47 +90,44 @@
         transition: 0.3s;
     }
     #uploadBtn:hover { background: #00c0d4; }
+    #uploadBtn:disabled { background: #555; cursor: not-allowed; }
 
     .item-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 22px;
         margin-top: 20px;
     }
     .item-card {
         background: var(--glass);
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.35);
         transition: 0.3s;
     }
-    .item-card:hover { transform: translateY(-8px); }
+    .item-card:hover { transform: translateY(-10px); }
     .item-card img {
         width: 100%;
-        height: 200px;
+        height: 210px;
         object-fit: cover;
     }
     .item-info {
-        padding: 16px;
+        padding: 18px;
         text-align: center;
     }
     .item-info h3 {
         margin: 0 0 8px;
-        font-size: 1.2rem;
-    }
-    .item-info p {
-        margin: 4px 0;
-        opacity: 0.9;
+        font-size: 1.25rem;
     }
     .price {
         font-weight: bold;
         color: var(--accent);
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         margin: 10px 0;
     }
     footer {
         text-align: center;
-        margin: 50px 0 20px;
+        margin: 60px 0 20px;
         opacity: 0.7;
         font-size: 0.9rem;
     }
@@ -140,7 +137,7 @@
 
 <header>MARKETPLACE</header>
 
-<a href="index.html" class="back-btn">← Back to Main App</a>
+<a href="index.html" class="back-btn">← Back to Dashboard</a>
 
 <div class="container">
 
@@ -150,12 +147,10 @@
     <textarea id="desc" rows="3" placeholder="Description (optional)"></textarea>
     <input type="file" id="productImage" accept="image/*" required />
     <button id="uploadBtn">Upload Item</button>
-    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:10px"></p>
+    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:12px;min-height:24px"></p>
 
     <h2>Available Items</h2>
-    <div class="item-grid" id="itemList">
-        <!-- Items load here -->
-    </div>
+    <div class="item-grid" id="itemList"></div>
 
 </div>
 
@@ -166,7 +161,7 @@
       apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
       authDomain: "selelo-tracker.firebaseapp.com",
       projectId: "selelo-tracker",
-      storageBucket: "selelo-tracker.fireasestorage.app",
+      storageBucket: "selelo-tracker.appspot.com",   // ← FIXED TYPO (was fireasestorage → firebasestorage / appspot)
       messagingSenderId: "42660826905",
       appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
     };
@@ -175,91 +170,100 @@
     const db = firebase.firestore();
     const storage = firebase.storage();
 
-    // CRITICAL FIX: You MUST update your Firestore rules in Firebase Console:
-    // Go to: Firebase Console → Firestore Database → Rules → Publish this:
-    /*
-    rules_version = '2';
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /marketplace/{itemId} {
-          allow read: if true;
-          allow write: if true;   // Change to 'if request.auth != null;' later for security
-        }
-      }
-    }
-    */
+    // ==== VERY IMPORTANT: Update BOTH Firestore & Storage Rules in Firebase Console ====
+    // Firestore Rules → Publish this:
+    // rules_version = '2';
+    // service cloud.firestore {
+    //   match /databases/{database}/documents {
+    //     match /marketplace/{item} { allow read, write: if true; }
+    //   }
+    // }
+    //
+    // Storage Rules → Publish this:
+    // rules_version = '2';
+    // service firebase.storage {
+    //   match /b/{bucket}/o {
+    //     match /{allPaths=**} { allow read, write: if true; }
+    //   }
+    // }
 
     document.getElementById("uploadBtn").addEventListener("click", async () => {
-        const file = document.getElementById("productImage").files[0];
+        const fileInput = document.getElementById("productImage");
+        const file = fileInput.files[0];
         const title = document.getElementById("title").value.trim();
         const price = document.getElementById("price").value.trim();
         const desc = document.getElementById("desc").value.trim();
 
         if (!file || !title || !price) {
-            alert("Please fill all required fields and select an image");
+            alert("Please fill Item Name, Price and select an Image");
             return;
         }
 
         const status = document.getElementById("uploadStatus");
-        status.textContent = "Uploading...";
+        const btn = document.getElementById("uploadBtn");
+        status.textContent = "Uploading image...";
         status.style.color = "#00eaff";
+        btn.disabled = true;
 
         try {
-            const filePath = "marketplace/" + Date.now() + "_" + file.name;
-            const ref = storage.ref(filePath);
-            await ref.put(file);
-            const url = await ref.getDownloadURL();
+            // Upload image using promise (modern & reliable)
+            const filePath = `marketplace/${Date.now()}_${file.name}`;
+            const storageRef = storage.ref(filePath);
+            await storageRef.put(file);
+            const url = await storageRef.getDownloadURL();
 
+            // Save to Firestore
             await db.collection("marketplace").add({
-                title: title,
-                price: price,
-                description: desc,
+                title,
+                price: Number(price),
+                description: desc || "",
                 image: url,
                 created: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-            status.textContent = "Uploaded successfully!";
+            status.textContent = "✓ Uploaded & Posted Successfully!";
             status.style.color = "lime";
+
+            // Reset form
             document.getElementById("title").value = "";
             document.getElementById("price").value = "";
             document.getElementById("desc").value = "";
-            document.getElementById("productImage").value = "";
+            fileInput.value = "";
+
         } catch (err) {
-            console.error(err);
-            status.textContent = "Upload failed: " + err.message;
-            status.style.color = "#ff0066";
+            console.error("Upload error:", err);
+            status.textContent = "✗ Upload failed: " + (err.message || "Unknown error");
+            status.style.color = "#ff3366";
+        } finally {
+            btn.disabled = false;
         }
     });
 
-    // Load all items in real-time
-    function loadMarketplace() {
-        db.collection("marketplace")
-          .orderBy("created", "desc")
-          .onSnapshot(snapshot => {
-              const container = document.getElementById("itemList");
-              container.innerHTML = snapshot.empty ? "<p style='text-align:center;grid-column:1/-1;opacity:0.7'>No items yet. Be the first to post!</p>" : "";
+    // Real-time load items
+    db.collection("marketplace")
+      .orderBy("created", "desc")
+      .onSnapshot(snap => {
+          const container = document.getElementById("itemList");
+          container.innerHTML = snap.empty ? "<p style='grid-column:1/-1;text-align:center;opacity:0.7;margin:40px 0'>No items yet. Be the first to sell!</p>" : "";
 
-              snapshot.forEach(doc => {
-                  const item = doc.data();
-                  const card = document.createElement("div");
-                  card.className = "item-card";
-                  card.innerHTML = `
-                      <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                      <div class="item-info">
-                          <h3>${item.title}</h3>
-                          <div class="price">KES ${Number(item.price).toLocaleString()}</div>
-                          <p>${item.description || "No description"}</p>
-                      </div>
-                  `;
-                  container.appendChild(card);
-              });
-          }, err => {
-              console.error("Firestore load error:", err);
-              document.getElementById("itemList").innerHTML = "<p style='color:#ff0066;text-align:center'>Error loading items. Check Firestore rules!</p>";
+          snap.forEach(doc => {
+              const item = doc.data();
+              const card = document.createElement("div");
+              card.className = "item-card";
+              card.innerHTML = `
+                  <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200/333/fff?text=No+Image'">
+                  <div class="item-info">
+                      <h3>${item.title}</h3>
+                      <div class="price">KES ${Number(item.price).toLocaleString()}</div>
+                      <p>${item.description || "No description"}</p>
+                  </div>
+              `;
+              container.appendChild(card);
           });
-    }
-
-    loadMarketplace();
+      }, err => {
+          document.getElementById("itemList").innerHTML = "<p style='color:#ff3366;text-align:center'>Failed to load items. Check Firestore/Storage rules!</p>";
+          console.error(err);
+      });
 </script>
 
 </body>
