@@ -7,380 +7,738 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  
   <style>
-    :root{
-      --bg: #0b0f12; /* deep */
-      --card: rgba(255,255,255,0.03);
-      --muted: #9aa6b2;
-      --accent: linear-gradient(90deg,#7b61ff,#5ee7df);
-      --accent-solid: #7b61ff;
-      --glass: rgba(255,255,255,0.04);
-      --glass-strong: rgba(255,255,255,0.06);
-      --text: #e6eef6;
-      --danger: #ff6b6b;
+    :root {
+      --bg: #1A120B;
+      --text: #F8F4F0;
+      --muted: #A89A8F;
+      --accent1: #E2725B;
+      --accent2: #D4A574;
+      --good: #4ade80;
+      --danger: #D9534F;
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.09);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;}
-    body{
-      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.06), transparent 10%),
-                  radial-gradient(900px 400px at 90% 90%, rgba(94,231,223,0.03), transparent 8%),
-                  var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      min-height:100vh;
-      position:relative;
-      overflow:hidden;
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: Inter, sans-serif;
+      background: var(--bg) url('2.png') center/cover no-repeat fixed;
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(26,18,11,0.78), rgba(0,0,0,0.65));
+      backdrop-filter: blur(3px);
+      z-index: 1;
     }
 
-    /* subtle backdrop */
-    body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.45),rgba(0,0,0,0.6));pointer-events:none}
+    /* Welcome Splash */
+    #welcome {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(circle at center, rgba(226,114,91,0.18), transparent 70%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      animation: fadeOut 3.8s forwards;
+      pointer-events: none;
+    }
+    #welcome h1 {
+      font-size: 42px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      margin-bottom: 8px;
+      animation: glow 2.2s ease-in-out infinite alternate;
+    }
+    #welcome p { font-size: 17px; letter-spacing: 5px; opacity: 0.9; }
+    @keyframes glow { from { text-shadow: 0 0 20px rgba(226,114,91,0.6); } to { text-shadow: 0 0 40px rgba(212,165,116,0.8); } }
+    @keyframes fadeOut { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
-    /* Shell */
-    .shell{padding:18px;position:relative;z-index:5;min-height:100vh;display:flex;align-items:flex-start;justify-content:center}
-    .card{width:100%;max-width:1100px;background:var(--card);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(8px);box-shadow:0 10px 40px rgba(2,6,12,0.6)}
+    .shell { padding: 16px; position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+    .card { background: var(--glass); border-radius: 20px; padding: 20px; backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.45); flex: 1; display: flex; flex-direction: column; }
 
-    header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-    .logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid rgba(255,255,255,0.06)}
-    h1{font-size:16px;font-weight:800;letter-spacing:1px}
-    .sub{font-size:12px;color:var(--muted)}
+    .top { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+    h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
+    .sub { font-size: 13px; opacity: 0.85; }
 
-    /* Controls */
-    .controls{display:flex;gap:10px;margin-left:auto}
-    .btn{padding:10px 14px;border-radius:12px;border:none;font-weight:700;cursor:pointer}
-    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)}
-    .btn-accent{background:linear-gradient(90deg,#7b61ff,#5ee7df);color:#021;box-shadow:0 8px 28px rgba(123,97,255,0.08)}
+    /* Premium SVG Nav */
+    .nav-icons {
+      display: flex; justify-content: center; gap: 28px; padding: 12px 0;
+      background: rgba(255,255,255,0.04); border-radius: 16px;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--text); font-size: 11px; opacity: 0.9; transition: all 0.3s ease; text-decoration:none;
+    }
+    .nav-item:hover { transform: translateY(-6px); opacity: 1; color: var(--accent1); }
+    .nav-icon-svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; transition: all 0.3s; }
+    .nav-item:hover .nav-icon-svg { stroke: var(--accent1); transform: scale(1.15); }
 
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:16px}
+    .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 11px 18px; border-radius: 14px; font-weight: 700; font-size: 13px;
+      border: none; cursor: pointer; transition: all 0.25s;
+    }
+    .btn-admin { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 5px 18px rgba(226,114,91,0.35); }
+    .btn-admin:active { transform: translateY(2px); }
+    .btn-ghost, .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--text); }
 
-    /* Panels */
-    .panel{background:var(--glass-strong);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+    .grid { display: flex; flex-direction: column; gap: 20px; flex: 1; }
+    .panel { background: var(--glass-strong); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .fields { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 12.5px; font-weight: 700; opacity: 0.9; }
+    input, select, textarea {
+      background: transparent; border: 1px solid rgba(255,255,255,0.18); padding: 12px 14px;
+      border-radius: 12px; color: var(--text); font-size: 14px;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.22); }
 
-    /* Transactions table - keep it minimal when locked */
-    .table-wrap{margin-top:12px;overflow:auto;border-radius:10px}
-    table{width:100%;border-collapse:collapse;font-size:13px;color:var(--muted);min-width:520px}
-    th,td{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.02)}
-    th{font-weight:700;color:var(--text);font-size:12px}
+    .table-wrap { margin-top: 12px; overflow: auto; max-height: 56vh; border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 600px; }
+    th, td { padding: 11px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.09); }
+    th { font-weight: 600; font-size: 11.5px; opacity: 0.82; position: sticky; top: 0; background: rgba(255,255,255,0.04); }
 
-    /* Locked placeholder */
-    .locked-state{display:flex;align-items:center;justify-content:center;padding:28px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.02)}
-    .locked-inner{display:flex;flex-direction:column;align-items:center;gap:10px}
-    .lock-badge{width:74px;height:74px;border-radius:18px;background:linear-gradient(180deg,rgba(123,97,255,0.14),rgba(94,231,223,0.06));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--text);box-shadow:0 10px 30px rgba(7,8,14,0.6)}
-    .locked-text{color:var(--muted);font-size:13px}
+    .action-btn, .delete-btn { padding: 6px 10px; border-radius: 8px; font-size: 12px; margin-right: 4px; }
+    .delete-btn { background: var(--danger); color: #fff; }
 
-    /* AUTH GATE - centered hovering card */
-    #authGate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:rgba(2,6,12,0.35);backdrop-filter:blur(3px)}
-    #authCard{width:360px;max-width:92%;padding:22px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.06);box-shadow:0 20px 60px rgba(2,6,12,0.7);display:flex;flex-direction:column;align-items:center;gap:12px}
-    #authCard h2{margin:0;font-size:18px;letter-spacing:0.6px}
-    #authCard p{margin:0;color:var(--muted);font-size:13px;text-align:center}
-    .auth-actions{display:flex;gap:10px;width:100%;margin-top:6px}
-    .auth-actions button{flex:1}
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999;
+    }
+    .modal-panel {
+      background: var(--glass-strong); padding: 24px; border-radius: 16px; width: 90%; max-width: 420px; border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal.show { display: flex; animation: drop 0.3s ease; }
+    @keyframes drop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-    .small-muted{font-size:12px;color:var(--muted)}
+    footer { text-align: center; margin-top: 24px; font-size: 12px; opacity: 0.7; }
 
-    /* Goodbye overlay */
-    #quitScreen{position:fixed;inset:0;background:linear-gradient(180deg,#03040a,#071026);display:none;align-items:center;justify-content:center;z-index:1000;color:var(--text);flex-direction:column}
-    #quitScreen h2{font-size:22px;margin-bottom:8px}
-    #quitScreen p{color:var(--muted)}
-
-    footer{margin-top:14px;text-align:center;font-size:12px;color:var(--muted)}
-
-    /* Responsiveness */
-    @media (max-width:880px){.grid{grid-template-columns:1fr}.controls{margin-top:8px}}
+    @media (max-width: 480px) {
+      .fields { grid-template-columns: 1fr; }
+      .nav-icons { gap: 20px; }
+      #welcome h1 { font-size: 36px; }
+      .logo { width: 50px; height: 50px; }
+      h1 { font-size: 20px; }
+      .card { padding: 16px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- AUTH GATE: shown until admin signs-in -->
-  <div id="authGate" aria-hidden="false">
-    <div id="authCard" role="dialog" aria-modal="true">
-      <div style="display:flex;align-items:center;gap:12px;width:100%">
-        <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(90deg,#7b61ff,#5ee7df);display:flex;align-items:center;justify-content:center;font-weight:800;color:#021">SB</div>
-        <div style="flex:1">
-          <h2>Welcome to SELELO</h2>
-          <p class="small-muted">Sign in to unlock transactions & charts — or quit to close this session.</p>
-        </div>
-      </div>
-
-      <div style="width:100%;display:flex;flex-direction:column;gap:10px;margin-top:6px">
-        <div style="display:flex;gap:10px" class="auth-actions">
-          <button id="authLogin" class="btn btn-accent">Login as Admin</button>
-          <button id="authQuit" class="btn btn-ghost">Quit App</button>
-        </div>
-        <button id="authClose" class="btn btn-ghost" style="width:100%">Continue as Guest</button>
-      </div>
-
-      <div style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center">Genzeish • Minimal • Secure</div>
-    </div>
-  </div>
-
-  <!-- QUIT/GOODBYE SCREEN -->
-  <div id="quitScreen">
-    <h2>Goodbye 👋</h2>
-    <p>Your session has been closed. Refresh to restart.</p>
+  <!-- Welcome Splash -->
+  <div id="welcome">
+    <h1>WELCOME TO THE BIZHUB</h1>
+    <p>SELELO BUSINESS PARK</p>
   </div>
 
   <div class="shell">
-    <main class="card" id="mainApp" aria-hidden="false">
+    <main class="card">
 
-      <header>
-        <img src="11.png" class="logo" alt="Logo" onerror="this.style.display='none'">
-        <div>
-          <h1>Selelo Business Park</h1>
-          <div class="sub">The BizHub</div>
+      <div class="top">
+        <div class="brand">
+          <img src="11.png" class="logo" alt="Logo" loading="lazy" onerror="this.style.display='none'">
+          <div>
+            <h1>Selelo Business Park</h1>
+            <div class="sub">The BizHub</div>
+          </div>
         </div>
-        <div class="controls" style="margin-left:auto">
-          <button id="adminBtn" class="btn btn-accent">Admin Login</button>
-          <button id="themeBtn" class="btn btn-ghost">Theme</button>
+
+        <!-- Premium Navigation -->
+        <div class="nav-icons">
+          <a href="#transactions" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 14h6"/>
+            </svg>
+            <span>Transactions</span>
+          </a>
+          <a href="marketplace.html" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span>Marketplace</span>
+          </a>
+          <a href="contacts.html" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Contacts</span>
+          </a>
         </div>
-      </header>
+
+        <div class="controls">
+          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
+          <button id="themeBtn" class="btn btn-theme">Theme</button>
+          <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
+        <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
+        <button id="genPL" class="btn btn-ghost">Generate P&L</button>
+        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
+      </div>
+
+      <!-- Anchor for smooth scroll -->
+      <a id="transactions"></a>
 
       <div class="grid">
         <section>
           <div id="addPanel" class="panel">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
               <div>
-                <h2 style="font-size:15px;margin:0">Add Transaction</h2>
-                <div class="small-muted">Sign in as admin to add, edit or delete</div>
+                <h2 style="font-size:17px;margin:0">Add Transaction</h2>
+                <div class="sub">Sign in as admin to add, edit or delete</div>
               </div>
               <div id="adminBadgeWrap"></div>
             </div>
 
-            <!-- form fields (kept disabled for guests) -->
-            <div class="fields" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <input id="txDate" type="date" placeholder="Date" style="padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)" disabled>
-              <select id="txType" disabled style="padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)"><option>Income</option><option>Expense</option></select>
-              <select id="txCategory" disabled style="padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option></select>
-              <input id="txAmount" type="number" disabled placeholder="Amount" style="padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">
+            <div class="fields">
+              <div class="field"><label>Date</label><input id="txDate" type="date"></div>
+              <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
+              <div class="field"><label>Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
+              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
             </div>
 
-            <div style="margin-top:10px">
-              <textarea id="txNotes" placeholder="Optional notes..." disabled style="width:100%;min-height:70px;padding:10px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)"></textarea>
-            </div>
+            <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
 
-            <div style="display:flex;gap:10px;margin-top:12px">
-              <button id="addBtn" class="btn btn-accent" disabled>Add Transaction</button>
-              <button id="clearBtn" class="btn btn-ghost" disabled>Clear</button>
-              <div style="margin-left:auto;color:var(--muted);font-size:13px" id="txMsg"></div>
+            <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+              <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
+              <button id="clearBtn" class="btn btn-ghost">Clear</button>
+              <div id="txMsg" style="color:var(--good);font-size:13px"></div>
             </div>
           </div>
 
-          <div class="panel" style="margin-top:14px">
+          <div class="panel" style="margin-top:20px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <h3 style="margin:0;font-size:15px">Transactions</h3>
-              <div class="small-muted">Locked until you sign in</div>
+              <h3 style="margin:0;font-size:16px">Transactions</h3>
+              <div class="sub">Filter and manage</div>
             </div>
 
-            <!-- Locked / Unlocked views -->
-            <div id="transactionsLocked" class="locked-state">
-              <div class="locked-inner">
-                <div class="lock-badge">🔒</div>
-                <div class="locked-text">Transactions are hidden. Sign in to view.</div>
-                <div style="display:flex;gap:8px;margin-top:6px">
-                  <button id="loginFromLock" class="btn btn-accent">Sign in</button>
-                  <button id="quitFromLock" class="btn btn-ghost">Quit</button>
-                </div>
-              </div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+              <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <option value="">All Types</option><option>Income</option><option>Expense</option>
+              </select>
+              <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+              </select>
+              <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <button id="applyFilter" class="btn btn-ghost">Apply</button>
+              <button id="resetFilter" class="btn btn-ghost">Reset</button>
             </div>
 
-            <div id="transactionsUnlocked" style="display:none">
-              <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-                <input id="fMonth" type="month" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">
-                <select id="fType" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)"><option value="">All Types</option><option>Income</option><option>Expense</option></select>
-                <select id="fCategory" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)"><option value="">All Categories</option></select>
-                <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text)">
-                <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              </div>
-
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                  <tbody id="txTbody"></tbody>
-                </table>
-              </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+                <tbody id="txTbody"></tbody>
+              </table>
             </div>
-
           </div>
         </section>
 
         <aside>
-          <div class="panel">
-            <h3 style="font-size:15px;margin-bottom:10px">Overview</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-              <div><div style="font-size:12px;color:var(--muted)">Total Income</div><strong id="statIncome">0</strong></div>
-              <div><div style="font-size:12px;color:var(--muted)">Total Expense</div><strong id="statExpense">0</strong></div>
-              <div><div style="font-size:12px;color:var(--muted)">Balance</div><strong id="statBalance">0</strong></div>
+          <div class="panel dashboard">
+            <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
+              <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
+              <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
+              <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
             </div>
+            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
 
-          <div id="chartsPanel" class="panel" style="margin-top:12px;display:none">
-            <h3 style="font-size:15px;margin-bottom:10px">Charts</h3>
-            <canvas id="chartIE" height="120"></canvas>
-            <canvas id="chartCat" height="120" style="margin-top:10px"></canvas>
+          <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
+            <h3 style="margin-bottom:12px">Charts</h3>
+            <canvas id="chartIE" height="140"></canvas>
+            <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
+            <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
+            <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
+            <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
+            <div style="display:flex;gap:8px">
+              <button id="showPLBtn" class="btn btn-ghost">Show</button>
+              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
+            </div>
+            <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
           </div>
         </aside>
       </div>
 
-      <footer>Developed by David Kopirato | 0742147197</footer>
+      <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
     </main>
   </div>
 
-  <!-- Modals and libraries remain similar to original but admin modal will be triggered from auth gate -->
-  <div id="adminModal" class="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;z-index:1200">
-    <div style="width:360px;padding:18px;border-radius:12px;background:var(--glass-strong);border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 50px rgba(0,0,0,0.6)">
-      <h3 style="margin:0 0 8px 0">Administrator access</h3>
-      <p style="margin:0 0 12px 0;color:var(--muted);font-size:13px">Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
-      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text)">
+  <!-- Modals -->
+  <div id="adminModal" class="modal">
+    <div class="modal-panel">
+      <h3>Administrator access</h3>
+      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
+      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
         <button id="adminCancel" class="btn btn-ghost">Cancel</button>
-        <button id="adminConfirm" class="btn btn-accent">Confirm</button>
+        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
       </div>
     </div>
   </div>
 
+  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
+    <div class="modal-panel">
+      <h3>Edit Transaction</h3>
+      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></textarea>
+      <div style="text-align:right;margin-top:10px">
+        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
+        <button id="editSaveBtn" class="btn btn-admin">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="receiptModal" class="modal">
+    <div class="modal-panel" id="receiptInner"></div>
+  </div>
+
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <script>
-    document.addEventListener('DOMContentLoaded', ()=>{
-      // Keys & existing local logic kept for compatibility
+    document.addEventListener('DOMContentLoaded', () => {
+      const firebaseConfig = {
+        apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+        authDomain: "selelo-tracker.firebaseapp.com",
+        projectId: "selelo-tracker",
+        storageBucket: "selelo-tracker.firebasestorage.app",
+        messagingSenderId: "42660826905",
+        appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+      };
+      try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
+
+      let txRef;
+      try {
+        const db = firebase.database();
+        txRef = db.ref('transactions');
+      } catch (e) { console.warn('Firebase DB unavailable', e); }
+
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
+      const KEY_THEME = "selelo_theme_final";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-      let transactions = JSON.parse(localStorage.getItem(KEY_TX) || '[]');
-      let isAdmin = localStorage.getItem(KEY_ADMIN) === 'true';
+      let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+      let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
+      let editKey = null;
+      let chartIE, chartCat, chartTrend;
+      let usingFirebase = !!txRef;
 
-      // Elements
-      const authGate = document.getElementById('authGate');
-      const authLogin = document.getElementById('authLogin');
-      const authQuit = document.getElementById('authQuit');
-      const authClose = document.getElementById('authClose');
-      const mainApp = document.getElementById('mainApp');
-      const quitScreen = document.getElementById('quitScreen');
+      const els = {
+        adminBtn: document.getElementById('adminBtn'),
+        addBtn: document.getElementById('addBtn'),
+        clearBtn: document.getElementById('clearBtn'),
+        txDate: document.getElementById('txDate'),
+        txType: document.getElementById('txType'),
+        txCategory: document.getElementById('txCategory'),
+        txAmount: document.getElementById('txAmount'),
+        txNotes: document.getElementById('txNotes'),
+        txMsg: document.getElementById('txMsg'),
+        txTbody: document.getElementById('txTbody'),
+        fMonth: document.getElementById('fMonth'),
+        fType: document.getElementById('fType'),
+        fCategory: document.getElementById('fCategory'),
+        fMin: document.getElementById('fMin'),
+        fMax: document.getElementById('fMax'),
+        fNotes: document.getElementById('fNotes'),
+        applyFilter: document.getElementById('applyFilter'),
+        resetFilter: document.getElementById('resetFilter'),
+        statIncome: document.getElementById('statIncome'),
+        statExpense: document.getElementById('statExpense'),
+        statBalance: document.getElementById('statBalance'),
+        adminBadgeWrap: document.getElementById('adminBadgeWrap'),
+        chartsPanel: document.getElementById('chartsPanel'),
+        adminModal: document.getElementById('adminModal'),
+        adminPassword: document.getElementById('adminPassword'),
+        adminCancel: document.getElementById('adminCancel'),
+        adminConfirm: document.getElementById('adminConfirm'),
+        editModal: document.getElementById('editModal'),
+        editDate: document.getElementById('editDate'),
+        editType: document.getElementById('editType'),
+        editCategory: document.getElementById('editCategory'),
+        editAmount: document.getElementById('editAmount'),
+        editNotes: document.getElementById('editNotes'),
+        editCancelBtn: document.getElementById('editCancelBtn'),
+        editSaveBtn: document.getElementById('editSaveBtn'),
+        receiptModal: document.getElementById('receiptModal'),
+        receiptInner: document.getElementById('receiptInner'),
+        exportCsv: document.getElementById('exportCsv'),
+        genPL: document.getElementById('genPL'),
+        downloadPL: document.getElementById('downloadPL'),
+        reportMonth: document.getElementById('reportMonth'),
+        showPLBtn: document.getElementById('showPLBtn'),
+        plView: document.getElementById('plView'),
+        addPanel: document.getElementById('addPanel'),
+        installBtn: document.getElementById('installBtn')
+      };
 
-      const adminBtn = document.getElementById('adminBtn');
-      const adminModal = document.getElementById('adminModal');
-      const adminPassword = document.getElementById('adminPassword');
-      const adminCancel = document.getElementById('adminCancel');
-      const adminConfirm = document.getElementById('adminConfirm');
+      function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
+      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
+      function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
+      function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
+      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+      function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
-      const txTbody = document.getElementById('txTbody');
-      const transactionsLocked = document.getElementById('transactionsLocked');
-      const transactionsUnlocked = document.getElementById('transactionsUnlocked');
-      const addBtn = document.getElementById('addBtn');
-      const addPanelInputs = Array.from(document.querySelectorAll('#addPanel input, #addPanel select, #addPanel textarea, #addPanel button'));
-      const chartsPanel = document.getElementById('chartsPanel');
-      const adminBadgeWrap = document.getElementById('adminBadgeWrap');
-      const loginFromLock = document.getElementById('loginFromLock');
-      const quitFromLock = document.getElementById('quitFromLock');
+      document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-      // initialize UI state
-      function showAuthGate(show){
-        authGate.style.display = show ? 'flex' : 'none';
-        // When gate visible, ensure sensitive parts are hidden
-        if (show){
-          transactionsLocked.style.display = 'flex';
-          transactionsUnlocked.style.display = 'none';
-          chartsPanel.style.display = 'none';
-          addPanelInputs.forEach(i => i.disabled = true);
-        }
-      }
+      (function applyTheme() {
+        const t = localStorage.getItem(KEY_THEME) || 'dark';
+        if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
+      })();
+      document.getElementById('themeBtn').addEventListener('click', () => {
+        const cur = localStorage.getItem(KEY_THEME) || 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(KEY_THEME, next);
+        document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
+      });
 
-      function setAdmin(v){
-        isAdmin = !!v;
-        localStorage.setItem(KEY_ADMIN, isAdmin ? 'true' : 'false');
-        if (isAdmin){
-          authGate.style.display = 'none';
-          transactionsLocked.style.display = 'none';
-          transactionsUnlocked.style.display = 'block';
-          chartsPanel.style.display = 'block';
-          addPanelInputs.forEach(i => i.disabled = false);
-          adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,#7b61ff,#5ee7df);color:#021;font-weight:800;font-size:12px">ADMIN</span>';
-          adminBtn.textContent = 'Sign out';
+      function applyAdminUI() {
+        if (isAdmin) {
+          els.addPanel.classList.add('admin-active');
+          els.adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800;font-size:12px">ADMIN</span>';
+          els.chartsPanel.style.display = 'block';
         } else {
-          // show gate again by default on sign out
-          showAuthGate(true);
-          adminBadgeWrap.innerHTML = '';
-          adminBtn.textContent = 'Admin Login';
+          els.addPanel.classList.remove('admin-active');
+          els.adminBadgeWrap.innerHTML = '';
+          els.chartsPanel.style.display = 'none';
         }
+        els.addBtn.disabled = !isAdmin;
         renderTransactions();
       }
+      applyAdminUI();
 
-      // If already admin (from previous session) hide gate
-      if (isAdmin) showAuthGate(false);
-
-      // AUTH actions
-      authLogin.addEventListener('click', ()=> openAdminModal());
-      authClose.addEventListener('click', ()=> { // continue as guest
-        showAuthGate(false);
-        // but keep content locked visually (no transactions shown)
-        transactionsLocked.style.display = 'flex';
-        transactionsUnlocked.style.display = 'none';
-      });
-      authQuit.addEventListener('click', ()=> doQuit());
-      loginFromLock.addEventListener('click', ()=> openAdminModal());
-      quitFromLock.addEventListener('click', ()=> doQuit());
-
-      function doQuit(){
-        // show goodbye and disable main
-        document.getElementById('authGate').style.display = 'none';
-        document.querySelector('.shell').style.filter = 'blur(3px) grayscale(0.2)';
-        quitScreen.style.display = 'flex';
-        mainApp.setAttribute('aria-hidden','true');
+      if (usingFirebase && txRef) {
+        txRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            saveLocal();
+          } else {
+            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          }
+          renderTransactions();
+        }, (err) => {
+          console.error('Firebase read error', err);
+          usingFirebase = false;
+          transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          renderTransactions();
+          notify('Using local storage (check internet)', 'var(--danger)');
+        });
+      } else {
+        usingFirebase = false;
+        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       }
 
-      // Admin modal behavior
-      function openAdminModal(){ adminModal.style.display = 'flex'; adminPassword.value=''; setTimeout(()=> adminPassword.focus(),120); }
-      adminCancel.addEventListener('click', ()=> adminModal.style.display='none');
-      adminConfirm.addEventListener('click', ()=> {
-        const p = (adminPassword.value || '').trim();
-        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
-        adminModal.style.display = 'none';
-        setAdmin(true);
-        alert('Admin session active');
-      });
-
-      adminBtn.addEventListener('click', ()=>{
-        if (isAdmin){ if (confirm('Sign out admin?')) setAdmin(false); return; }
-        openAdminModal();
-      });
-
-      // Transactions rendering -- hidden for non-admins
-      function renderTransactions(){
-        txTbody.innerHTML = '';
-        if (!isAdmin){
-          // keep it empty; stats still show zero/summary of public-safe values
-          document.getElementById('statIncome').textContent = '—';
-          document.getElementById('statExpense').textContent = '—';
-          document.getElementById('statBalance').textContent = '—';
-          return;
+      els.addBtn.addEventListener('click', () => {
+        if (!isAdmin) { alert('Admin only'); return; }
+        const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
+        const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
+        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
+        const newTx = { date, type, category, amount, notes };
+        if (usingFirebase && txRef) {
+          txRef.push(newTx).then(() => {
+            notify('Added (synced to cloud)');
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          }).catch(e => {
+            console.error(e);
+            newTx.key = Date.now().toString();
+            transactions.push(newTx);
+            saveLocal();
+            renderTransactions();
+            notify('Added locally (cloud error)', 'var(--danger)');
+          });
+        } else {
+          newTx.key = Date.now().toString();
+          transactions.push(newTx);
+          saveLocal();
+          renderTransactions();
+          notify('Added locally');
+          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
         }
-        // admin: show full data
-        let inc=0,exp=0;
-        transactions.forEach((t, idx) => {
+      });
+
+      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
+
+      function openEdit(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        editKey = key;
+        const t = transactions.find(t => t.key === key);
+        if (!t) return;
+        els.editDate.value = t.date; els.editType.value = t.type; els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        openModal(els.editModal);
+      }
+      els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
+      els.editSaveBtn.addEventListener('click', () => {
+        if (!isAdmin || !editKey) return;
+        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
+        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
+        if (usingFirebase && txRef) {
+          txRef.child(editKey).update(nd).then(() => {
+            closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
+          }).catch(e => {
+            const idx = transactions.findIndex(t => t.key === editKey);
+            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+            saveLocal();
+            renderTransactions();
+            notify('Edited locally', 'var(--danger)');
+          });
+        } else {
+          const idx = transactions.findIndex(t => t.key === editKey);
+          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+          saveLocal();
+          renderTransactions();
+          closeModal(els.editModal);
+          notify('Edited');
+          editKey = null;
+        }
+      });
+
+      function deleteTx(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        if (!confirm('Delete this transaction?')) return;
+        if (usingFirebase && txRef) {
+          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+            transactions = transactions.filter(t => t.key !== key);
+            saveLocal();
+            renderTransactions();
+            notify('Deleted locally', 'var(--danger)');
+          });
+        } else {
+          transactions = transactions.filter(t => t.key !== key);
+          saveLocal();
+          renderTransactions();
+          notify('Deleted', 'var(--danger)');
+        }
+      }
+
+      els.applyFilter.addEventListener('click', renderTransactions);
+      els.resetFilter.addEventListener('click', () => {
+        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
+        renderTransactions();
+      });
+
+      function passesFilters(t) {
+        if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
+        if (els.fType.value && t.type !== els.fType.value) return false;
+        if (els.fCategory.value && t.category !== els.fCategory.value) return false;
+        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
+        if (t.amount < min || t.amount > max) return false;
+        const nf = (els.fNotes.value || '').toLowerCase();
+        if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
+        return true;
+      }
+
+      function renderTransactions() {
+        els.txTbody.innerHTML = '';
+        let inc = 0, exp = 0;
+        transactions.filter(passesFilters).forEach(t => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${escapeHtml(t.date)}</td><td>${escapeHtml(t.type)}</td><td>${escapeHtml(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${escapeHtml(t.notes||'')}</td><td><button class=\"btn btn-ghost\">Edit</button> <button class=\"btn btn-ghost\">Receipt</button></td>`;
-          txTbody.appendChild(tr);
+          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          if (isAdmin) {
+            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
+            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
+          }
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          els.txTbody.appendChild(tr);
           if (t.type === 'Income') inc += Number(t.amount);
           if (t.type === 'Expense') exp += Number(t.amount);
         });
-        document.getElementById('statIncome').textContent = inc.toLocaleString();
-        document.getElementById('statExpense').textContent = exp.toLocaleString();
-        document.getElementById('statBalance').textContent = (inc - exp).toLocaleString();
+        els.statIncome.textContent = inc.toLocaleString();
+        els.statExpense.textContent = exp.toLocaleString();
+        els.statBalance.textContent = (inc - exp).toLocaleString();
+        if (isAdmin) renderCharts();
       }
 
-      function escapeHtml(s){ return String(s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+      els.txTbody.addEventListener('click', e => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const act = b.dataset.act, key = b.dataset.key;
+        if (act === 'edit') openEdit(key);
+        if (act === 'del') deleteTx(key);
+        if (act === 'rcpt') openReceipt(key);
+      });
 
-      // initial render
+      function renderCharts() {
+        if (!window.Chart) return;
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        try { if (chartIE) chartIE.destroy(); } catch (e) {}
+        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const catMap = {};
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch (e) {}
+        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const monthly = {};
+        transactions.forEach(t => {
+          const m = t.date.slice(0,7);
+          monthly[m] = monthly[m] || { Income:0, Expense:0 };
+          monthly[m][t.type] += Number(t.amount);
+        });
+        const months = Object.keys(monthly).sort();
+        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
+        chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: months,
+            datasets: [
+              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill:true },
+              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
+            ]
+          },
+          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
+        });
+      }
+
+      els.exportCsv.addEventListener('click', () => {
+        if (!transactions.length) { alert('No transactions to export'); return; }
+        let csv = 'Date,Type,Category,Amount,Notes\n';
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        const blob = new Blob([csv], { type:'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        notify('CSV exported', 'var(--good)');
+      });
+
+      function generatePL() {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
+        html += '</ul></div>';
+        els.plView.innerHTML = html;
+        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
+      }
+      els.genPL.addEventListener('click', generatePL);
+      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
+
+      els.downloadPL.addEventListener('click', () => {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF) { alert('PDF library not ready'); return; }
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        const br = {};
+        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+        doc.text('Category breakdown:', 14, y); y += 8;
+        for (const k in br) {
+          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+          if (y > 270) { doc.addPage(); y = 20; }
+        }
+        doc.save(`PL_${m || 'all'}.pdf`);
+      });
+
+      function openReceipt(key) {
+        const t = transactions.find(x => x.key === key);
+        if (!t) return;
+        const idx = transactions.findIndex(x => x.key === key);
+        const inv = 'INV-' + (10000 + idx);
+        const issued = new Date().toLocaleDateString();
+        let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
+          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
+        els.receiptInner.innerHTML = html;
+        openModal(els.receiptModal);
+        setTimeout(()=>{
+          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
+            const w = window.open('','_blank','width=700,height=800');
+            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
+            w.document.close(); setTimeout(()=> w.print(), 300);
+          });
+          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
+        },60);
+      }
+
+      els.adminBtn.addEventListener('click', () => {
+        if (isAdmin) {
+          if (!confirm('Sign out admin?')) return;
+          setAdmin(false);
+          notify('Admin signed out', 'var(--muted)');
+          return;
+        }
+        els.adminPassword.value = '';
+        openModal(els.adminModal);
+        setTimeout(() => els.adminPassword.focus(), 120);
+      });
+      els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
+      els.adminConfirm.addEventListener('click', () => {
+        const p = (els.adminPassword.value || '').trim();
+        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
+        closeModal(els.adminModal);
+        setAdmin(true);
+        notify('Admin session active', 'var(--good)');
+      });
+
+      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        els.installBtn.style.display = 'block';
+      });
+
+      els.installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        els.installBtn.style.display = 'none';
+      });
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('SW registered:', reg.scope);
+        }).catch(err => console.warn('SW registration failed:', err));
+      }
+
       renderTransactions();
-
-      // keep saving local changes if add flows used later (admin)
-      window.addEventListener('beforeunload', ()=> localStorage.setItem(KEY_TX, JSON.stringify(transactions)));
-
-      // NOTE: Charts will only be shown once isAdmin==true (chartsPanel is toggled in setAdmin)
-
-      // Small accessibility: close gate with Esc
-      document.addEventListener('keydown', e=>{ if (e.key === 'Escape' && authGate.style.display !== 'none') { showAuthGate(false); } });
-
+      window.addEventListener('beforeunload', saveLocal);
     });
   </script>
 </body>
