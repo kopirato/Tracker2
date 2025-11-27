@@ -1,259 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Marketplace - Selelo Business Park</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace – Selelo Business Park</title>
 
 <style>
-    :root {
-      --accent: #00eaff;
-      --glass: rgba(255, 255, 255, 0.08);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
-        background: #000 url('2.png') center/cover no-repeat fixed;
-        color: #fff;
-        min-height: 100vh;
-    }
-    body::before {
-        content: ""; 
-        position: fixed; 
-        inset: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.78), rgba(0,0,0,0.65));
-        backdrop-filter: blur(3px);
-    }
-
-    /* Android-style App Bar */
-    .appbar {
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        height: 56px;
-        background: rgba(0,0,0,0.92);
-        backdrop-filter: blur(12px);
-        display: flex;
-        align-items: center;
-        padding: 0 16px;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(0,238,255,0.25);
-    }
-    .back { font-size: 32px; color: var(--accent); text-decoration: none; }
-    .title { margin-left: 16px; font-size: 20px; font-weight: 700; }
-
-    .container {
-        padding-top: 76px;
-        padding-left: 16px;
-        padding-right: 16px;
-        max-width: 900px;
-        margin: 0 auto;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        background: #0a0a0a;
+        color: #f5f5f5;
+        line-height: 1.6;
     }
 
     header {
+        width: 100%;
+        background: #111;
+        padding: 15px;
         text-align: center;
-        padding: 30px 0 10px;
-        font-size: 2.5rem;
-        font-weight: 900;
-        letter-spacing: 2px;
-        background: linear-gradient(90deg, #00eaff, #a855f7);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        font-size: 1.4rem;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .back-btn {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        background: #1f1f1f;
+        border: 1px solid #333;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #fff;
+        font-size: 0.9rem;
+        transition: 0.25s;
+    }
+
+    .back-btn:hover {
+        background: #333;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 20px;
     }
 
     h2 {
-        margin: 35px 0 16px;
+        margin-top: 10px;
+        font-size: 1.6rem;
         font-weight: 700;
-        color: var(--accent);
         text-align: center;
     }
 
-    input, textarea, button {
-        width: 100%;
-        padding: 15px;
-        margin: 10px 0;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 12px;
-        color: #fff;
-        font-size: 1rem;
-    }
-    input::placeholder, textarea::placeholder { color: #aaa; }
-
-    #uploadBtn {
-        background: var(--accent);
-        color: #000;
-        font-weight: bold;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    #uploadBtn:hover { background: #00c0d4; }
-    #uploadBtn:disabled { background: #444; cursor: not-allowed; opacity: 0.7; }
-
-    .item-grid {
+    .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 22px;
-        margin-top: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
     }
-    .item-card {
-        background: var(--glass);
-        border-radius: 16px;
+
+    .card {
+        background: #141414;
+        border: 1px solid #222;
+        border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
         transition: 0.3s;
     }
-    .item-card:hover { transform: translateY(-10px); }
-    .item-card img {
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
+
+    .card img {
         width: 100%;
-        height: 210px;
+        height: 180px;
         object-fit: cover;
+        background: #222;
     }
-    .item-info {
-        padding: 18px;
-        text-align: center;
+
+    .card-content {
+        padding: 15px;
     }
-    .item-info h3 {
-        margin: 0 0 8px;
-        font-size: 1.25rem;
+
+    .card-content h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #fff;
     }
-    .price {
-        font-weight: bold;
-        color: var(--accent);
-        font-size: 1.4rem;
-        margin: 10px 0;
+
+    .card-content p {
+        font-size: 0.95rem;
+        color: #ccc;
+        margin-top: 8px;
     }
-    footer {
-        text-align: center;
-        margin: 60px 0 20px;
-        opacity: 0.7;
-        font-size: 0.9rem;
-    }
+
 </style>
 </head>
+
 <body>
 
-<!-- Android-style App Bar with Back Button to index.html -->
-<div class="appbar">
-  <a href="index.html" class="back">←</a>
-  <div class="title">Marketplace</div>
-</div>
+<header>
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+    Marketplace
+</header>
 
 <div class="container">
+    <h2>Our Offerings</h2>
 
-    <h2>List Your Item</h2>
-    <input type="text" id="title" placeholder="Item Name" required />
-    <input type="number" id="price" placeholder="Price in KES" required />
-    <textarea id="desc" rows="3" placeholder="Description (optional)"></textarea>
-    <input type="file" id="productImage" accept="image/*" required />
-    <button id="uploadBtn">Upload Item</button>
-    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:12px;min-height:28px"></p>
+    <div class="grid">
 
-    <h2>Available Items</h2>
-    <div class="item-grid" id="itemList"></div>
+        <!-- Commercial Spaces -->
+        <div class="card">
+            <img src="your-image-url.jpg" alt="Commercial Spaces">
+            <div class="card-content">
+                <h3>Commercial Spaces</h3>
+                <p>Office blocks, retail outlets, modern business centers and flexible commercial rentals.</p>
+            </div>
+        </div>
+
+        <!-- Logistics Hub -->
+        <div class="card">
+            <img src="your-image-url.jpg" alt="Logistics Hub">
+            <div class="card-content">
+                <h3>Logistics Hub</h3>
+                <p>State-of-the-art warehousing, storage, transportation and distribution facilities.</p>
+            </div>
+        </div>
+
+        <!-- Real Estate Development -->
+        <div class="card">
+            <img src="your-image-url.jpg" alt="Real Estate Development">
+            <div class="card-content">
+                <h3>Real Estate Development</h3>
+                <p>Modern residential units, serviced apartments and contemporary real estate projects.</p>
+            </div>
+        </div>
+
+        <!-- Hospitality & Lifestyle -->
+        <div class="card">
+            <img src="your-image-url.jpg" alt="Hospitality">
+            <div class="card-content">
+                <h3>Hospitality & Lifestyle</h3>
+                <p>Restaurants, recreational areas, entertainment spaces and social amenities.</p>
+            </div>
+        </div>
+
+        <!-- Security & Parking -->
+        <div class="card">
+            <img src="your-image-url.jpg" alt="Security & Parking">
+            <div class="card-content">
+                <h3>Parking & Security</h3>
+                <p>Secure and convenient parking with reliable on-site security for all visitors and tenants.</p>
+            </div>
+        </div>
+
+    </div>
 
 </div>
-
-<footer>© David Kopirato • Selelo Business Park</footer>
-
-<!-- Firebase v9 Modular - MOVED TO BOTTOM (this is the fix for "stuck uploading") -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89paule",
-    authDomain: "selelo-tracker.firebaseapp.com",
-    projectId: "selelo-tracker",
-    storageBucket: "selelo-tracker.appspot.com",
-    messagingSenderId: "42660826905",
-    appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
-
-  const uploadBtn = document.getElementById("uploadBtn");
-  const status = document.getElementById("uploadStatus");
-
-  uploadBtn.addEventListener("click", async () => {
-    const file = document.getElementById("productImage").files[0];
-    const title = document.getElementById("title").value.trim();
-    const price = document.getElementById("price").value.trim();
-    const desc = document.getElementById("desc").value.trim();
-
-    if (!file || !title || !price) {
-      status.textContent = "⚠ Fill all fields + select image";
-      status.style.color = "#ff0066";
-      return;
-    }
-
-    uploadBtn.disabled = true;
-    status.textContent = "Uploading image...";
-    status.style.color = "#00eaff";
-
-    try {
-      const filePath = `marketplace/${Date.now()}_${file.name}`;
-      const storageRef = ref(storage, filePath);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-
-      await addDoc(collection(db, "marketplace"), {
-        title,
-        price: Number(price),
-        description: desc || "",
-        image: url,
-        created: serverTimestamp()
-      });
-
-      status.textContent = "✓ Posted Successfully!";
-      status.style.color = "lime";
-
-      document.getElementById("title").value = "";
-      document.getElementById("price").value = "";
-      document.getElementById("desc").value = "";
-      document.getElementById("productImage").value = "";
-
-    } catch (err) {
-      console.error("Upload failed:", err);
-      status.textContent = "✗ Failed: " + (err.message || "Unknown error");
-      status.style.color = "#ff0066";
-    } finally {
-      uploadBtn.disabled = false;
-    }
-  });
-
-  // Real-time listener
-  onSnapshot(collection(db, "marketplace"), orderBy("created", "desc"), (snapshot) => {
-    const container = document.getElementById("itemList");
-    container.innerHTML = snapshot.empty ? "<p style='grid-column:1/-1;text-align:center;opacity:0.7;margin:50px 0'>No items yet. Be the first!</p>" : "";
-
-    snapshot.forEach((doc) => {
-      const item = doc.data();
-      const card = document.createElement("div");
-      card.className = "item-card";
-      card.innerHTML = `
-        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200/111/666?text=No+Image'">
-        <div class="item-info">
-          <h3>${item.title}</h3>
-          <div class="price">KES ${Number(item.price).toLocaleString()}</div>
-          <p>${item.description || "No description"}</p>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }, (err) => {
-    document.getElementById("itemList").innerHTML = "<p style='color:#ff0066;text-align:center'>Load failed - check Firestore rules</p>";
-    console.error(err);
-  });
-
-</script>
 
 </body>
 </html>
