@@ -5,245 +5,258 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Marketplace - Selelo Business Park</title>
 
-<!-- Modern Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-<!-- Firebase v8 -->
+<!-- Firebase v8 (compat mode) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
 <style>
+    :root {
+      --accent: #00eaff;
+      --glass: rgba(255, 255, 255, 0.08);
+    }
     body {
         margin: 0;
         font-family: 'Inter', sans-serif;
-        background: #000;
+        background: #000 url('2.png') center/cover no-repeat fixed;
         color: #fff;
-        overflow-x: hidden;
+        min-height: 100vh;
     }
-
-    /* Beautiful glass-themed container */
+    body::before {
+        content: ""; position: fixed; inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+        backdrop-filter: blur(3px);
+    }
     .container {
         max-width: 900px;
         margin: 0 auto;
         padding: 20px;
-        margin-top: 40px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 18px;
-        backdrop-filter: blur(15px);
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.06);
+        position: relative;
+        z-index: 2;
     }
-
     header {
         text-align: center;
-        margin-top: 20px;
-        padding: 15px 0;
-        font-size: 1.8rem;
-        font-weight: 800;
-        letter-spacing: 1px;
-        color: #00eaff;
-        text-transform: uppercase;
+        padding: 30px 0 10px;
+        font-size: 2.2rem;
+        font-weight: 900;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #00eaff, #a855f7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
     }
-
     .back-btn {
-        display: inline-block;
-        padding: 10px 18px;
-        margin-top: 20px;
-        background: #111;
-        border: 1px solid #00eaff;
-        color: #00eaff;
-        border-radius: 10px;
+        display: block;
+        width: fit-content;
+        margin: 20px auto;
+        padding: 12px 24px;
+        background: rgba(0,238,255,0.15);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        border-radius: 12px;
         text-decoration: none;
-        font-size: 1rem;
-        transition: 0.2s;
+        font-weight: 600;
+        transition: 0.3s;
     }
-    .back-btn:hover {
-        background: #00eaff;
-        color: #000;
-    }
+    .back-btn:hover { background: var(--accent); color: #000; }
 
     h2 {
-        margin-top: 30px;
-        margin-bottom: 10px;
+        margin: 30px 0 16px;
         font-weight: 700;
-        color: #00eaff;
+        color: var(--accent);
+        text-align: center;
     }
 
-    /* Input styling */
-    input, textarea {
+    input, textarea, button {
         width: 100%;
         padding: 14px;
-        margin-top: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
+        margin: 10px 0;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
         color: #fff;
         font-size: 1rem;
-        outline: none;
     }
+    input::placeholder, textarea::placeholder { color: #aaa; }
 
-    input::placeholder, textarea::placeholder {
-        color: #ccc;
-    }
-
-    /* Upload button */
     #uploadBtn {
-        width: 100%;
-        padding: 14px;
-        margin-top: 10px;
-        background: #00eaff;
+        background: var(--accent);
         color: #000;
-        border: none;
-        border-radius: 10px;
-        font-size: 1.1rem;
         font-weight: bold;
+        font-size: 1.1rem;
         cursor: pointer;
-        transition: 0.2s;
+        transition: 0.3s;
     }
-    #uploadBtn:hover {
-        background: #03b6c8;
-    }
+    #uploadBtn:hover { background: #00c0d4; }
 
-    /* Marketplace item grid */
     .item-grid {
-        margin-top: 30px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 15px;
-        padding-bottom: 50px;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
     }
-
     .item-card {
-        background: rgba(255, 255, 255, 0.07);
-        border-radius: 14px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(10px);
+        background: var(--glass);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        transition: 0.3s;
     }
-
+    .item-card:hover { transform: translateY(-8px); }
     .item-card img {
         width: 100%;
-        height: 180px;
+        height: 200px;
         object-fit: cover;
-        border-radius: 12px;
     }
-
-    .item-card h3 {
-        margin-top: 10px;
-        font-size: 1.1rem;
-        font-weight: 600;
+    .item-info {
+        padding: 16px;
+        text-align: center;
     }
-
-    .item-card p {
-        margin: 6px 0;
-        font-size: 0.93rem;
-        color: #ddd;
+    .item-info h3 {
+        margin: 0 0 8px;
+        font-size: 1.2rem;
     }
-
+    .item-info p {
+        margin: 4px 0;
+        opacity: 0.9;
+    }
+    .price {
+        font-weight: bold;
+        color: var(--accent);
+        font-size: 1.3rem;
+        margin: 10px 0;
+    }
+    footer {
+        text-align: center;
+        margin: 50px 0 20px;
+        opacity: 0.7;
+        font-size: 0.9rem;
+    }
 </style>
 </head>
 <body>
 
 <header>MARKETPLACE</header>
 
-<a href="index.html" class="back-btn">⬅ Back to Main App</a>
+<a href="index.html" class="back-btn">← Back to Main App</a>
 
 <div class="container">
 
-    <h2>Add New Item</h2>
-
-    <input type="text" id="title" placeholder="Item Name" />
-    <input type="text" id="price" placeholder="Price (KES)" />
-    <textarea id="desc" placeholder="Item description"></textarea>
-
-    <input type="file" id="productImage" accept="image/*" />
+    <h2>List Your Item</h2>
+    <input type="text" id="title" placeholder="Item Name" required />
+    <input type="number" id="price" placeholder="Price in KES" required />
+    <textarea id="desc" rows="3" placeholder="Description (optional)"></textarea>
+    <input type="file" id="productImage" accept="image/*" required />
     <button id="uploadBtn">Upload Item</button>
+    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:10px"></p>
 
-    <p id="uploadStatus"></p>
-    <input type="hidden" id="imageURL">
-
-    <h2>Marketplace Items</h2>
+    <h2>Available Items</h2>
     <div class="item-grid" id="itemList">
-        <!-- Items from Firestore appear here -->
+        <!-- Items load here -->
     </div>
 
 </div>
 
+<footer>© David Kopirato • Selelo Business Park</footer>
+
 <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-        authDomain: "selelo-tracker.firebaseapp.com",
-        projectId: "selelo-tracker",
-        storageBucket: "selelo-tracker.firebasestorage.app",
-        messagingSenderId: "42660826905",
-        appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+      authDomain: "selelo-tracker.firebaseapp.com",
+      projectId: "selelo-tracker",
+      storageBucket: "selelo-tracker.fireasestorage.app",
+      messagingSenderId: "42660826905",
+      appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+    };
 
     firebase.initializeApp(firebaseConfig);
-
     const db = firebase.firestore();
     const storage = firebase.storage();
 
-    // Upload image + store item
-    document.getElementById("uploadBtn").addEventListener("click", async function () {
+    // CRITICAL FIX: You MUST update your Firestore rules in Firebase Console:
+    // Go to: Firebase Console → Firestore Database → Rules → Publish this:
+    /*
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /marketplace/{itemId} {
+          allow read: if true;
+          allow write: if true;   // Change to 'if request.auth != null;' later for security
+        }
+      }
+    }
+    */
 
-        let file = document.getElementById("productImage").files[0];
-        let title = document.getElementById("title").value.trim();
-        let price = document.getElementById("price").value.trim();
-        let desc = document.getElementById("desc").value.trim();
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+        const file = document.getElementById("productImage").files[0];
+        const title = document.getElementById("title").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const desc = document.getElementById("desc").value.trim();
 
-        if (!file) return alert("Select an image first");
-        if (title === "" || price === "") return alert("Enter item name and price");
+        if (!file || !title || !price) {
+            alert("Please fill all required fields and select an image");
+            return;
+        }
 
-        let filePath = "marketplace/" + Date.now() + "_" + file.name;
-        let uploadTask = storage.ref(filePath).put(file);
+        const status = document.getElementById("uploadStatus");
+        status.textContent = "Uploading...";
+        status.style.color = "#00eaff";
 
-        uploadTask.on("state_changed",
-            function (snapshot) {},
-            function (error) { alert("Upload failed: " + error.message); },
-            function () {
-                uploadTask.snapshot.ref.getDownloadURL().then(function (url) {
+        try {
+            const filePath = "marketplace/" + Date.now() + "_" + file.name;
+            const ref = storage.ref(filePath);
+            await ref.put(file);
+            const url = await ref.getDownloadURL();
 
-                    // Save to Firestore
-                    db.collection("marketplace").add({
-                        title: title,
-                        price: price,
-                        description: desc,
-                        image: url,
-                        created: Date.now()
-                    }).then(() => {
-                        document.getElementById("uploadStatus").innerText = "✔ Uploaded Successfully!";
-                        document.getElementById("uploadStatus").style.color = "lime";
+            await db.collection("marketplace").add({
+                title: title,
+                price: price,
+                description: desc,
+                image: url,
+                created: firebase.firestore.FieldValue.serverTimestamp()
+            });
 
-                        loadMarketplace();
-                    });
-                });
-            }
-        );
+            status.textContent = "Uploaded successfully!";
+            status.style.color = "lime";
+            document.getElementById("title").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("desc").value = "";
+            document.getElementById("productImage").value = "";
+        } catch (err) {
+            console.error(err);
+            status.textContent = "Upload failed: " + err.message;
+            status.style.color = "#ff0066";
+        }
     });
 
-    // Load items from Firestore
+    // Load all items in real-time
     function loadMarketplace() {
-        db.collection("marketplace").orderBy("created", "desc").onSnapshot(snapshot => {
-            let container = document.getElementById("itemList");
-            container.innerHTML = "";
+        db.collection("marketplace")
+          .orderBy("created", "desc")
+          .onSnapshot(snapshot => {
+              const container = document.getElementById("itemList");
+              container.innerHTML = snapshot.empty ? "<p style='text-align:center;grid-column:1/-1;opacity:0.7'>No items yet. Be the first to post!</p>" : "";
 
-            snapshot.forEach(doc => {
-                let item = doc.data();
-
-                let card = `
-                    <div class="item-card">
-                        <img src="${item.image}" />
-                        <h3>${item.title}</h3>
-                        <p>KES: ${item.price}</p>
-                        <p>${item.description || ""}</p>
-                    </div>
-                `;
-
-                container.innerHTML += card;
-            });
-        });
+              snapshot.forEach(doc => {
+                  const item = doc.data();
+                  const card = document.createElement("div");
+                  card.className = "item-card";
+                  card.innerHTML = `
+                      <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                      <div class="item-info">
+                          <h3>${item.title}</h3>
+                          <div class="price">KES ${Number(item.price).toLocaleString()}</div>
+                          <p>${item.description || "No description"}</p>
+                      </div>
+                  `;
+                  container.appendChild(card);
+              });
+          }, err => {
+              console.error("Firestore load error:", err);
+              document.getElementById("itemList").innerHTML = "<p style='color:#ff0066;text-align:center'>Error loading items. Check Firestore rules!</p>";
+          });
     }
 
     loadMarketplace();
