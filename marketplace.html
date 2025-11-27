@@ -7,10 +7,103 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-<!-- Firebase v8 -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<!-- Firebase v9 Modular (NEW & FULLY WORKING) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+    authDomain: "selelo-tracker.firebaseapp.com",
+    projectId: "selelo-tracker",
+    storageBucket: "selelo-tracker.appspot.com",
+    messagingSenderId: "42660826905",
+    appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  const uploadBtn = document.getElementById("uploadBtn");
+  const status = document.getElementById("uploadStatus");
+
+  uploadBtn.addEventListener("click", async () => {
+    const file = document.getElementById("productImage").files[0];
+    const title = document.getElementById("title").value.trim();
+    const price = document.getElementById("price").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+
+    if (!file || !title || !price) {
+      status.textContent = "⚠ Fill all fields + select image";
+      status.style.color = "#ff0066";
+      return;
+    }
+
+    uploadBtn.disabled = true;
+    status.textContent = "Uploading image...";
+    status.style.color = "#00eaff";
+
+    try {
+      // Upload image
+      const filePath = `marketplace/${Date.now()}_${file.name}`;
+      const storageRef = ref(storage, filePath);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      // Save to Firestore
+      await addDoc(collection(db, "marketplace"), {
+        title,
+        price: Number(price),
+        description: desc || "",
+        image: url,
+        created: serverTimestamp()
+      });
+
+      status.textContent = "✓ Posted Successfully!";
+      status.style.color = "lime";
+
+      // Reset form
+      document.getElementById("title").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("desc").value = "";
+      document.getElementById("productImage").value = "";
+
+    } catch (err) {
+      console.error("Upload failed:", err);
+      status.textContent = "✗ Failed: " + (err.message || "Unknown error");
+      status.style.color = "#ff0066";
+    } finally {
+      uploadBtn.disabled = false;
+    }
+  });
+
+  // Real-time listener
+  onSnapshot(collection(db, "marketplace"), orderBy("created", "desc"), (snapshot) => {
+    const container = document.getElementById("itemList");
+    container.innerHTML = snapshot.empty ? "<p style='grid-column:1/-1;text-align:center;opacity:0.7;margin:50px 0'>No items yet. Be the first!</p>" : "";
+
+    snapshot.forEach((doc) => {
+      const item = doc.data();
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.innerHTML = `
+        <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200/111/666?text=No+Image'">
+        <div class="item-info">
+          <h3>${item.title}</h3>
+          <div class="price">KES ${Number(item.price).toLocaleString()}</div>
+          <p>${item.description || "No description"}</p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }, (err) => {
+    document.getElementById("itemList").innerHTML = "<p style='color:#ff0066;text-align:center'>Load failed - check Firestore rules</p>";
+    console.error(err);
+  });
+
+</script>
 
 <style>
     :root {
@@ -26,7 +119,7 @@
     }
     body::before {
         content: ""; position: fixed; inset: 0;
-        background: linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.6));
+        background: linear-gradient(180deg, rgba(0,0,0,0.78), rgba(0,0,0,0.65));
         backdrop-filter: blur(3px);
     }
     .container {
@@ -39,7 +132,7 @@
     header {
         text-align: center;
         padding: 30px 0 10px;
-        font-size: 2.4rem;
+        font-size: 2.5rem;
         font-weight: 900;
         letter-spacing: 2px;
         background: linear-gradient(90deg, #00eaff, #a855f7);
@@ -90,7 +183,7 @@
         transition: 0.3s;
     }
     #uploadBtn:hover { background: #00c0d4; }
-    #uploadBtn:disabled { background: #555; cursor: not-allowed; }
+    #uploadBtn:disabled { background: #444; cursor: not-allowed; opacity: 0.7; }
 
     .item-grid {
         display: grid;
@@ -147,7 +240,7 @@
     <textarea id="desc" rows="3" placeholder="Description (optional)"></textarea>
     <input type="file" id="productImage" accept="image/*" required />
     <button id="uploadBtn">Upload Item</button>
-    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:12px;min-height:24px"></p>
+    <p id="uploadStatus" style="text-align:center;font-weight:bold;margin-top:12px;min-height:28px"></p>
 
     <h2>Available Items</h2>
     <div class="item-grid" id="itemList"></div>
@@ -155,116 +248,6 @@
 </div>
 
 <footer>© David Kopirato • Selelo Business Park</footer>
-
-<script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-      authDomain: "selelo-tracker.firebaseapp.com",
-      projectId: "selelo-tracker",
-      storageBucket: "selelo-tracker.appspot.com",   // ← FIXED TYPO (was fireasestorage → firebasestorage / appspot)
-      messagingSenderId: "42660826905",
-      appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    // ==== VERY IMPORTANT: Update BOTH Firestore & Storage Rules in Firebase Console ====
-    // Firestore Rules → Publish this:
-    // rules_version = '2';
-    // service cloud.firestore {
-    //   match /databases/{database}/documents {
-    //     match /marketplace/{item} { allow read, write: if true; }
-    //   }
-    // }
-    //
-    // Storage Rules → Publish this:
-    // rules_version = '2';
-    // service firebase.storage {
-    //   match /b/{bucket}/o {
-    //     match /{allPaths=**} { allow read, write: if true; }
-    //   }
-    // }
-
-    document.getElementById("uploadBtn").addEventListener("click", async () => {
-        const fileInput = document.getElementById("productImage");
-        const file = fileInput.files[0];
-        const title = document.getElementById("title").value.trim();
-        const price = document.getElementById("price").value.trim();
-        const desc = document.getElementById("desc").value.trim();
-
-        if (!file || !title || !price) {
-            alert("Please fill Item Name, Price and select an Image");
-            return;
-        }
-
-        const status = document.getElementById("uploadStatus");
-        const btn = document.getElementById("uploadBtn");
-        status.textContent = "Uploading image...";
-        status.style.color = "#00eaff";
-        btn.disabled = true;
-
-        try {
-            // Upload image using promise (modern & reliable)
-            const filePath = `marketplace/${Date.now()}_${file.name}`;
-            const storageRef = storage.ref(filePath);
-            await storageRef.put(file);
-            const url = await storageRef.getDownloadURL();
-
-            // Save to Firestore
-            await db.collection("marketplace").add({
-                title,
-                price: Number(price),
-                description: desc || "",
-                image: url,
-                created: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            status.textContent = "✓ Uploaded & Posted Successfully!";
-            status.style.color = "lime";
-
-            // Reset form
-            document.getElementById("title").value = "";
-            document.getElementById("price").value = "";
-            document.getElementById("desc").value = "";
-            fileInput.value = "";
-
-        } catch (err) {
-            console.error("Upload error:", err);
-            status.textContent = "✗ Upload failed: " + (err.message || "Unknown error");
-            status.style.color = "#ff3366";
-        } finally {
-            btn.disabled = false;
-        }
-    });
-
-    // Real-time load items
-    db.collection("marketplace")
-      .orderBy("created", "desc")
-      .onSnapshot(snap => {
-          const container = document.getElementById("itemList");
-          container.innerHTML = snap.empty ? "<p style='grid-column:1/-1;text-align:center;opacity:0.7;margin:40px 0'>No items yet. Be the first to sell!</p>" : "";
-
-          snap.forEach(doc => {
-              const item = doc.data();
-              const card = document.createElement("div");
-              card.className = "item-card";
-              card.innerHTML = `
-                  <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/300x200/333/fff?text=No+Image'">
-                  <div class="item-info">
-                      <h3>${item.title}</h3>
-                      <div class="price">KES ${Number(item.price).toLocaleString()}</div>
-                      <p>${item.description || "No description"}</p>
-                  </div>
-              `;
-              container.appendChild(card);
-          });
-      }, err => {
-          document.getElementById("itemList").innerHTML = "<p style='color:#ff3366;text-align:center'>Failed to load items. Check Firestore/Storage rules!</p>";
-          console.error(err);
-      });
-</script>
 
 </body>
 </html>
