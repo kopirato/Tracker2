@@ -28,21 +28,21 @@
         backdrop-filter: blur(3px);
     }
 
-    /* Android App Bar */
+    /* Android-style App Bar */
     .appbar {
         position: fixed;
         top: 0; left: 0; right: 0;
         height: 56px;
-        background: rgba(0,0,0,0.85);
+        background: rgba(0,0,0,0.92);
         backdrop-filter: blur(12px);
         display: flex;
         align-items: center;
         padding: 0 16px;
         z-index: 1000;
-        border-bottom: 1px solid rgba(0,238,255,0.3);
+        border-bottom: 1px solid rgba(0,238,255,0.25);
     }
     .back { font-size: 32px; color: var(--accent); text-decoration: none; }
-    .title { margin-left: 16px; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+    .title { margin-left: 16px; font-size: 20px; font-weight: 700; }
 
     .container {
         padding-top: 76px;
@@ -51,9 +51,10 @@
         max-width: 900px;
         margin: 0 auto;
     }
+
     header {
         text-align: center;
-        padding: 20px 0 10px;
+        padding: 30px 0 10px;
         font-size: 2.5rem;
         font-weight: 900;
         letter-spacing: 2px;
@@ -136,7 +137,7 @@
 </head>
 <body>
 
-<!-- Android-style App Bar with Back Button -->
+<!-- Android-style App Bar with Back Button to index.html -->
 <div class="appbar">
   <a href="index.html" class="back">←</a>
   <div class="title">Marketplace</div>
@@ -159,14 +160,14 @@
 
 <footer>© David Kopirato • Selelo Business Park</footer>
 
-<!-- Firebase v9 Modular - MOVED TO BOTTOM, FULLY WORKING -->
+<!-- Firebase v9 Modular - MOVED TO BOTTOM (this is the fix for "stuck uploading") -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
   import { getFirestore, collection, addDoc, onSnapshot, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
   import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89paule",
     authDomain: "selelo-tracker.firebaseapp.com",
     projectId: "selelo-tracker",
     storageBucket: "selelo-tracker.appspot.com",
@@ -221,7 +222,7 @@
 
     } catch (err) {
       console.error("Upload failed:", err);
-      status.textContent = "✗ Failed: " + (err.message || "Check rules/network");
+      status.textContent = "✗ Failed: " + (err.message || "Unknown error");
       status.style.color = "#ff0066";
     } finally {
       uploadBtn.disabled = false;
