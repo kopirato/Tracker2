@@ -4,164 +4,169 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Selelo Business Park</title>
-    <meta name="description" content="East Africa's premier mixed-use business destination along Namanga Highway, Kitengela. Commercial spaces, logistics hubs, real estate, and lifestyle amenities.">
+    <meta name="description" content="Owner-owned mixed-use business hub along Namanga Highway. Real estate, logistics, commerce. Secure. High ROI.">
     
-    <!-- Tailwind CSS via CDN (latest) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Inter Font - Clean, modern, perfect for apps (feels native on Android) -->
+    <!-- Inter Font -->
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
         html { scroll-behavior: smooth; }
-        .hero-bg { background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.65)), url('images/hero.jpg'); background-size: cover; background-position: center; }
-        .section-padding { padding: 80px 0; }
-        @media (max-width: 768px) {
-            .section-padding { padding: 60px 0; }
+        .hero-bg { 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)), url('images/hero.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
         }
+        .glow-icon:hover {
+            transform: translateY(-8px) scale(1.15);
+            filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.8));
+            transition: all 0.35s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.4s ease;
+        }
+        .section-padding { padding: 90px 0; }
+        @media (max-width: 768px) {
+            .section-padding { padding: 70px 0; }
+        }
+        .text-glow { text-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
     </style>
 </head>
-<body class="bg-white text-gray-900 leading-relaxed antialiased">
+<body class="bg-white text-gray-900 antialiased">
 
-    <!-- Hero Section - Full screen, app-like feel -->
-    <section class="hero-bg min-h-screen flex items-center justify-center text-center text-white px-6">
-        <div class="max-w-4xl mx-auto">
-            <img src="images/logo-white.png" alt="Selelo Business Park Logo" class="h-20 mx-auto mb-8 object-contain drop-shadow-2xl">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Selelo Business Park</h1>
-            <p class="text-xl md:text-2xl mb-10 opacity-95">A self-sustaining city within a city along Namanga Highway</p>
-            <a href="tel:+254712373717" class="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg px-10 py-5 rounded-full transition shadow-lg">
-                <i class="fas fa-phone mr-2"></i> Contact Now
-            </a>
+    <!-- Hero - Ultra minimal, cinematic, app-like -->
+    <section class="hero-bg min-h-screen flex items-center justify-center text-center text-white px-6 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto z-10">
+            <img src="images/logo-white.png" alt="Selelo Logo" class="h-24 mx-auto mb-8 object-contain drop-shadow-2xl">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-none text-glow">SELELO</h1>
+            <p class="text-2xl md:text-4xl font-light mb-10 tracking-wider opacity-95">Business Park</p>
+            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light">Owner-owned. Self-sustaining. Future-proof.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="tel:+254712373717" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg px-12 py-6 rounded-full shadow-2xl transform hover:scale-105 transition">
+                    <i class="fas fa-phone mr-3"></i> Call Now
+                </a>
+                <a href="https://wa.me/254712373717" class="bg-white text-emerald-600 font-bold text-lg px-12 py-6 rounded-full shadow-2xl transform hover:scale-105 transition">
+                    <i class="fab fa-whatsapp mr-3"></i> WhatsApp
+                </a>
+            </div>
         </div>
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i class="fas fa-chevron-down text-4xl text-white opacity-70"></i>
+            <i class="fas fa-chevron-down text-5xl text-white opacity-70"></i>
         </div>
     </section>
 
-    <!-- About Us -->
+    <!-- About - Ultra short & punchy -->
     <section class="section-padding bg-gray-50 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">About Us</h2>
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <p class="text-lg leading-relaxed mb-6">
-                        Established in 2022, Selelo Business Park was founded with a bold vision: to create a <span class="font-semibold">self-sustaining city within a city</span>. Strategically located along the Namanga Highway, we integrate real estate, logistics, and commercial opportunities into one thriving hub.
-                    </p>
-                    <p class="text-lg leading-relaxed">
-                        Unlike typical developments, Selelo Business Park is <span class="font-semibold text-emerald-600">fully owned by its proprietor — not leased</span> — ensuring long-term value, security, and stability for all investors and stakeholders.
-                    </p>
-                </div>
-                <div>
-                    <img src="images/about.jpg" alt="Selelo Business Park Aerial View" class="rounded-2xl shadow-2xl w-full object-cover">
-                </div>
-            </div>
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-black mb-10">About Selelo</h2>
+            <p class="text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto">
+                Established 2022. Fully <span class="font-black text-emerald-600">proprietor-owned</span> land along Namanga Highway.
+            </p>
+            <p class="text-xl md:text-2xl leading-relaxed mt-6 max-w-3xl mx-auto">
+                A self-sustaining mixed-use city integrating real estate, logistics, and commerce — built for long-term security and maximum investor value.
+            </p>
+            <img src="images/about.jpg" alt="Selelo Business Park" class="mt-12 rounded-3xl shadow-2xl w-full object-cover">
         </div>
     </section>
 
-    <!-- Vision & Mission -->
+    <!-- Vision & Mission - Minimal cards -->
     <section class="section-padding px-6 bg-white">
-        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
-            <div class="bg-emerald-50 p-10 rounded-3xl shadow-xl">
-                <h3 class="text-2xl font-bold mb-4 text-emerald-700">Vision</h3>
-                <p class="text-lg leading-relaxed">
-                    To become East Africa’s premier mixed-use business destination, combining real estate, logistics, and commerce into a sustainable urban ecosystem.
-                </p>
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+            <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-10 rounded-3xl shadow-2xl card-hover border border-emerald-100">
+                <h3 class="text-3xl font-black mb-4 text-emerald-700">Vision</h3>
+                <p class="text-xl leading-relaxed">East Africa’s premier mixed-use destination. Sustainable. Integrated. Unrivaled.</p>
             </div>
-            <div class="bg-blue-50 p-10 rounded-3xl shadow-xl">
-                <h3 class="text-2xl font-bold mb-4 text-blue-700">Mission</h3>
-                <p class="text-lg leading-relaxed">
-                    To deliver world-class infrastructure, innovative business spaces, and integrated solutions that foster growth, connectivity, and long-term value for our partners and community.
-                </p>
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-10 rounded-3xl shadow-2xl card-hover border border-blue-100">
+                <h3 class="text-3xl font-black mb-4 text-blue-700">Mission</h3>
+                <p class="text-xl leading-relaxed">Deliver world-class infrastructure and innovative spaces that drive growth and lasting value.</p>
             </div>
         </div>
     </section>
 
-    <!-- Core Values -->
+    <!-- Core Values - Glowing icons on hover -->
     <section class="section-padding bg-gray-50 px-6">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Core Values</h2>
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-16">Core Values</h2>
             <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-3xl text-emerald-600">
+                <div class="text-center group">
+                    <div class="w-24 h-24 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-4xl text-emerald-600 glow-icon">
                         <i class="fas fa-lightbulb"></i>
                     </div>
-                    <h4 class="font-semibold text-lg">Innovation</h4>
+                    <h4 class="font-bold text-lg">Innovation</h4>
+                    <p class="text-sm text-gray-600 mt-1">Future-ready spaces</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-3xl text-emerald-600">
+                <div class="text-center group">
+                    <div class="w-24 h-24 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-4xl text-emerald-600 glow-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h4 class="font-semibold text-lg">Integrity</h4>
+                    <h4 class="font-bold text-lg">Integrity</h4>
+                    <p class="text-sm text-gray-600 mt-1">Transparent dealings</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-3xl text-emerald-600">
+                <div class="text-center group">
+                    <div class="w-24 h-24 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-4xl text-emerald-600 glow-icon">
                         <i class="fas fa-leaf"></i>
                     </div>
-                    <h4 class="font-semibold text-lg">Sustainability</h4>
+                    <h4 class="font-bold text-lg">Sustainability</h4>
+                    <p class="text-sm text-gray-600 mt-1">Eco-responsible</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-3xl text-emerald-600">
+                <div class="text-center group">
+                    <div class="w-24 h-24 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-4xl text-emerald-600 glow-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <h4 class="font-semibold text-lg">Excellence</h4>
+                    <h4 class="font-bold text-lg">Excellence</h4>
+                    <p class="text-sm text-gray-600 mt-1">Premium delivery</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-3xl text-emerald-600">
+                <div class="text-center group">
+                    <div class="w-24 h-24 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center text-4xl text-emerald-600 glow-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h4 class="font-semibold text-lg">Community</h4>
+                    <h4 class="font-bold text-lg">Community</h4>
+                    <p class="text-sm text-gray-600 mt-1">Thriving ecosystem</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Our Offerings -->
+    <!-- Offerings - Cards with glowing icons & lift -->
     <section class="section-padding px-6 bg-white">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">Our Offerings</h2>
+            <h2 class="text-4xl md:text-5xl font-black text-center mb-16">What We Offer</h2>
             <div class="grid md:grid-cols-3 gap-10">
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg text-center hover:shadow-2xl transition">
-                    <i class="fas fa-building text-5xl text-emerald-600 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-3">Commercial Spaces</h3>
-                    <p>Office blocks, retail outlets, and business centers</p>
+                <div class="bg-gray-50 p-10 rounded-3xl shadow-xl text-center card-hover border border-gray-100">
+                    <i class="fas fa-building text-7xl text-emerald-600 mb-6 glow-icon"></i>
+                    <h3 class="text-2xl font-black mb-3">Commercial</h3>
+                    <p class="text-gray-700">Offices • Retail • Business Centers</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg text-center hover:shadow-2xl transition">
-                    <i class="fas fa-truck text-5xl text-emerald-600 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-3">Logistics Hub</h3>
-                    <p>State-of-the-art warehousing & distribution facilities</p>
+                <div class="bg-gray-50 p-10 rounded-3xl shadow-xl text-center card-hover border border-gray-100">
+                    <i class="fas fa-truck-loading text-7xl text-emerald-600 mb-6 glow-icon"></i>
+                    <h3 class="text-2xl font-black mb-3">Logistics Hub</h3>
+                    <p class="text-gray-700">Warehousing • Distribution</p>
                 </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg text-center hover:shadow-2xl transition">
-                    <i class="fas fa-home text-5xl text-emerald-600 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-3">Real Estate</h3>
-                    <p>Modern residential units & serviced apartments</p>
-                </div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-10 mt-10">
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg text-center hover:shadow-2xl transition">
-                    <i class="fas fa-utensils text-5xl text-emerald-600 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-3">Hospitality & Lifestyle</h3>
-                    <p>Restaurants, recreational areas, social amenities</p>
-                </div>
-                <div class="bg-gray-50 p-8 rounded-2xl shadow-lg text-center hover:shadow-2xl transition">
-                    <i class="fas fa-car text-5xl text-emerald-600 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-3">Parking & Security</h3>
-                    <p>Ample secure parking and 24/7 surveillance</p>
+                <div class="bg-gray-50 p-10 rounded-3xl shadow-xl text-center card-hover border border-gray-100">
+                    <i class="fas fa-city text-7xl text-emerald-600 mb-6 glow-icon"></i>
+                    <h3 class="text-2xl font-black mb-3">Real Estate</h3>
+                    <p class="text-gray-700">Residences • Serviced Apartments</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Strategic Location -->
+    <!-- Location -->
     <section class="section-padding bg-gray-50 px-6">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Strategic Location</h2>
-            <img src="images/map.jpg" alt="Namanga Highway Location Map" class="rounded-2xl shadow-2xl w-full mb-10">
-            <p class="text-lg text-center max-w-3xl mx-auto leading-relaxed">
-                Located along Namanga Highway, Kitengela – offering unmatched connectivity to Nairobi, Athi River, Kitengela, and the Namanga border. The perfect hub for trade, logistics, and commerce targeting local and regional markets.
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-black mb-12">Strategic Location</h2>
+            <img src="images/map.jpg" alt="Namanga Highway Location" class="rounded-3xl shadow-2xl w-full mb-10">
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto">
+                Namanga Highway, Kitengela — direct link to Nairobi, Athi River & Tanzania border.
             </p>
         </div>
     </section>
@@ -169,63 +174,48 @@
     <!-- Why Invest -->
     <section class="section-padding px-6 bg-white">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-16">Why Invest in Selelo Business Park?</h2>
-            <div class="space-y-8 text-left md:text-lg">
-                <div class="flex items-start">
-                    <i class="fas fa-check-circle text-emerald-600 text-2xl mr-4 mt-1"></i>
-                    <p>Prime location along a key East African trade corridor</p>
-                </div>
-                <div class="flex items-start">
-                    <i class="fas fa-check-circle text-emerald-600 text-2xl mr-4 mt-1"></i>
-                    <p>Fully owned land – guaranteeing investor security & stability</p>
-                </div>
-                <div class="flex items-start">
-                    <i class="fas fa-check-circle text-emerald-600 text-2xl mr-4 mt-1"></i>
-                    <p>Integrated concept: real estate + logistics + commercial + lifestyle</p>
-                </div>
-                <div class="flex items-start">
-                    <i class="fas fa-check-circle text-emerald-600 text-2xl mr-4 mt-1"></i>
-                    <p>Proven long-term appreciation and high ROI potential</p>
-                </div>
+            <h2 class="text-4xl md:text-5xl font-black mb-16">Why Invest?</h2>
+            <div class="space-y-8 text-left md:text-xl max-w-2xl mx-auto">
+                <div class="flex items-center"><i class="fas fa-check-circle text-emerald-600 text-3xl mr-5"></i><p>Prime trade corridor location</p></div>
+                <div class="flex items-center"><i class="fas fa-check-circle text-emerald-600 text-3xl mr-5"></i><p>Fully proprietor-owned land = zero risk</p></div>
+                <div class="flex items-center"><i class="fas fa-check-circle text-emerald-600 text-3xl mr-5"></i><p>Complete ecosystem: live • work • logistics</p></div>
+                <div class="flex items-center"><i class="fas fa-check-circle text-emerald-600 text-3xl mr-5"></i><p>Exceptional long-term appreciation</p></div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Us - Fixed bottom bar on mobile (app feel) -->
-    <section class="bg-emerald-600 text-white py-20 px-6">
+    <!-- Contact -->
+    <section class="bg-emerald-600 text-white py-24 px-6">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-10">Get In Touch</h2>
-            <div class="space-y-6 text-lg md:text-xl">
-                <p><i class="fas fa-map-marker-alt mr-3"></i> Namanga Highway, Kitengela, Kenya</p>
-                <p>
-                    <i class="fas fa-phone mr-3"></i>
-                    <a href="tel:+254712373717" class="underline hover:no-underline">+254 712 373 717</a> | 
+            <h2 class="text-4xl md:text-5xl font-black mb-10">Let’s Talk Investment</h2>
+            <div class="space-y-6 text-xl md:text-2xl">
+                <p><i class="fas fa-map-marker-alt mr-4"></i> Namanga Highway, Kitengela</p>
+                <p class="flex flex-col md:flex-row justify-center items-center gap-4">
+                    <a href="tel:+254712373717" class="underline hover:no-underline">+254 712 373 717</a>
+                    <span class="hidden md:inline">•</span>
                     <a href="tel:+254713904835" class="underline hover:no-underline">+254 713 904 835</a>
                 </p>
-                <p>
-                    <i class="fas fa-envelope mr-3"></i>
-                    <a href="mailto:selelobizpark@gmail.com" class="underline hover:no-underline">selelobizpark@gmail.com</a>
-                </p>
+                <p><i class="fas fa-envelope mr-4"></i> selelobizpark@gmail.com</p>
             </div>
-            <a href="https://wa.me/254712373717" class="inline-block mt-10 bg-white text-emerald-600 font-bold px-12 py-5 rounded-full text-lg hover:bg-gray-100 transition shadow-lg">
-                <i class="fab fa-whatsapp mr-2"></i> Message on WhatsApp
+            <a href="https://wa.me/254712373717" class="inline-block mt-12 bg-white text-emerald-600 font-black text-xl px-16 py-7 rounded-full hover:bg-gray-100 transform hover:scale-105 transition shadow-2xl">
+                <i class="fab fa-whatsapp text-3xl mr-3 align-middle"></i> Message on WhatsApp
             </a>
         </div>
     </section>
 
-    <!-- Mobile bottom CTA bar (feels like native app) -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t border-gray-200 px-6 py-4 md:hidden flex justify-around items-center z-50">
-        <a href="tel:+254712373717" class="flex flex-col items-center text-emerald-600">
-            <i class="fas fa-phone text-2xl"></i>
-            <span class="text-xs mt-1">Call</span>
+    <!-- Mobile Bottom Bar - Pure app feel -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t border-gray-200 px-8 py-5 md:hidden flex justify-around items-center z-50">
+        <a href="tel:+254712373717" class="text-emerald-600 text-center">
+            <i class="fas fa-phone text-3xl"></i>
+            <span class="block text-xs mt-1 font-bold">Call</span>
         </a>
-        <a href="https://wa.me/254712373717" class="flex flex-col items-center text-emerald-600">
-            <i class="fab fa-whatsapp text-2xl"></i>
-            <span class="text-xs mt-1">WhatsApp</span>
+        <a href="https://wa.me/254712373717" class="text-emerald-600 text-center">
+            <i class="fab fa-whatsapp text-3xl"></i>
+            <span class="block text-xs mt-1 font-bold">WhatsApp</span>
         </a>
-        <a href="mailto:selelobizpark@gmail.com" class="flex flex-col items-center text-emerald-600">
-            <i class="fas fa-envelope text-2xl"></i>
-            <span class="text-xs mt-1">Email</span>
+        <a href="mailto:selelobizpark@gmail.com" class="text-emerald-600 text-center">
+            <i class="fas fa-envelope text-3xl"></i>
+            <span class="block text-xs mt-1 font-bold">Email</span>
         </a>
     </div>
 
