@@ -506,5 +506,244 @@
       });
     }
   </script>
+  <script>
+// ------------------------------
+// GLOBAL STORAGE
+// ------------------------------
+let tx = JSON.parse(localStorage.getItem("transactions") || "[]");
+let admin = localStorage.getItem("admin") === "true";
+
+// ------------------------------
+// ADMIN LOGIN
+// ------------------------------
+const adminModal = document.getElementById("adminModal");
+document.getElementById("adminBtn").onclick = () => adminModal.classList.add("show");
+document.getElementById("adminCancel").onclick = () => adminModal.classList.remove("show");
+
+document.getElementById("adminConfirm").onclick = () => {
+  const pass = document.getElementById("adminPassword").value.trim();
+  if(pass === "admin123"){           // <-- change this to your real password
+    admin = true;
+    localStorage.setItem("admin", "true");
+    adminModal.classList.remove("show");
+    enableAdminFeatures();
+  } else {
+    alert("Wrong password!");
+  }
+};
+
+function enableAdminFeatures(){
+  document.getElementById("addBtn").disabled = false;
+  document.getElementById("adminBadgeWrap").innerHTML =
+     `<span style="padding:4px 10px;border-radius:8px;background:var(--good);color:#000;font-size:12px">ADMIN</span>`;
+  document.getElementById("chartsPanel").style.display = "block";
+}
+
+// auto-apply admin on reload
+if(admin) enableAdminFeatures();
+
+// ------------------------------
+// ADD TRANSACTION
+// ------------------------------
+document.getElementById("addBtn").onclick = () => {
+  const t = {
+    date: document.getElementById("txDate").value,
+    type: document.getElementById("txType").value,
+    category: document.getElementById("txCategory").value,
+    amount: parseFloat(document.getElementById("txAmount").value || 0),
+    notes: document.getElementById("txNotes").value
+  };
+
+  if(!t.date || !t.amount){ alert("Fill all fields!"); return; }
+
+  tx.push(t);
+  save();
+  renderTable();
+  updateStats();
+
+  document.getElementById("txMsg").textContent = "✓ Saved!";
+  setTimeout(()=>document.getElementById("txMsg").textContent="",1500);
+};
+
+// clear inputs
+document.getElementById("clearBtn").onclick = () => {
+  document.getElementById("txDate").value="";
+  document.getElementById("txAmount").value="";
+  document.getElementById("txNotes").value="";
+};
+
+// ------------------------------
+// RENDER TABLE
+// ------------------------------
+function renderTable(list = tx){
+  const tb = document.getElementById("txTbody");
+  tb.innerHTML="";
+
+  list.forEach((t, i)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${t.date}</td>
+      <td>${t.type}</td>
+      <td>${t.category}</td>
+      <td>${t.amount.toLocaleString()}</td>
+      <td>${t.notes}</td>
+      <td>
+        ${admin ? `
+          <button class="action-btn" onclick="editTx(${i})">Edit</button>
+          <button class="delete-btn" onclick="delTx(${i})">Del</button>
+        ` : ""}
+      </td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+renderTable();
+
+// ------------------------------
+// SAVE
+// ------------------------------
+function save(){
+  localStorage.setItem("transactions", JSON.stringify(tx));
+}
+
+// ------------------------------
+// DELETE
+// ------------------------------
+function delTx(i){
+  if(confirm("Delete this?")){
+    tx.splice(i,1);
+    save(); renderTable(); updateStats();
+  }
+}
+
+// ------------------------------
+// EDIT
+// ------------------------------
+const editModal = document.getElementById("editModal");
+let editIndex = null;
+
+function editTx(i){
+  editIndex = i;
+  const t = tx[i];
+  document.getElementById("editDate").value = t.date;
+  document.getElementById("editType").value = t.type;
+  document.getElementById("editCategory").value = t.category;
+  document.getElementById("editAmount").value = t.amount;
+  document.getElementById("editNotes").value = t.notes;
+  editModal.classList.add("show");
+}
+
+editModal.onclick = e => {
+  if(e.target === editModal) editModal.classList.remove("show");
+};
+
+// save edit
+document.getElementById("editNotes").onblur = () => saveEdit();
+function saveEdit(){
+  if(editIndex===null) return;
+
+  tx[editIndex] = {
+    date: document.getElementById("editDate").value,
+    type: document.getElementById("editType").value,
+    category: document.getElementById("editCategory").value,
+    amount: parseFloat(document.getElementById("editAmount").value),
+    notes: document.getElementById("editNotes").value
+  };
+
+  save(); renderTable(); updateStats();
+}
+
+// ------------------------------
+// FILTERS
+// ------------------------------
+document.getElementById("applyFilter").onclick = () => {
+  const m = document.getElementById("fMonth").value;
+  const tp = document.getElementById("fType").value;
+  const cat = document.getElementById("fCategory").value;
+  const min = parseFloat(document.getElementById("fMin").value || 0);
+  const max = parseFloat(document.getElementById("fMax").value || Infinity);
+  const notes = document.getElementById("fNotes").value.toLowerCase();
+
+  const f = tx.filter(t=>{
+    return (!m || t.date.startsWith(m)) &&
+           (!tp || t.type===tp) &&
+           (!cat || t.category===cat) &&
+           (t.amount>=min && t.amount<=max) &&
+           (t.notes.toLowerCase().includes(notes));
+  });
+
+  renderTable(f);
+};
+
+document.getElementById("resetFilter").onclick = () => {
+  renderTable(tx);
+};
+
+// ------------------------------
+// STATISTICS
+// ------------------------------
+function updateStats(){
+  let income=0, expense=0;
+  tx.forEach(t=>{
+    if(t.type==="Income") income+=t.amount;
+    else expense+=t.amount;
+  });
+
+  document.getElementById("statIncome").textContent = income.toLocaleString();
+  document.getElementById("statExpense").textContent = expense.toLocaleString();
+  document.getElementById("statBalance").textContent = (income-expense).toLocaleString();
+}
+updateStats();
+
+// ------------------------------
+// EXPORT CSV
+// ------------------------------
+document.getElementById("exportCsv").onclick = () => {
+  let csv = "Date,Type,Category,Amount,Notes\n";
+  tx.forEach(t=>{
+    csv += `${t.date},${t.type},${t.category},${t.amount},${t.notes}\n`;
+  });
+
+  const a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+  a.download = "transactions.csv";
+  a.click();
+};
+
+// ------------------------------
+// P&L GENERATION
+// ------------------------------
+document.getElementById("showPLBtn").onclick = () => generatePL(false);
+document.getElementById("downloadPLBtn").onclick = () => generatePL(true);
+
+function generatePL(download){
+  const m = document.getElementById("reportMonth").value;
+
+  let inc=0, exp=0;
+
+  tx.forEach(t=>{
+    if(!m || t.date.startsWith(m)){
+      if(t.type==="Income") inc+=t.amount;
+      else exp+=t.amount;
+    }
+  });
+
+  const out = `
+    <strong>Income:</strong> ${inc.toLocaleString()}<br>
+    <strong>Expenses:</strong> ${exp.toLocaleString()}<br>
+    <strong>Profit:</strong> ${(inc-exp).toLocaleString()}
+  `;
+
+  document.getElementById("plView").innerHTML = out;
+
+  if(download){
+    const blob = new Blob([out.replace(/<br>/g,"\n")], {type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "profit_and_loss.txt";
+    a.click();
+  }
+}
+</script>
 </body>
 </html>
