@@ -1,9 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SELELO BUSINESS PARK</title>
@@ -131,22 +128,6 @@
   </style>
 </head>
 <body>
-<div id="authContainer" style="text-align:center; padding:20px;">
-    <h2>Login / Register</h2>
-
-    <input id="email" type="email" placeholder="Email" /><br><br>
-    <input id="password" type="password" placeholder="Password" /><br><br>
-
-    <button id="loginBtn">Login</button>
-    <button id="registerBtn">Register</button>
-
-    <p id="authMessage" style="color:red;"></p>
-</div>
-
-<!-- Your app content -->
-<div id="appContent" style="display:none;">
-    <!-- PUT YOUR TRANSACTIONS, UPLOADS, TABLES, EVERYTHING HERE -->
-</div>  
 
   <!-- Welcome Splash -->
   <div id="welcome">
@@ -341,16 +322,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-      // Check if user is logged in
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById("authContainer").style.display = "none";
-      document.getElementById("appContent").style.display = "block";
-    } else {
-      document.getElementById("authContainer").style.display = "block";
-      document.getElementById("appContent").style.display = "none";
-    }
-  })
     document.addEventListener('DOMContentLoaded', () => {
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
@@ -770,49 +741,5 @@
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-    authDomain: "selelo-tracker.firebaseapp.com",
-    databaseURL: "https://selelo-tracker-default-rtdb.firebaseio.com",
-    projectId: "selelo-tracker",
-    storageBucket: "selelo-tracker.firebasestorage.app",
-    messagingSenderId: "42660826905",
-    appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
-  // Register
-  document.getElementById("registerBtn").addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-
-    auth.createUserWithEmailAndPassword(email, pass)
-      .then(() => {
-        document.getElementById("authMessage").innerText =
-            "Account created! You can log in now.";
-      })
-      .catch(error => {
-        document.getElementById("authMessage").innerText = error.message;
-      });
-  });
-
-  // Login
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-
-    auth.signInWithEmailAndPassword(email, pass)
-      .catch(error => {
-        document.getElementById("authMessage").innerText = error.message;
-      });
-  });
-
-
-                                                          </script>
-  
 </body>
 </html>
