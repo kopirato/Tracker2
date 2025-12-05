@@ -341,6 +341,16 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
+      // Check if user is logged in
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("appContent").style.display = "block";
+    } else {
+      document.getElementById("authContainer").style.display = "block";
+      document.getElementById("appContent").style.display = "none";
+    }
+  })
     document.addEventListener('DOMContentLoaded', () => {
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
@@ -801,16 +811,7 @@
       });
   });
 
-  // Check if user is logged in
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById("authContainer").style.display = "none";
-      document.getElementById("appContent").style.display = "block";
-    } else {
-      document.getElementById("authContainer").style.display = "block";
-      document.getElementById("appContent").style.display = "none";
-    }
-  });
+
                                                           </script>
   
 </body>
