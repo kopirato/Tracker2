@@ -36,9 +36,6 @@
       z-index: 1;
     }
 
-    /* Hide protected content until login */
-    .protected { display: none; }
-
     /* Welcome Splash */
     #welcome {
       position: fixed; inset: 0; z-index: 9999;
@@ -132,43 +129,13 @@
 </head>
 <body>
 
-  <!-- LOGIN POPUP (shown first) -->
-  <div id="loginPopup" style="
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 9999;
-  ">
-    <div style="
-      background: #111;
-      padding: 30px;
-      border-radius: 15px;
-      width: 85%; max-width: 350px;
-      text-align: center;
-      color: white;
-      box-shadow: 0 0 25px rgba(255,255,255,0.1);
-    ">
-      <h2 style="margin-bottom: 15px;">Admin Login</h2>
-      <input type="password" id="loginPwd" placeholder="Enter password"
-        style="width: 100%; padding: 12px; margin-bottom: 15px;
-               border-radius: 8px; border: none; outline: none;">
-      <button onclick="verifyLogin()" style="
-        width: 100%; padding: 12px;
-        background: #1db954; border: none;
-        border-radius: 8px; font-size: 16px;
-        color: white; cursor: pointer;
-      ">Login</button>
-      <button onclick="quitApp()" style="
-        margin-top: 10px; width: 100%; padding: 12px;
-        background: #f44336; border: none;
-        border-radius: 8px; color: white;
-        cursor: pointer;
-      ">Quit</button>
-    </div>
+  <!-- Welcome Splash -->
+  <div id="welcome">
+    <h1>WELCOME TO THE BIZHUB</h1>
+    <p>SELELO BUSINESS PARK</p>
   </div>
 
-  <div class="shell protected">
+  <div class="shell">
     <main class="card">
 
       <div class="top">
@@ -208,8 +175,7 @@
         </div>
 
         <div class="controls">
-          <!-- optional: you can remove admin login/logout btn since loginPopup handles login -->
-          <!-- <button id="adminBtn" class="btn btn-admin">Admin Login</button> -->
+          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
           <button id="themeBtn" class="btn btn-theme">Theme</button>
           <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
         </div>
@@ -264,7 +230,8 @@
                 <option value="">All Types</option><option>Income</option><option>Expense</option>
               </select>
               <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+              </select>
               <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
               <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
@@ -317,6 +284,18 @@
   </div>
 
   <!-- Modals -->
+  <div id="adminModal" class="modal">
+    <div class="modal-panel">
+      <h3>Administrator access</h3>
+      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
+      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
+        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
@@ -343,644 +322,424 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // LOGIN logic
-    function verifyLogin() {
-      const pass = document.getElementById("loginPwd").value;
-      const realPass = "0742147197";  // you can change to your own
-      if (pass === realPass) {
-        document.getElementById("loginPopup").style.display = "none";
-        document.querySelectorAll(".protected").forEach(el => el.style.display = "");
-        initApp();  // start app logic
-      } else {
-        alert("Incorrect password!");
-      }
-    }
-    function quitApp() {
-      alert("Exit");
-      window.close();
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const firebaseConfig = {
+        apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+        authDomain: "selelo-tracker.firebaseapp.com",
+        projectId: "selelo-tracker",
+        storageBucket: "selelo-tracker.firebasestorage.app",
+        messagingSenderId: "42660826905",
+        appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+      };
+      try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
 
-    // After login — write all your existing code inside this function
-    function initApp() {
-      document.addEventListener('DOMContentLoaded', () => {
-        const firebaseConfig = {
-          apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-          authDomain: "selelo-tracker.firebaseapp.com",
-          projectId: "selelo-tracker",
-          storageBucket: "selelo-tracker.firebasestorage.app",
-          messagingSenderId: "42660826905",
-          appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-        };
-        try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
+      let txRef;
+      try {
+        const db = firebase.database();
+        txRef = db.ref('transactions');
+      } catch (e) { console.warn('Firebase DB unavailable', e); }
 
-        let txRef;
-        try {
-          const db = firebase.database();
-          txRef = db.ref('transactions');
-        } catch (e) { console.warn('Firebase DB unavailable', e); }
+      const KEY_TX = "selelo_tx_local";
+      const KEY_ADMIN = "selelo_admin_final";
+      const KEY_THEME = "selelo_theme_final";
+      const ADMIN_PASSWORDS = ["0742147197","0721235005"];
+      let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+      let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
+      let editKey = null;
+      let chartIE, chartCat, chartTrend;
+      let usingFirebase = !!txRef;
 
-        const KEY_TX = "selelo_tx_local";
-        const KEY_THEME = "selelo_theme_final";
-        let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-        let chartIE, chartCat, chartTrend;
-        let usingFirebase = !!txRef;
+      const els = {
+        adminBtn: document.getElementById('adminBtn'),
+        addBtn: document.getElementById('addBtn'),
+        clearBtn: document.getElementById('clearBtn'),
+        txDate: document.getElementById('txDate'),
+        txType: document.getElementById('txType'),
+        txCategory: document.getElementById('txCategory'),
+        txAmount: document.getElementById('txAmount'),
+        txNotes: document.getElementById('txNotes'),
+        txMsg: document.getElementById('txMsg'),
+        txTbody: document.getElementById('txTbody'),
+        fMonth: document.getElementById('fMonth'),
+        fType: document.getElementById('fType'),
+        fCategory: document.getElementById('fCategory'),
+        fMin: document.getElementById('fMin'),
+        fMax: document.getElementById('fMax'),
+        fNotes: document.getElementById('fNotes'),
+        applyFilter: document.getElementById('applyFilter'),
+        resetFilter: document.getElementById('resetFilter'),
+        statIncome: document.getElementById('statIncome'),
+        statExpense: document.getElementById('statExpense'),
+        statBalance: document.getElementById('statBalance'),
+        adminBadgeWrap: document.getElementById('adminBadgeWrap'),
+        chartsPanel: document.getElementById('chartsPanel'),
+        adminModal: document.getElementById('adminModal'),
+        adminPassword: document.getElementById('adminPassword'),
+        adminCancel: document.getElementById('adminCancel'),
+        adminConfirm: document.getElementById('adminConfirm'),
+        editModal: document.getElementById('editModal'),
+        editDate: document.getElementById('editDate'),
+        editType: document.getElementById('editType'),
+        editCategory: document.getElementById('editCategory'),
+        editAmount: document.getElementById('editAmount'),
+        editNotes: document.getElementById('editNotes'),
+        editCancelBtn: document.getElementById('editCancelBtn'),
+        editSaveBtn: document.getElementById('editSaveBtn'),
+        receiptModal: document.getElementById('receiptModal'),
+        receiptInner: document.getElementById('receiptInner'),
+        exportCsv: document.getElementById('exportCsv'),
+        genPL: document.getElementById('genPL'),
+        downloadPL: document.getElementById('downloadPL'),
+        reportMonth: document.getElementById('reportMonth'),
+        showPLBtn: document.getElementById('showPLBtn'),
+        plView: document.getElementById('plView'),
+        addPanel: document.getElementById('addPanel'),
+        installBtn: document.getElementById('installBtn')
+      };
 
-        const els = {
-          addBtn: document.getElementById('addBtn'),
-          clearBtn: document.getElementById('clearBtn'),
-          txDate: document.getElementById('txDate'),
-          txType: document.getElementById('txType'),
-          txCategory: document.getElementById('txCategory'),
-          txAmount: document.getElementById('txAmount'),
-          txNotes: document.getElementById('txNotes'),
-          txMsg: document.getElementById('txMsg'),
-          txTbody: document.getElementById('txTbody'),
-          fMonth: document.getElementById('fMonth'),
-          fType: document.getElementById('fType'),
-          fCategory: document.getElementById('fCategory'),
-          fMin: document.getElementById('fMin'),
-          fMax: document.getElementById('fMax'),
-          fNotes: document.getElementById('fNotes'),
-          applyFilter: document.getElementById('applyFilter'),
-          resetFilter: document.getElementById('resetFilter'),
-          statIncome: document.getElementById('statIncome'),
-          statExpense: document.getElementById('statExpense'),
-          statBalance: document.getElementById('statBalance'),
-          chartsPanel: document.getElementById('chartsPanel'),
-          editModal: document.getElementById('editModal'),
-          editDate: document.getElementById('editDate'),
-          editType: document.getElementById('editType'),
-          editCategory: document.getElementById('editCategory'),
-          editAmount: document.getElementById('editAmount'),
-          editNotes: document.getElementById('editNotes'),
-          receiptModal: document.getElementById('receiptModal'),
-          receiptInner: document.getElementById('receiptInner'),
-          exportCsv: document.getElementById('exportCsv'),
-          genPL: document.getElementById('genPL'),
-          downloadPL: document.getElementById('downloadPL'),
-          reportMonth: document.getElementById('reportMonth'),
-          showPLBtn: document.getElementById('showPLBtn'),
-          plView: document.getElementById('plView'),
-          installBtn: document.getElementById('installBtn')
-        };
+      function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
+      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
+      function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
+      function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
+      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+      function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
-        function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-        function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
-        function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-        function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
-        function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
+      document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-        document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
+      (function applyTheme() {
+        const t = localStorage.getItem(KEY_THEME) || 'dark';
+        if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
+      })();
+      document.getElementById('themeBtn').addEventListener('click', () => {
+        const cur = localStorage.getItem(KEY_THEME) || 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(KEY_THEME, next);
+        document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
+      });
 
-        (function applyTheme() {
-          const t = localStorage.getItem(KEY_THEME) || 'dark';
-          if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
-        })();
-        document.getElementById('themeBtn').addEventListener('click', () => {
-          const cur = localStorage.getItem(KEY_THEME) || 'dark';
-          const next = cur === 'dark' ? 'light' : 'dark';
-          localStorage.setItem(KEY_THEME, next);
-          document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
-        });
-
-        function renderTransactions() {
-          els.txTbody.innerHTML = '';
-          let inc = 0, exp = 0;
-          transactions.filter(t => {
-            if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
-            if (els.fType.value && t.type !== els.fType.value) return false;
-            if (els.fCategory.value && t.category !== els.fCategory.value) return false;
-            const min = parseFloat(els.fMin.value) || -Infinity;
-            const max = parseFloat(els.fMax.value) || Infinity;
-            if (t.amount < min || t.amount > max) return false;
-            const nf = (els.fNotes.value || '').toLowerCase();
-            if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
-            return true;
-          }).forEach(t => {
-            const tr = document.createElement('tr');
-            const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
-            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
-            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
-            tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
-            els.txTbody.appendChild(tr);
-            if (t.type === 'Income') inc += Number(t.amount);
-            if (t.type === 'Expense') exp += Number(t.amount);
-          });
-          els.statIncome.textContent = inc.toLocaleString();
-          els.statExpense.textContent = exp.toLocaleString();
-          els.statBalance.textContent = (inc - exp).toLocaleString();
-          renderCharts();
-        }
-
-        function renderCharts() {
-          if (!window.Chart) return;
-          // (chart logic unchanged...)
-        }
-
-        // initialize: load from storage or firebase
-        if (usingFirebase && txRef) {
-          txRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-              transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
-              saveLocal();
-            } else {
-              transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-            }
-            renderTransactions();
-          }, (err) => {
-            usingFirebase = false;
-            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-            renderTransactions();
-            notify('Using local storage (check internet)', 'var(--danger)');
-          });
+      function applyAdminUI() {
+        if (isAdmin) {
+          els.addPanel.classList.add('admin-active');
+          els.adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800;font-size:12px">ADMIN</span>';
+          els.chartsPanel.style.display = 'block';
         } else {
+          els.addPanel.classList.remove('admin-active');
+          els.adminBadgeWrap.innerHTML = '';
+          els.chartsPanel.style.display = 'none';
+        }
+        els.addBtn.disabled = !isAdmin;
+        renderTransactions();
+      }
+      applyAdminUI();
+
+      if (usingFirebase && txRef) {
+        txRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            saveLocal();
+          } else {
+            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          }
+          renderTransactions();
+        }, (err) => {
+          console.error('Firebase read error', err);
+          usingFirebase = false;
           transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
           renderTransactions();
+          notify('Using local storage (check internet)', 'var(--danger)');
+        });
+      } else {
+        usingFirebase = false;
+        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+      }
+
+      els.addBtn.addEventListener('click', () => {
+        if (!isAdmin) { alert('Admin only'); return; }
+        const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
+        const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
+        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
+        const newTx = { date, type, category, amount, notes };
+        if (usingFirebase && txRef) {
+          txRef.push(newTx).then(() => {
+            notify('Added (synced to cloud)');
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          }).catch(e => {
+            console.error(e);
+            newTx.key = Date.now().toString();
+            transactions.push(newTx);
+            saveLocal();
+            renderTransactions();
+            notify('Added locally (cloud error)', 'var(--danger)');
+          });
+        } else {
+          newTx.key = Date.now().toString();
+          transactions.push(newTx);
+          saveLocal();
+          renderTransactions();
+          notify('Added locally');
+          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
         }
-
-        // Add / Edit / Delete logic remains the same, with buttons working as before
-        // ... (you can copy your existing handlers)
-        // Remember: all UI is only accessible after login
-
       });
-    }
+
+      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
+
+      function openEdit(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        editKey = key;
+        const t = transactions.find(t => t.key === key);
+        if (!t) return;
+        els.editDate.value = t.date; els.editType.value = t.type; els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        openModal(els.editModal);
+      }
+      els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
+      els.editSaveBtn.addEventListener('click', () => {
+        if (!isAdmin || !editKey) return;
+        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
+        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
+        if (usingFirebase && txRef) {
+          txRef.child(editKey).update(nd).then(() => {
+            closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
+          }).catch(e => {
+            const idx = transactions.findIndex(t => t.key === editKey);
+            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+            saveLocal();
+            renderTransactions();
+            notify('Edited locally', 'var(--danger)');
+          });
+        } else {
+          const idx = transactions.findIndex(t => t.key === editKey);
+          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+          saveLocal();
+          renderTransactions();
+          closeModal(els.editModal);
+          notify('Edited');
+          editKey = null;
+        }
+      });
+
+      function deleteTx(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        if (!confirm('Delete this transaction?')) return;
+        if (usingFirebase && txRef) {
+          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+            transactions = transactions.filter(t => t.key !== key);
+            saveLocal();
+            renderTransactions();
+            notify('Deleted locally', 'var(--danger)');
+          });
+        } else {
+          transactions = transactions.filter(t => t.key !== key);
+          saveLocal();
+          renderTransactions();
+          notify('Deleted', 'var(--danger)');
+        }
+      }
+
+      els.applyFilter.addEventListener('click', renderTransactions);
+      els.resetFilter.addEventListener('click', () => {
+        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
+        renderTransactions();
+      });
+
+      function passesFilters(t) {
+        if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
+        if (els.fType.value && t.type !== els.fType.value) return false;
+        if (els.fCategory.value && t.category !== els.fCategory.value) return false;
+        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
+        if (t.amount < min || t.amount > max) return false;
+        const nf = (els.fNotes.value || '').toLowerCase();
+        if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
+        return true;
+      }
+
+      function renderTransactions() {
+        els.txTbody.innerHTML = '';
+        let inc = 0, exp = 0;
+        transactions.filter(passesFilters).forEach(t => {
+          const tr = document.createElement('tr');
+          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          if (isAdmin) {
+            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
+            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
+          }
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          els.txTbody.appendChild(tr);
+          if (t.type === 'Income') inc += Number(t.amount);
+          if (t.type === 'Expense') exp += Number(t.amount);
+        });
+        els.statIncome.textContent = inc.toLocaleString();
+        els.statExpense.textContent = exp.toLocaleString();
+        els.statBalance.textContent = (inc - exp).toLocaleString();
+        if (isAdmin) renderCharts();
+      }
+
+      els.txTbody.addEventListener('click', e => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const act = b.dataset.act, key = b.dataset.key;
+        if (act === 'edit') openEdit(key);
+        if (act === 'del') deleteTx(key);
+        if (act === 'rcpt') openReceipt(key);
+      });
+
+      function renderCharts() {
+        if (!window.Chart) return;
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        try { if (chartIE) chartIE.destroy(); } catch (e) {}
+        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const catMap = {};
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch (e) {}
+        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
+          type: 'doughnut',
+          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        const monthly = {};
+        transactions.forEach(t => {
+          const m = t.date.slice(0,7);
+          monthly[m] = monthly[m] || { Income:0, Expense:0 };
+          monthly[m][t.type] += Number(t.amount);
+        });
+        const months = Object.keys(monthly).sort();
+        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
+        chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: months,
+            datasets: [
+              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill:true },
+              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
+            ]
+          },
+          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
+        });
+      }
+
+      els.exportCsv.addEventListener('click', () => {
+        if (!transactions.length) { alert('No transactions to export'); return; }
+        let csv = 'Date,Type,Category,Amount,Notes\n';
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        const blob = new Blob([csv], { type:'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        notify('CSV exported', 'var(--good)');
+      });
+
+      function generatePL() {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
+        html += '</ul></div>';
+        els.plView.innerHTML = html;
+        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
+      }
+      els.genPL.addEventListener('click', generatePL);
+      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
+
+      els.downloadPL.addEventListener('click', () => {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF) { alert('PDF library not ready'); return; }
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        const br = {};
+        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+        doc.text('Category breakdown:', 14, y); y += 8;
+        for (const k in br) {
+          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+          if (y > 270) { doc.addPage(); y = 20; }
+        }
+        doc.save(`PL_${m || 'all'}.pdf`);
+      });
+
+      function openReceipt(key) {
+        const t = transactions.find(x => x.key === key);
+        if (!t) return;
+        const idx = transactions.findIndex(x => x.key === key);
+        const inv = 'INV-' + (10000 + idx);
+        const issued = new Date().toLocaleDateString();
+        let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
+          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
+        els.receiptInner.innerHTML = html;
+        openModal(els.receiptModal);
+        setTimeout(()=>{
+          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
+            const w = window.open('','_blank','width=700,height=800');
+            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
+            w.document.close(); setTimeout(()=> w.print(), 300);
+          });
+          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
+        },60);
+      }
+
+      els.adminBtn.addEventListener('click', () => {
+        if (isAdmin) {
+          if (!confirm('Sign out admin?')) return;
+          setAdmin(false);
+          notify('Admin signed out', 'var(--muted)');
+          return;
+        }
+        els.adminPassword.value = '';
+        openModal(els.adminModal);
+        setTimeout(() => els.adminPassword.focus(), 120);
+      });
+      els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
+      els.adminConfirm.addEventListener('click', () => {
+        const p = (els.adminPassword.value || '').trim();
+        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
+        closeModal(els.adminModal);
+        setAdmin(true);
+        notify('Admin session active', 'var(--good)');
+      });
+
+      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        els.installBtn.style.display = 'block';
+      });
+
+      els.installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        els.installBtn.style.display = 'none';
+      });
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('SW registered:', reg.scope);
+        }).catch(err => console.warn('SW registration failed:', err));
+      }
+
+      renderTransactions();
+      window.addEventListener('beforeunload', saveLocal);
+    });
   </script>
-  <script>
-// ------------------------------
-// GLOBAL STORAGE
-// ------------------------------
-let tx = JSON.parse(localStorage.getItem("transactions") || "[]");
-let admin = localStorage.getItem("admin") === "true";
-
-// ------------------------------
-// ADMIN LOGIN
-// ------------------------------
-const adminModal = document.getElementById("adminModal");
-document.getElementById("adminBtn").onclick = () => adminModal.classList.add("show");
-document.getElementById("adminCancel").onclick = () => adminModal.classList.remove("show");
-
-document.getElementById("adminConfirm").onclick = () => {
-  const pass = document.getElementById("adminPassword").value.trim();
-  if(pass === "admin123"){           // <-- change this to your real password
-    admin = true;
-    localStorage.setItem("admin", "true");
-    adminModal.classList.remove("show");
-    enableAdminFeatures();
-  } else {
-    alert("Wrong password!");
-  }
-};
-
-function enableAdminFeatures(){
-  document.getElementById("addBtn").disabled = false;
-  document.getElementById("adminBadgeWrap").innerHTML =
-     `<span style="padding:4px 10px;border-radius:8px;background:var(--good);color:#000;font-size:12px">ADMIN</span>`;
-  document.getElementById("chartsPanel").style.display = "block";
-}
-
-// auto-apply admin on reload
-if(admin) enableAdminFeatures();
-
-// ------------------------------
-// ADD TRANSACTION
-// ------------------------------
-document.getElementById("addBtn").onclick = () => {
-  const t = {
-    date: document.getElementById("txDate").value,
-    type: document.getElementById("txType").value,
-    category: document.getElementById("txCategory").value,
-    amount: parseFloat(document.getElementById("txAmount").value || 0),
-    notes: document.getElementById("txNotes").value
-  };
-
-  if(!t.date || !t.amount){ alert("Fill all fields!"); return; }
-
-  tx.push(t);
-  save();
-  renderTable();
-  updateStats();
-
-  document.getElementById("txMsg").textContent = "✓ Saved!";
-  setTimeout(()=>document.getElementById("txMsg").textContent="",1500);
-};
-
-// clear inputs
-document.getElementById("clearBtn").onclick = () => {
-  document.getElementById("txDate").value="";
-  document.getElementById("txAmount").value="";
-  document.getElementById("txNotes").value="";
-};
-
-// ------------------------------
-// RENDER TABLE
-// ------------------------------
-function renderTable(list = tx){
-  const tb = document.getElementById("txTbody");
-  tb.innerHTML="";
-
-  list.forEach((t, i)=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${t.date}</td>
-      <td>${t.type}</td>
-      <td>${t.category}</td>
-      <td>${t.amount.toLocaleString()}</td>
-      <td>${t.notes}</td>
-      <td>
-        ${admin ? `
-          <button class="action-btn" onclick="editTx(${i})">Edit</button>
-          <button class="delete-btn" onclick="delTx(${i})">Del</button>
-        ` : ""}
-      </td>
-    `;
-    tb.appendChild(tr);
-  });
-}
-renderTable();
-
-// ------------------------------
-// SAVE
-// ------------------------------
-function save(){
-  localStorage.setItem("transactions", JSON.stringify(tx));
-}
-
-// ------------------------------
-// DELETE
-// ------------------------------
-function delTx(i){
-  if(confirm("Delete this?")){
-    tx.splice(i,1);
-    save(); renderTable(); updateStats();
-  }
-}
-
-// ------------------------------
-// EDIT
-// ------------------------------
-const editModal = document.getElementById("editModal");
-let editIndex = null;
-
-function editTx(i){
-  editIndex = i;
-  const t = tx[i];
-  document.getElementById("editDate").value = t.date;
-  document.getElementById("editType").value = t.type;
-  document.getElementById("editCategory").value = t.category;
-  document.getElementById("editAmount").value = t.amount;
-  document.getElementById("editNotes").value = t.notes;
-  editModal.classList.add("show");
-}
-
-editModal.onclick = e => {
-  if(e.target === editModal) editModal.classList.remove("show");
-};
-
-// save edit
-document.getElementById("editNotes").onblur = () => saveEdit();
-function saveEdit(){
-  if(editIndex===null) return;
-
-  tx[editIndex] = {
-    date: document.getElementById("editDate").value,
-    type: document.getElementById("editType").value,
-    category: document.getElementById("editCategory").value,
-    amount: parseFloat(document.getElementById("editAmount").value),
-    notes: document.getElementById("editNotes").value
-  };
-
-  save(); renderTable(); updateStats();
-}
-
-// ------------------------------
-// FILTERS
-// ------------------------------
-document.getElementById("applyFilter").onclick = () => {
-  const m = document.getElementById("fMonth").value;
-  const tp = document.getElementById("fType").value;
-  const cat = document.getElementById("fCategory").value;
-  const min = parseFloat(document.getElementById("fMin").value || 0);
-  const max = parseFloat(document.getElementById("fMax").value || Infinity);
-  const notes = document.getElementById("fNotes").value.toLowerCase();
-
-  const f = tx.filter(t=>{
-    return (!m || t.date.startsWith(m)) &&
-           (!tp || t.type===tp) &&
-           (!cat || t.category===cat) &&
-           (t.amount>=min && t.amount<=max) &&
-           (t.notes.toLowerCase().includes(notes));
-  });
-
-  renderTable(f);
-};
-
-document.getElementById("resetFilter").onclick = () => {
-  renderTable(tx);
-};
-
-// ------------------------------
-// STATISTICS
-// ------------------------------
-function updateStats(){
-  let income=0, expense=0;
-  tx.forEach(t=>{
-    if(t.type==="Income") income+=t.amount;
-    else expense+=t.amount;
-  });
-
-  document.getElementById("statIncome").textContent = income.toLocaleString();
-  document.getElementById("statExpense").textContent = expense.toLocaleString();
-  document.getElementById("statBalance").textContent = (income-expense).toLocaleString();
-}
-updateStats();
-
-// ------------------------------
-// EXPORT CSV
-// ------------------------------
-document.getElementById("exportCsv").onclick = () => {
-  let csv = "Date,Type,Category,Amount,Notes\n";
-  tx.forEach(t=>{
-    csv += `${t.date},${t.type},${t.category},${t.amount},${t.notes}\n`;
-  });
-
-  const a = document.createElement("a");
-  a.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
-  a.download = "transactions.csv";
-  a.click();
-};
-
-// ------------------------------
-// P&L GENERATION
-// ------------------------------
-document.getElementById("showPLBtn").onclick = () => generatePL(false);
-document.getElementById("downloadPLBtn").onclick = () => generatePL(true);
-
-function generatePL(download){
-  const m = document.getElementById("reportMonth").value;
-
-  let inc=0, exp=0;
-
-  tx.forEach(t=>{
-    if(!m || t.date.startsWith(m)){
-      if(t.type==="Income") inc+=t.amount;
-      else exp+=t.amount;
-    }
-  });
-
-  const out = `
-    <strong>Income:</strong> ${inc.toLocaleString()}<br>
-    <strong>Expenses:</strong> ${exp.toLocaleString()}<br>
-    <strong>Profit:</strong> ${(inc-exp).toLocaleString()}
-  `;
-
-  document.getElementById("plView").innerHTML = out;
-
-  if(download){
-    const blob = new Blob([out.replace(/<br>/g,"\n")], {type:"text/plain"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "profit_and_loss.txt";
-    a.click();
-  }
-}
-</script>
-  <script type="module">
-/* -----------------------------
-   FIREBASE INITIALIZATION
------------------------------ */
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { 
-  getStorage, ref, uploadBytes, getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-  authDomain: "selelo-tracker.firebaseapp.com",
-  databaseURL: "https://selelo-tracker-default-rtdb.firebaseio.com",
-  projectId: "selelo-tracker",
-  storageBucket: "selelo-tracker.firebasestorage.app",
-  messagingSenderId: "42660826905",
-  appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-const transCol = collection(db, "transactions");
-
-/* -----------------------------
-   ADMIN LOGIN
------------------------------ */
-
-function verifyLogin() {
-  const input = document.getElementById("adminPassword").value;
-  const correctPass = "admin123"; // YOU CAN CHANGE THIS
-
-  if (input === correctPass) {
-    document.getElementById("loginPopup").style.display = "none";
-    document.querySelectorAll(".protected").forEach(e => e.style.display = "block");
-    loadTransactions();
-  } else {
-    alert("Incorrect password!");
-  }
-}
-
-window.verifyLogin = verifyLogin;
-
-window.quitApp = () => {
-  alert("Exiting app...");
-  window.close();
-};
-
-/* -----------------------------
-   LOAD TRANSACTIONS
------------------------------ */
-
-async function loadTransactions() {
-  const tableBody = document.getElementById("transactionsTableBody");
-  if (!tableBody) return;
-
-  tableBody.innerHTML = "";
-
-  const snapshot = await getDocs(transCol);
-  snapshot.forEach((docu) => {
-    const data = docu.data();
-
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${data.date}</td>
-      <td>${data.description}</td>
-      <td>${data.type}</td>
-      <td>KES ${data.amount}</td>
-      <td><a href="${data.fileURL || '#'}" target="_blank">View</a></td>
-      <td>
-        <button onclick="editTransaction('${docu.id}')">Edit</button>
-        <button onclick="deleteTransaction('${docu.id}')">Delete</button>
-      </td>
-    `;
-
-    tableBody.appendChild(row);
-  });
-}
-
-window.loadTransactions = loadTransactions;
-
-/* -----------------------------
-   ADD TRANSACTION
------------------------------ */
-
-async function addTransaction() {
-  const date = document.getElementById("date").value;
-  const desc = document.getElementById("description").value;
-  const type = document.getElementById("type").value;
-  const amount = Number(document.getElementById("amount").value);
-  const file = document.getElementById("file").files[0];
-
-  let fileURL = "";
-
-  if (file) {
-    const storageRef = ref(storage, "uploads/" + Date.now() + "_" + file.name);
-    await uploadBytes(storageRef, file);
-    fileURL = await getDownloadURL(storageRef);
-  }
-
-  await addDoc(transCol, {
-    date, description: desc, type, amount, fileURL
-  });
-
-  alert("Transaction added!");
-  loadTransactions();
-}
-
-window.addTransaction = addTransaction;
-
-/* -----------------------------
-   DELETE TRANSACTION
------------------------------ */
-
-async function deleteTransaction(id) {
-  if (!confirm("Delete this item?")) return;
-
-  await deleteDoc(doc(db, "transactions", id));
-  loadTransactions();
-}
-
-window.deleteTransaction = deleteTransaction;
-
-/* -----------------------------
-   EDIT TRANSACTION
------------------------------ */
-
-async function editTransaction(id) {
-  const snapshot = await getDocs(transCol);
-  let data;
-
-  snapshot.forEach(docu => {
-    if (docu.id === id) data = { id: docu.id, ...docu.data() };
-  });
-
-  if (!data) return;
-
-  document.getElementById("editId").value = data.id;
-  document.getElementById("editDate").value = data.date;
-  document.getElementById("editDescription").value = data.description;
-  document.getElementById("editType").value = data.type;
-  document.getElementById("editAmount").value = data.amount;
-
-  document.getElementById("editModal").style.display = "flex";
-}
-
-window.editTransaction = editTransaction;
-
-window.closeEditModal = () => {
-  document.getElementById("editModal").style.display = "none";
-};
-
-/* -----------------------------
-   SAVE EDITED TRANSACTION
------------------------------ */
-
-window.saveTransactionEdit = async function () {
-  const id = document.getElementById("editId").value;
-  const newData = {
-    date: document.getElementById("editDate").value,
-    description: document.getElementById("editDescription").value,
-    type: document.getElementById("editType").value,
-    amount: Number(document.getElementById("editAmount").value)
-  };
-
-  await updateDoc(doc(db, "transactions", id), newData);
-
-  alert("Updated successfully!");
-  document.getElementById("editModal").style.display = "none";
-  loadTransactions();
-};
-
-/* -----------------------------
-   THEME TOGGLE
------------------------------ */
-
-window.toggleTheme = function () {
-  const body = document.body;
-
-  if (body.classList.contains("light-theme")) {
-    body.classList.remove("light-theme");
-    body.classList.add("dark-theme");
-  } else {
-    body.classList.remove("dark-theme");
-    body.classList.add("light-theme");
-  }
-};
-
-/* -----------------------------
-   CSV EXPORT
------------------------------ */
-
-window.downloadCSV = async function () {
-  const snapshot = await getDocs(transCol);
-
-  let csv = "date,description,type,amount,fileURL\n";
-
-  snapshot.forEach(docu => {
-    const d = docu.data();
-    csv += `${d.date},${d.description},${d.type},${d.amount},${d.fileURL || ""}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "transactions.csv";
-  a.click();
-};
-
-/* -----------------------------
-   PWA INSTALL (if supported)
------------------------------ */
-
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  const installBtn = document.getElementById("installBtn");
-  if (installBtn) installBtn.style.display = "block";
-});
-
-window.installPWA = async function () {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt = null;
-};
-
-</script>
 </body>
 </html>
