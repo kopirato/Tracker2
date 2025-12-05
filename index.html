@@ -760,5 +760,58 @@
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+    authDomain: "selelo-tracker.firebaseapp.com",
+    databaseURL: "https://selelo-tracker-default-rtdb.firebaseio.com",
+    projectId: "selelo-tracker",
+    storageBucket: "selelo-tracker.firebasestorage.app",
+    messagingSenderId: "42660826905",
+    appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Register
+  document.getElementById("registerBtn").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(() => {
+        document.getElementById("authMessage").innerText =
+            "Account created! You can log in now.";
+      })
+      .catch(error => {
+        document.getElementById("authMessage").innerText = error.message;
+      });
+  });
+
+  // Login
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(error => {
+        document.getElementById("authMessage").innerText = error.message;
+      });
+  });
+
+  // Check if user is logged in
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("appContent").style.display = "block";
+    } else {
+      document.getElementById("authContainer").style.display = "block";
+      document.getElementById("appContent").style.display = "none";
+    }
+  });
+                                                          </script>
+  
 </body>
 </html>
