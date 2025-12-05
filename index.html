@@ -745,5 +745,242 @@ function generatePL(download){
   }
 }
 </script>
+  <script type="module">
+/* -----------------------------
+   FIREBASE INITIALIZATION
+----------------------------- */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getStorage, ref, uploadBytes, getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+  authDomain: "selelo-tracker.firebaseapp.com",
+  databaseURL: "https://selelo-tracker-default-rtdb.firebaseio.com",
+  projectId: "selelo-tracker",
+  storageBucket: "selelo-tracker.firebasestorage.app",
+  messagingSenderId: "42660826905",
+  appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const transCol = collection(db, "transactions");
+
+/* -----------------------------
+   ADMIN LOGIN
+----------------------------- */
+
+function verifyLogin() {
+  const input = document.getElementById("adminPassword").value;
+  const correctPass = "admin123"; // YOU CAN CHANGE THIS
+
+  if (input === correctPass) {
+    document.getElementById("loginPopup").style.display = "none";
+    document.querySelectorAll(".protected").forEach(e => e.style.display = "block");
+    loadTransactions();
+  } else {
+    alert("Incorrect password!");
+  }
+}
+
+window.verifyLogin = verifyLogin;
+
+window.quitApp = () => {
+  alert("Exiting app...");
+  window.close();
+};
+
+/* -----------------------------
+   LOAD TRANSACTIONS
+----------------------------- */
+
+async function loadTransactions() {
+  const tableBody = document.getElementById("transactionsTableBody");
+  if (!tableBody) return;
+
+  tableBody.innerHTML = "";
+
+  const snapshot = await getDocs(transCol);
+  snapshot.forEach((docu) => {
+    const data = docu.data();
+
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${data.date}</td>
+      <td>${data.description}</td>
+      <td>${data.type}</td>
+      <td>KES ${data.amount}</td>
+      <td><a href="${data.fileURL || '#'}" target="_blank">View</a></td>
+      <td>
+        <button onclick="editTransaction('${docu.id}')">Edit</button>
+        <button onclick="deleteTransaction('${docu.id}')">Delete</button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+window.loadTransactions = loadTransactions;
+
+/* -----------------------------
+   ADD TRANSACTION
+----------------------------- */
+
+async function addTransaction() {
+  const date = document.getElementById("date").value;
+  const desc = document.getElementById("description").value;
+  const type = document.getElementById("type").value;
+  const amount = Number(document.getElementById("amount").value);
+  const file = document.getElementById("file").files[0];
+
+  let fileURL = "";
+
+  if (file) {
+    const storageRef = ref(storage, "uploads/" + Date.now() + "_" + file.name);
+    await uploadBytes(storageRef, file);
+    fileURL = await getDownloadURL(storageRef);
+  }
+
+  await addDoc(transCol, {
+    date, description: desc, type, amount, fileURL
+  });
+
+  alert("Transaction added!");
+  loadTransactions();
+}
+
+window.addTransaction = addTransaction;
+
+/* -----------------------------
+   DELETE TRANSACTION
+----------------------------- */
+
+async function deleteTransaction(id) {
+  if (!confirm("Delete this item?")) return;
+
+  await deleteDoc(doc(db, "transactions", id));
+  loadTransactions();
+}
+
+window.deleteTransaction = deleteTransaction;
+
+/* -----------------------------
+   EDIT TRANSACTION
+----------------------------- */
+
+async function editTransaction(id) {
+  const snapshot = await getDocs(transCol);
+  let data;
+
+  snapshot.forEach(docu => {
+    if (docu.id === id) data = { id: docu.id, ...docu.data() };
+  });
+
+  if (!data) return;
+
+  document.getElementById("editId").value = data.id;
+  document.getElementById("editDate").value = data.date;
+  document.getElementById("editDescription").value = data.description;
+  document.getElementById("editType").value = data.type;
+  document.getElementById("editAmount").value = data.amount;
+
+  document.getElementById("editModal").style.display = "flex";
+}
+
+window.editTransaction = editTransaction;
+
+window.closeEditModal = () => {
+  document.getElementById("editModal").style.display = "none";
+};
+
+/* -----------------------------
+   SAVE EDITED TRANSACTION
+----------------------------- */
+
+window.saveTransactionEdit = async function () {
+  const id = document.getElementById("editId").value;
+  const newData = {
+    date: document.getElementById("editDate").value,
+    description: document.getElementById("editDescription").value,
+    type: document.getElementById("editType").value,
+    amount: Number(document.getElementById("editAmount").value)
+  };
+
+  await updateDoc(doc(db, "transactions", id), newData);
+
+  alert("Updated successfully!");
+  document.getElementById("editModal").style.display = "none";
+  loadTransactions();
+};
+
+/* -----------------------------
+   THEME TOGGLE
+----------------------------- */
+
+window.toggleTheme = function () {
+  const body = document.body;
+
+  if (body.classList.contains("light-theme")) {
+    body.classList.remove("light-theme");
+    body.classList.add("dark-theme");
+  } else {
+    body.classList.remove("dark-theme");
+    body.classList.add("light-theme");
+  }
+};
+
+/* -----------------------------
+   CSV EXPORT
+----------------------------- */
+
+window.downloadCSV = async function () {
+  const snapshot = await getDocs(transCol);
+
+  let csv = "date,description,type,amount,fileURL\n";
+
+  snapshot.forEach(docu => {
+    const d = docu.data();
+    csv += `${d.date},${d.description},${d.type},${d.amount},${d.fileURL || ""}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "transactions.csv";
+  a.click();
+};
+
+/* -----------------------------
+   PWA INSTALL (if supported)
+----------------------------- */
+
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.getElementById("installBtn");
+  if (installBtn) installBtn.style.display = "block";
+});
+
+window.installPWA = async function () {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt = null;
+};
+
+</script>
 </body>
 </html>
