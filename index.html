@@ -6,7 +6,7 @@
   <title>SELELO BUSINESS PARK</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -19,6 +19,7 @@
       --danger: #D9534F;
       --glass: rgba(255,255,255,0.06);
       --glass-strong: rgba(255,255,255,0.09);
+      --accent3: #FFD700; /* New secondary accent for highlights */
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -62,20 +63,19 @@
     .brand { display: flex; align-items: center; gap: 14px; }
     .logo { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
-    .sub { font-size: 13px; opacity: 0.85; }
+    .sub { font-size: 13px; opacity: 0.85; font-weight: 300; } /* Lighter font weight */
 
-    /* Premium SVG Nav */
-    .nav-icons {
-      display: flex; justify-content: center; gap: 28px; padding: 12px 0;
-      background: rgba(255,255,255,0.04); border-radius: 16px;
+    /* Tabbed Navigation */
+    .nav-tabs {
+      display: flex; justify-content: center; gap: 8px; padding: 4px; background: rgba(255,255,255,0.04); border-radius: 16px;
     }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      color: var(--text); font-size: 11px; opacity: 0.9; transition: all 0.3s ease; text-decoration:none;
+    .nav-tab {
+      padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; color: var(--muted); transition: all 0.3s;
+      text-decoration: none; position: relative;
     }
-    .nav-item:hover { transform: translateY(-6px); opacity: 1; color: var(--accent1); }
-    .nav-icon-svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; transition: all 0.3s; }
-    .nav-item:hover .nav-icon-svg { stroke: var(--accent1); transform: scale(1.15); }
+    .nav-tab:hover, .nav-tab.active { color: var(--text); background: var(--glass-strong); }
+    .nav-tab::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 2px; background: var(--accent1); transition: all 0.3s; transform: translateX(-50%); }
+    .nav-tab:hover::after, .nav-tab.active::after { width: 80%; }
 
     .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .btn {
@@ -96,11 +96,14 @@
       border-radius: 12px; color: var(--text); font-size: 14px;
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.22); }
+    input:invalid, select:invalid { border-color: var(--danger); }
 
     .table-wrap { margin-top: 12px; overflow: auto; max-height: 56vh; border-radius: 12px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 600px; }
     th, td { padding: 11px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.09); }
-    th { font-weight: 600; font-size: 11.5px; opacity: 0.82; position: sticky; top: 0; background: rgba(255,255,255,0.04); }
+    th { font-weight: 600; font-size: 11.5px; opacity: 0.82; position: sticky; top: 0; background: rgba(255,255,255,0.04); cursor: pointer; } /* Sortable */
+    tr:nth-child(even) { background: var(--glass-strong); }
+    tr:hover { background: rgba(226,114,91,0.1); }
 
     .action-btn, .delete-btn { padding: 6px 10px; border-radius: 8px; font-size: 12px; margin-right: 4px; }
     .delete-btn { background: var(--danger); color: #fff; }
@@ -117,9 +120,26 @@
 
     footer { text-align: center; margin-top: 24px; font-size: 12px; opacity: 0.7; }
 
-    @media (max-width: 480px) {
+    /* Accordion */
+    details { margin-bottom: 12px; }
+    summary { font-weight: 600; cursor: pointer; padding: 8px; border-radius: 8px; background: var(--glass); }
+    summary:hover { background: var(--glass-strong); }
+
+    /* Progress Bar */
+    progress { width: 100%; height: 8px; border-radius: 4px; background: var(--muted); }
+    progress::-webkit-progress-value { background: var(--good); border-radius: 4px; }
+    progress::-moz-progress-bar { background: var(--good); border-radius: 4px; }
+
+    /* Skeleton Loader */
+    .skeleton { background: linear-gradient(90deg, var(--glass), var(--glass-strong), var(--glass)); background-size: 200% 100%; animation: skeleton 1.5s infinite; }
+    @keyframes skeleton { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    @media (max-width: 768px) { /* New breakpoint */
       .fields { grid-template-columns: 1fr; }
-      .nav-icons { gap: 20px; }
+      .grid { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .nav-tabs { flex-direction: column; gap: 4px; }
       #welcome h1 { font-size: 36px; }
       .logo { width: 50px; height: 50px; }
       h1 { font-size: 20px; }
@@ -147,32 +167,13 @@
           </div>
         </div>
 
-        <!-- Premium Navigation -->
-        <div class="nav-icons">
-          <a href="#transactions" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 14h6"/>
-            </svg>
-            <span>Transactions</span>
-          </a>
-          <a href="marketplace.html" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            <span>Marketplace</span>
-          </a>
-          <a href="contacts.html" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            <span>Contacts</span>
-          </a>
-        </div>
+        <!-- Tabbed Navigation -->
+        <nav class="nav-tabs">
+          <a href="#transactions" class="nav-tab active">Transactions</a>
+          <a href="marketplace.html" class="nav-tab">Marketplace</a>
+          <a href="contacts.html" class="nav-tab">Contacts</a>
+          <a href="#pl" class="nav-tab">P&L</a> <!-- New tab for P&L -->
+        </nav>
 
         <div class="controls">
           <button id="adminBtn" class="btn btn-admin">Admin Login</button>
@@ -203,10 +204,10 @@
             </div>
 
             <div class="fields">
-              <div class="field"><label>Date</label><input id="txDate" type="date"></div>
-              <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-              <div class="field"><label>Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
-              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+              <div class="field"><label>Date</label><input id="txDate" type="date" required></div>
+              <div class="field"><label>Type</label><select id="txType" required><option>Income</option><option>Expense</option></select></div>
+              <div class="field"><label>Category</label><select id="txCategory" required><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
+              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required></div>
             </div>
 
             <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
@@ -224,24 +225,28 @@
               <div class="sub">Filter and manage</div>
             </div>
 
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Types</option><option>Income</option><option>Expense</option>
-              </select>
-              <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
-              </select>
-              <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
-            </div>
+            <details>
+              <summary>Filters</summary>
+              <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;padding:8px">
+                <input id="fStartDate" type="date" placeholder="Start Date" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <input id="fEndDate" type="date" placeholder="End Date" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                  <option value="">All Types</option><option>Income</option><option>Expense</option>
+                </select>
+                <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                  <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+                </select>
+                <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <button id="applyFilter" class="btn btn-ghost">Apply</button>
+                <button id="resetFilter" class="btn btn-ghost">Reset</button>
+              </div>
+            </details>
 
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+                <thead><tr><th data-sort="date">Date</th><th data-sort="type">Type</th><th data-sort="category">Category</th><th data-sort="amount">Amount</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
             </div>
@@ -256,6 +261,11 @@
               <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
               <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
             </div>
+            <div style="margin-top:12px">
+              <label for="budgetInput">Monthly Budget</label>
+              <input id="budgetInput" type="number" placeholder="Enter budget" style="width:100%;margin-top:4px">
+              <progress id="budgetProgress" value="0" max="100" style="margin-top:8px"></progress>
+            </div>
             <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
           </div>
 
@@ -268,9 +278,11 @@
 
           <div class="panel" style="margin-top:16px">
             <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
-            <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
-            <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
-            <div style="display:flex;gap:8px">
+            <div class="fields">
+              <div class="field"><label>Start Date</label><input id="reportStart" type="date"></div>
+              <div class="field"><label>End Date</label><input id="reportEnd" type="date"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px">
               <button id="showPLBtn" class="btn btn-ghost">Show</button>
               <button id="downloadPLBtn" class="btn btn-admin">Download</button>
             </div>
@@ -284,11 +296,11 @@
   </div>
 
   <!-- Modals -->
-  <div id="adminModal" class="modal">
+  <div id="adminModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-panel">
       <h3>Administrator access</h3>
       <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
-      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
+      <input id="adminPassword" type="password" placeholder="Admin password" aria-label="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
         <button id="adminCancel" class="btn btn-ghost">Cancel</button>
         <button id="adminConfirm" class="btn btn-admin">Confirm</button>
@@ -296,13 +308,13 @@
     </div>
   </div>
 
-  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
+  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)" role="dialog" aria-modal="true">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
-      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" required style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" required style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" required style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" min="0.01" required style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></textarea>
       <div style="text-align:right;margin-top:10px">
         <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
@@ -311,13 +323,14 @@
     </div>
   </div>
 
-  <div id="receiptModal" class="modal">
+  <div id="receiptModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
 
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -342,12 +355,14 @@
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
-      const ADMIN_PASSWORDS = ["0742147197","0721235005"];
+      const KEY_BUDGET = "selelo_budget";
+      const ADMIN_PASSWORDS = ["0742147197","0721235005"]; // Note: Consider hashing for better security
       let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
       let editKey = null;
       let chartIE, chartCat, chartTrend;
       let usingFirebase = !!txRef;
+      let budget = parseFloat(localStorage.getItem(KEY_BUDGET) || "0");
 
       const els = {
         adminBtn: document.getElementById('adminBtn'),
@@ -360,7 +375,8 @@
         txNotes: document.getElementById('txNotes'),
         txMsg: document.getElementById('txMsg'),
         txTbody: document.getElementById('txTbody'),
-        fMonth: document.getElementById('fMonth'),
+        fStartDate: document.getElementById('fStartDate'),
+        fEndDate: document.getElementById('fEndDate'),
         fType: document.getElementById('fType'),
         fCategory: document.getElementById('fCategory'),
         fMin: document.getElementById('fMin'),
@@ -371,6 +387,8 @@
         statIncome: document.getElementById('statIncome'),
         statExpense: document.getElementById('statExpense'),
         statBalance: document.getElementById('statBalance'),
+        budgetInput: document.getElementById('budgetInput'),
+        budgetProgress: document.getElementById('budgetProgress'),
         adminBadgeWrap: document.getElementById('adminBadgeWrap'),
         chartsPanel: document.getElementById('chartsPanel'),
         adminModal: document.getElementById('adminModal'),
@@ -390,12 +408,15 @@
         exportCsv: document.getElementById('exportCsv'),
         genPL: document.getElementById('genPL'),
         downloadPL: document.getElementById('downloadPL'),
-        reportMonth: document.getElementById('reportMonth'),
+        reportStart: document.getElementById('reportStart'),
+        reportEnd: document.getElementById('reportEnd'),
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
         addPanel: document.getElementById('addPanel'),
         installBtn: document.getElementById('installBtn')
       };
+
+      els.budgetInput.value = budget;
 
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
@@ -436,7 +457,7 @@
         txRef.on('value', (snapshot) => {
           const data = snapshot.val();
           if (data) {
-            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            transactions = Object.entries(data).map(([key, value]) => ({ key, ...value }));
             saveLocal();
           } else {
             transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
@@ -456,9 +477,9 @@
 
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) { alert('Admin only'); return; }
+        if (!els.txDate.checkValidity() || !els.txType.checkValidity() || !els.txCategory.checkValidity() || !els.txAmount.checkValidity()) { alert('Please fill all required fields correctly'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
-        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         const newTx = { date, type, category, amount, notes };
         if (usingFirebase && txRef) {
           txRef.push(newTx).then(() => {
@@ -495,8 +516,8 @@
       els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
       els.editSaveBtn.addEventListener('click', () => {
         if (!isAdmin || !editKey) return;
+        if (!els.editDate.checkValidity() || !els.editType.checkValidity() || !els.editCategory.checkValidity() || !els.editAmount.checkValidity()) { alert('Please fill all required fields correctly'); return; }
         const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
-        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
         if (usingFirebase && txRef) {
           txRef.child(editKey).update(nd).then(() => {
             closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
@@ -538,12 +559,15 @@
 
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => {
-        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
+        els.fStartDate.value = ''; els.fEndDate.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
         renderTransactions();
       });
 
       function passesFilters(t) {
-        if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
+        const start = els.fStartDate.value ? new Date(els.fStartDate.value) : new Date(0);
+        const end = els.fEndDate.value ? new Date(els.fEndDate.value) : new Date();
+        const txDate = new Date(t.date);
+        if (txDate < start || txDate > end) return false;
         if (els.fType.value && t.type !== els.fType.value) return false;
         if (els.fCategory.value && t.category !== els.fCategory.value) return false;
         const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
@@ -553,15 +577,32 @@
         return true;
       }
 
-      function renderTransactions() {
+      let sortKey = 'date', sortAsc = false;
+      document.querySelectorAll('th[data-sort]').forEach(th => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sort;
+          if (sortKey === key) sortAsc = !sortAsc;
+          else { sortKey = key; sortAsc = true; }
+          renderTransactions();
+        });
+      });
+
+      function renderTransactions(loading = false) {
         els.txTbody.innerHTML = '';
+        let filtered = transactions.filter(passesFilters);
+        filtered.sort((a, b) => {
+          let va = a[sortKey], vb = b[sortKey];
+          if (sortKey === 'amount') { va = Number(va); vb = Number(vb); }
+          if (sortKey === 'date') { va = new Date(va); vb = new Date(vb); }
+          return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+        });
         let inc = 0, exp = 0;
-        transactions.filter(passesFilters).forEach(t => {
+        filtered.forEach(t => {
           const tr = document.createElement('tr');
-          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}" title="View Receipt">Receipt</button>`];
           if (isAdmin) {
-            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
-            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
+            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}" title="Edit Transaction">Edit</button>`);
+            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}" title="Delete Transaction">Delete</button>`);
           }
           tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
@@ -570,7 +611,15 @@
         });
         els.statIncome.textContent = inc.toLocaleString();
         els.statExpense.textContent = exp.toLocaleString();
-        els.statBalance.textContent = (inc - exp).toLocaleString();
+        const balance = inc - exp;
+        els.statBalance.textContent = balance.toLocaleString();
+        els.statBalance.style.color = balance >= 0 ? 'var(--good)' : 'var(--danger)';
+        if (budget > 0) {
+          const usage = (exp / budget) * 100;
+          els.budgetProgress.value = usage;
+          els.budgetProgress.style.accentColor = usage > 100 ? 'var(--danger)' : 'var(--good)';
+          els.budgetAlert.textContent = usage > 100 ? 'Budget exceeded!' : '';
+        }
         if (isAdmin) renderCharts();
       }
 
@@ -591,7 +640,7 @@
         chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
           data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } }, animation: { duration: 1000 } }
         });
         const catMap = {};
         transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
@@ -599,7 +648,7 @@
         chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
           type: 'doughnut',
           data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive: true, plugins: { legend: { position: 'bottom' } }, animation: { duration: 1000 } }
         });
         const monthly = {};
         transactions.forEach(t => {
@@ -618,7 +667,7 @@
               { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
             ]
           },
-          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
+          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } }, animation: { duration: 1000 } }
         });
       }
 
@@ -632,45 +681,61 @@
         notify('CSV exported', 'var(--good)');
       });
 
-      function generatePL() {
-        const m = els.reportMonth.value;
-        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+      function getFilteredTransactions(start, end) {
+        const sDate = start ? new Date(start) : new Date(0);
+        const eDate = end ? new Date(end) : new Date();
+        return transactions.filter(t => {
+          const tDate = new Date(t.date);
+          return tDate >= sDate && tDate <= eDate;
+        });
+      }
+
+      function generatePL(showModal = false) {
+        const start = els.reportStart.value, end = els.reportEnd.value;
+        const arr = getFilteredTransactions(start, end);
         const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
-        const br = {};
-        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
-        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
-        html += '</ul></div>';
+        const net = inc - exp;
+        const incBr = {}, expBr = {};
+        arr.forEach(t => {
+          if (t.type === 'Income') incBr[t.category] = (incBr[t.category] || 0) + Number(t.amount);
+          else expBr[t.category] = (expBr[t.category] || 0) + Number(t.amount);
+        });
+        let html = `<strong>Period:</strong> ${start || 'Start'} to ${end || 'Now'}<br><strong>Total Income:</strong> KES ${inc.toLocaleString()}<br><strong>Total Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net Profit:</strong> <span style="color:${net >= 0 ? 'var(--good)' : 'var(--danger)'}">KES ${net.toLocaleString()}</span>
+          <div style="margin-top:8px"><strong>Income Breakdown:</strong><table style="width:100%;margin-top:4px"><tr><th>Category</th><th>Amount</th></tr>`;
+        for (const k in incBr) html += `<tr><td>${k}</td><td>KES ${incBr[k].toLocaleString()}</td></tr>`;
+        html += `</table></div><div style="margin-top:8px"><strong>Expense Breakdown:</strong><table style="width:100%;margin-top:4px"><tr><th>Category</th><th>Amount</th></tr>`;
+        for (const k in expBr) html += `<tr><td>${k}</td><td>KES ${expBr[k].toLocaleString()}</td></tr>`;
+        html += '</table></div>';
         els.plView.innerHTML = html;
-        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
-        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
+        if (showModal) {
+          els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+          openModal(els.receiptModal);
+          setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
+        }
       }
-      els.genPL.addEventListener('click', generatePL);
-      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
+      els.genPL.addEventListener('click', () => generatePL());
+      els.showPLBtn.addEventListener('click', () => generatePL(true));
 
       els.downloadPL.addEventListener('click', () => {
-        const m = els.reportMonth.value;
-        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const start = els.reportStart.value, end = els.reportEnd.value;
+        const arr = getFilteredTransactions(start, end);
         const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const net = inc - exp;
         const { jsPDF } = window.jspdf || {};
         if (!jsPDF) { alert('PDF library not ready'); return; }
         const doc = new jsPDF();
         doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
-        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
-        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
-        let y = 72;
-        const br = {};
-        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
-        doc.text('Category breakdown:', 14, y); y += 8;
-        for (const k in br) {
-          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
-          if (y > 270) { doc.addPage(); y = 20; }
-        }
-        doc.save(`PL_${m || 'all'}.pdf`);
+        doc.setFontSize(11); doc.text(`Period: ${start || 'Start'} to ${end || 'Now'}`, 14, 32);
+        doc.text(`Total Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Total Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net Profit: KES ${net.toLocaleString()}`, 14, 60);
+        const incBr = Object.entries(arr.filter(t => t.type === 'Income').reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + Number(t.amount); return acc; }, {}));
+        const expBr = Object.entries(arr.filter(t => t.type === 'Expense').reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + Number(t.amount); return acc; }, {}));
+        doc.autoTable({ head: [['Income Category', 'Amount']], body: incBr.map(([k, v]) => [k, `KES ${v.toLocaleString()}`]), startY: 68 });
+        doc.autoTable({ head: [['Expense Category', 'Amount']], body: expBr.map(([k, v]) => [k, `KES ${v.toLocaleString()}`]), startY: doc.lastAutoTable.finalY + 10 });
+        doc.save(`PL_${start}_${end || 'all'}.pdf`);
       });
 
       function openReceipt(key) {
@@ -715,6 +780,12 @@
       });
 
       els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      els.budgetInput.addEventListener('change', () => {
+        budget = parseFloat(els.budgetInput.value) || 0;
+        localStorage.setItem(KEY_BUDGET, budget);
+        renderTransactions();
+      });
 
       let deferredPrompt = null;
       window.addEventListener('beforeinstallprompt', (e) => {
