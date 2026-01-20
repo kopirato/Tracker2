@@ -64,6 +64,7 @@
     h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
     .sub { font-size: 13px; opacity: 0.85; }
 
+    /* Premium SVG Nav */
     .nav-icons {
       display: flex; justify-content: center; gap: 28px; padding: 12px 0;
       background: rgba(255,255,255,0.04); border-radius: 16px;
@@ -116,13 +117,6 @@
 
     footer { text-align: center; margin-top: 24px; font-size: 12px; opacity: 0.7; }
 
-    #filterStatus {
-      font-size: 13px;
-      opacity: 0.9;
-      margin: 8px 0;
-      min-height: 1.3em;
-    }
-
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
       .nav-icons { gap: 20px; }
@@ -153,6 +147,7 @@
           </div>
         </div>
 
+        <!-- Premium Navigation -->
         <div class="nav-icons">
           <a href="#transactions" class="nav-item">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -167,7 +162,7 @@
               <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
             <span>Marketplace</span>
-          </a>
+          </a
         </div>
 
         <div class="controls">
@@ -177,12 +172,14 @@
         </div>
       </div>
 
+      <!-- Quick Actions -->
       <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
         <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
         <button id="genPL" class="btn btn-ghost">Generate P&L</button>
         <button id="downloadPL" class="btn btn-admin">Download P&L</button>
       </div>
 
+      <!-- Anchor for smooth scroll -->
       <a id="transactions"></a>
 
       <div class="grid">
@@ -233,8 +230,6 @@
               <button id="resetFilter" class="btn btn-ghost">Reset</button>
             </div>
 
-            <div id="filterStatus" class="sub"></div>
-
             <div class="table-wrap">
               <table>
                 <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
@@ -279,7 +274,37 @@
     </main>
   </div>
 
-  <!-- Modals unchanged → omitted for brevity -->
+  <!-- Modals -->
+  <div id="adminModal" class="modal">
+    <div class="modal-panel">
+      <h3>Administrator access</h3>
+      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
+      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
+        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
+    <div class="modal-panel">
+      <h3>Edit Transaction</h3>
+      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></textarea>
+      <div style="text-align:right;margin-top:10px">
+        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
+        <button id="editSaveBtn" class="btn btn-admin">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="receiptModal" class="modal">
+    <div class="modal-panel" id="receiptInner"></div>
+  </div>
 
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -289,9 +314,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // ────────────────────────────────────────────────
-      // Firebase + config + constants (unchanged)
-      // ────────────────────────────────────────────────
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
         authDomain: "selelo-tracker.firebaseapp.com",
@@ -300,16 +322,18 @@
         messagingSenderId: "42660826905",
         appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
       };
-      try { if (!window.firebase?.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
+      try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
 
       let txRef;
-      try { txRef = firebase.database().ref('transactions'); } catch (e) { console.warn('Firebase unavailable', e); }
+      try {
+        const db = firebase.database();
+        txRef = db.ref('transactions');
+      } catch (e) { console.warn('Firebase DB unavailable', e); }
 
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-
       let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
       let editKey = null;
@@ -361,25 +385,58 @@
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
         addPanel: document.getElementById('addPanel'),
-        installBtn: document.getElementById('installBtn'),
-        filterStatus: document.getElementById('filterStatus')
+        installBtn: document.getElementById('installBtn')
       };
 
-      const incomeCategories = ['Room Rental','Parking Fees','Sales of Construction Materials','Construction Services','Co-Working Space Rental','Event Hosting','Sales','Other Income'];
+      const incomeCategories = [
+        'Room Rental',
+        'Parking Fees',
+        'Sales of Construction Materials',
+        'Construction Services',
+        'Co-Working Space Rental',
+        'Event Hosting',
+        'Sales',
+        'Other Income'
+      ];
       const expenseCategories = [
-        'Office rent','Repairs and maintenance','Advertising','Agency fees','Legal expenses','Stationery and office expenses','Security costs',
-        'Electricity','Office Water','Salaries and wages','Audit fees','Telephone expenses','Internet','Traveling and car expenses','Depreciation',
-        'Loan monthly installment','Other expenses','Legal fees(Term Loan)','Bank charges and interest','Car Tracker charges','Loan interest',
-        'Contractors all risk insurance','Credit protection insurance','Valuation fees','Architect fees','County approval fees','Nema fees',
-        'NCA fees','Consents/land control board cos'
+        'Office rent',
+        'Repairs and maintenance',
+        'Advertising',
+        'Agency fees',
+        'Legal expenses',
+        'Stationery and office expenses',
+        'Security costs',
+        'Electricity',
+        'Office Water',
+        'Salaries and wages',
+        'Audit fees',
+        'Telephone expenses',
+        'Internet',
+        'Traveling and car expenses',
+        'Depreciation',
+        'Loan monthly installment',
+        'Other expenses',
+        'Legal fees(Term Loan)',
+        'Bank charges and interest',
+        'Car Tracker charges',
+        'Loan interest',
+        'Contractors all risk insurance',
+        'Credit protection insurance',
+        'Valuation fees',
+        'Architect fees',
+        'County approval fees',
+        'Nema fees',
+        'NCA fees',
+        'Consents/land control board cos'
       ];
 
       function updateCategories(select, type) {
-        select.innerHTML = '<option value="">Select category</option>';
+        select.innerHTML = '';
         const cats = type === 'Expense' ? expenseCategories : incomeCategories;
-        cats.forEach(c => {
+        cats.forEach(cat => {
           const opt = document.createElement('option');
-          opt.value = opt.textContent = c;
+          opt.value = cat;
+          opt.textContent = cat;
           select.appendChild(opt);
         });
       }
@@ -391,40 +448,25 @@
       updateCategories(els.editCategory, els.editType.value);
 
       const allCategories = [...new Set([...incomeCategories, ...expenseCategories])].sort();
-      allCategories.forEach(c => {
+      allCategories.forEach(cat => {
         const opt = document.createElement('option');
-        opt.value = opt.textContent = c;
+        opt.value = cat;
+        opt.textContent = cat;
         els.fCategory.appendChild(opt);
       });
 
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-
-      function setAdmin(v) {
-        isAdmin = !!v;
-        localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false");
-        els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login';
-        applyAdminUI();
-      }
-
+      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-
-      function esc(s) {
-        return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
-      }
-
-      function notify(msg, color = 'var(--good)') {
-        els.txMsg.style.color = color;
-        els.txMsg.textContent = msg;
-        setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3400);
-      }
+      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+      function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
-      // Theme handling
       (function applyTheme() {
         const t = localStorage.getItem(KEY_THEME) || 'dark';
-        document.body.style.filter = t === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
+        if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
       })();
       document.getElementById('themeBtn').addEventListener('click', () => {
         const cur = localStorage.getItem(KEY_THEME) || 'dark';
@@ -436,7 +478,7 @@
       function applyAdminUI() {
         if (isAdmin) {
           els.addPanel.classList.add('admin-active');
-          els.adminBadgeWrap.innerHTML = '<span style="padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800;font-size:12px">ADMIN</span>';
+          els.adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800;font-size:12px">ADMIN</span>';
           els.chartsPanel.style.display = 'block';
         } else {
           els.addPanel.classList.remove('admin-active');
@@ -448,190 +490,314 @@
       }
       applyAdminUI();
 
-      // Firebase sync
       if (usingFirebase && txRef) {
-        txRef.on('value', snap => {
-          const data = snap.val();
-          transactions = data ? Object.entries(data).map(([key, val]) => ({ key, ...val })) : [];
-          saveLocal();
+        txRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            saveLocal();
+          } else {
+            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          }
           renderTransactions();
-        }, err => {
-          console.error(err);
+        }, (err) => {
+          console.error('Firebase read error', err);
           usingFirebase = false;
           transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
           renderTransactions();
-          notify('Offline – using local data', 'var(--danger)');
+          notify('Using local storage (check internet)', 'var(--danger)');
         });
+      } else {
+        usingFirebase = false;
+        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       }
 
-      // Add transaction
       els.addBtn.addEventListener('click', () => {
-        if (!isAdmin) return alert('Admin only');
-        const date = els.txDate.value.trim();
-        const type = els.txType.value;
-        const category = els.txCategory.value;
-        const amount = parseFloat(els.txAmount.value);
-        const notes = els.txNotes.value.trim();
-
-        if (!date || isNaN(amount) || amount <= 0 || !type || !category) {
-          return alert('Please fill date, type, category and valid amount');
-        }
-
+        if (!isAdmin) { alert('Admin only'); return; }
+        const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
+        const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
+        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         const newTx = { date, type, category, amount, notes };
         if (usingFirebase && txRef) {
           txRef.push(newTx).then(() => {
-            notify('Transaction added ✓');
-            els.txDate.value = els.txAmount.value = els.txNotes.value = '';
-          }).catch(() => {
-            newTx.key = 'local-' + Date.now();
+            notify('Added (synced to cloud)');
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          }).catch(e => {
+            console.error(e);
+            newTx.key = Date.now().toString();
             transactions.push(newTx);
             saveLocal();
             renderTransactions();
-            notify('Added locally (cloud failed)', 'var(--danger)');
+            notify('Added locally (cloud error)', 'var(--danger)');
           });
         } else {
-          newTx.key = 'local-' + Date.now();
+          newTx.key = Date.now().toString();
           transactions.push(newTx);
           saveLocal();
           renderTransactions();
-          notify('Transaction added (local)');
-          els.txDate.value = els.txAmount.value = els.txNotes.value = '';
+          notify('Added locally');
+          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
         }
       });
 
-      els.clearBtn.addEventListener('click', () => {
-        els.txDate.value = els.txAmount.value = els.txNotes.value = '';
+      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
+
+      function openEdit(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        editKey = key;
+        const t = transactions.find(t => t.key === key);
+        if (!t) return;
+        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        openModal(els.editModal);
+      }
+      els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
+      els.editSaveBtn.addEventListener('click', () => {
+        if (!isAdmin || !editKey) return;
+        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
+        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
+        if (usingFirebase && txRef) {
+          txRef.child(editKey).update(nd).then(() => {
+            closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
+          }).catch(e => {
+            const idx = transactions.findIndex(t => t.key === editKey);
+            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+            saveLocal();
+            renderTransactions();
+            notify('Edited locally', 'var(--danger)');
+          });
+        } else {
+          const idx = transactions.findIndex(t => t.key === editKey);
+          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
+          saveLocal();
+          renderTransactions();
+          closeModal(els.editModal);
+          notify('Edited');
+          editKey = null;
+        }
       });
 
-      // Edit / Delete logic remains the same (omitted for brevity)
+      function deleteTx(key) {
+        if (!isAdmin) { alert('Admin only'); return; }
+        if (!confirm('Delete this transaction?')) return;
+        if (usingFirebase && txRef) {
+          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
+            transactions = transactions.filter(t => t.key !== key);
+            saveLocal();
+            renderTransactions();
+            notify('Deleted locally', 'var(--danger)');
+          });
+        } else {
+          transactions = transactions.filter(t => t.key !== key);
+          saveLocal();
+          renderTransactions();
+          notify('Deleted', 'var(--danger)');
+        }
+      }
+
+      els.applyFilter.addEventListener('click', renderTransactions);
+      els.resetFilter.addEventListener('click', () => {
+        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
+        renderTransactions();
+      });
 
       function passesFilters(t) {
         if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
         if (els.fType.value && t.type !== els.fType.value) return false;
         if (els.fCategory.value && t.category !== els.fCategory.value) return false;
-
-        const min = parseFloat(els.fMin.value);
-        const max = parseFloat(els.fMax.value);
-        if (!isNaN(min) && t.amount < min) return false;
-        if (!isNaN(max) && t.amount > max) return false;
-
-        const nf = (els.fNotes.value || '').trim().toLowerCase();
-        if (nf && !(t.notes || '').toLowerCase().includes(nf)) return false;
-
+        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
+        if (t.amount < min || t.amount > max) return false;
+        const nf = (els.fNotes.value || '').toLowerCase();
+        if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
         return true;
       }
 
       function renderTransactions() {
         els.txTbody.innerHTML = '';
-
-        const filtered = transactions.filter(passesFilters);
         let inc = 0, exp = 0;
-
-        if (filtered.length === 0) {
+        transactions.filter(passesFilters).forEach(t => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td colspan="6" style="text-align:center;padding:40px 10px;color:var(--muted);font-style:italic">No transactions match the current filters</td>`;
+          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
+          if (isAdmin) {
+            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
+            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
+          }
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
-        } else {
-          filtered.forEach(t => {
-            const tr = document.createElement('tr');
-            const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
-            if (isAdmin) {
-              actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
-              actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
-            }
-            tr.innerHTML = `
-              <td>${esc(t.date)}</td>
-              <td>${esc(t.type)}</td>
-              <td>${esc(t.category)}</td>
-              <td>KES ${Number(t.amount).toLocaleString()}</td>
-              <td>${esc(t.notes || '')}</td>
-              <td>${actions.join(' ')}</td>`;
-            els.txTbody.appendChild(tr);
-
-            if (t.type === 'Income') inc += Number(t.amount);
-            if (t.type === 'Expense') exp += Number(t.amount);
-          });
-        }
-
-        // Show filtered stats when any filter is active
-        const anyFilter = els.fMonth.value || els.fType.value || els.fCategory.value || els.fMin.value || els.fMax.value || els.fNotes.value;
-        els.statIncome.textContent    = inc.toLocaleString();
-        els.statExpense.textContent   = exp.toLocaleString();
-        els.statBalance.textContent   = (inc - exp).toLocaleString();
-
-        els.filterStatus.textContent = anyFilter
-          ? `Showing ${filtered.length} of ${transactions.length} transactions`
-          : `Showing all ${transactions.length} transactions`;
-
-        if (isAdmin) renderCharts(filtered);   // ← now uses filtered data
+          if (t.type === 'Income') inc += Number(t.amount);
+          if (t.type === 'Expense') exp += Number(t.amount);
+        });
+        els.statIncome.textContent = inc.toLocaleString();
+        els.statExpense.textContent = exp.toLocaleString();
+        els.statBalance.textContent = (inc - exp).toLocaleString();
+        if (isAdmin) renderCharts();
       }
 
-      function renderCharts(data = transactions) {
+      els.txTbody.addEventListener('click', e => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const act = b.dataset.act, key = b.dataset.key;
+        if (act === 'edit') openEdit(key);
+        if (act === 'del') deleteTx(key);
+        if (act === 'rcpt') openReceipt(key);
+      });
+
+      function renderCharts() {
         if (!window.Chart) return;
-
-        const inc = data.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
-        const exp = data.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
-
-        // Doughnut Income vs Expense
-        if (chartIE) chartIE.destroy();
-        chartIE = new Chart(document.getElementById('chartIE'), {
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
+        try { if (chartIE) chartIE.destroy(); } catch (e) {}
+        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
-          data: {
-            labels: ['Income', 'Expense'],
-            datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80','#ff6b6b'] }]
-          },
+          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
           options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
-
-        // Category breakdown
         const catMap = {};
-        data.forEach(t => {
-          catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount);
-        });
-        if (chartCat) chartCat.destroy();
-        chartCat = new Chart(document.getElementById('chartCat'), {
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch (e) {}
+        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
           type: 'doughnut',
-          data: {
-            labels: Object.keys(catMap),
-            datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0','#9f7bfa'] }]
-          },
+          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
           options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
-
-        // Monthly trend
         const monthly = {};
-        data.forEach(t => {
+        transactions.forEach(t => {
           const m = t.date.slice(0,7);
           monthly[m] = monthly[m] || { Income:0, Expense:0 };
           monthly[m][t.type] += Number(t.amount);
         });
         const months = Object.keys(monthly).sort();
-        if (chartTrend) chartTrend.destroy();
-        chartTrend = new Chart(document.getElementById('chartTrend'), {
+        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
+        chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
           type: 'line',
           data: {
             labels: months,
             datasets: [
-              { label: 'Income',  data: months.map(m => monthly[m]?.Income  || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill: true },
-              { label: 'Expense', data: months.map(m => monthly[m]?.Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill: true }
+              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill:true },
+              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
             ]
           },
-          options: { responsive: true, tension: 0.3, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
         });
       }
 
-      // Filter events
-      els.applyFilter.addEventListener('click', renderTransactions);
-      els.resetFilter.addEventListener('click', () => {
-        els.fMonth.value = els.fType.value = els.fCategory.value = els.fMin.value = els.fMax.value = els.fNotes.value = '';
-        renderTransactions();
+      els.exportCsv.addEventListener('click', () => {
+        if (!transactions.length) { alert('No transactions to export'); return; }
+        let csv = 'Date,Type,Category,Amount,Notes\n';
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        const blob = new Blob([csv], { type:'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        notify('CSV exported', 'var(--good)');
       });
 
-      // Rest of your code (edit, delete, receipt, export, P&L, admin login, PWA install...) remains unchanged
+      function generatePL() {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
+        html += '</ul></div>';
+        els.plView.innerHTML = html;
+        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
+      }
+      els.genPL.addEventListener('click', generatePL);
+      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
+
+      els.downloadPL.addEventListener('click', () => {
+        const m = els.reportMonth.value;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const { jsPDF } = window.jspdf || {};
+        if (!jsPDF) { alert('PDF library not ready'); return; }
+        const doc = new jsPDF();
+        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+        let y = 72;
+        const br = {};
+        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+        doc.text('Category breakdown:', 14, y); y += 8;
+        for (const k in br) {
+          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+          if (y > 270) { doc.addPage(); y = 20; }
+        }
+        doc.save(`PL_${m || 'all'}.pdf`);
+      });
+
+      function openReceipt(key) {
+        const t = transactions.find(x => x.key === key);
+        if (!t) return;
+        const idx = transactions.findIndex(x => x.key === key);
+        const inv = 'INV-' + (10000 + idx);
+        const issued = new Date().toLocaleDateString();
+        let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
+          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
+        els.receiptInner.innerHTML = html;
+        openModal(els.receiptModal);
+        setTimeout(()=>{
+          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
+            const w = window.open('','_blank','width=700,height=800');
+            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
+            w.document.close(); setTimeout(()=> w.print(), 300);
+          });
+          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
+        },60);
+      }
+
+      els.adminBtn.addEventListener('click', () => {
+        if (isAdmin) {
+          if (!confirm('Sign out admin?')) return;
+          setAdmin(false);
+          notify('Admin signed out', 'var(--muted)');
+          return;
+        }
+        els.adminPassword.value = '';
+        openModal(els.adminModal);
+        setTimeout(() => els.adminPassword.focus(), 120);
+      });
+      els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
+      els.adminConfirm.addEventListener('click', () => {
+        const p = (els.adminPassword.value || '').trim();
+        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
+        closeModal(els.adminModal);
+        setAdmin(true);
+        notify('Admin session active', 'var(--good)');
+      });
+
+      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        els.installBtn.style.display = 'block';
+      });
+
+      els.installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        els.installBtn.style.display = 'none';
+      });
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+          console.log('SW registered:', reg.scope);
+        }).catch(err => console.warn('SW registration failed:', err));
+      }
 
       renderTransactions();
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
 </body>
-</html>
+  </html>
