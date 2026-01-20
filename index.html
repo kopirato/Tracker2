@@ -205,7 +205,7 @@
             <div class="fields">
               <div class="field"><label>Date</label><input id="txDate" type="date"></div>
               <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-              <div class="field"><label>Category</label><select id="txCategory"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select></div>
+              <div class="field"><label>Category</label><select id="txCategory"></select></div>
               <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
             </div>
 
@@ -230,7 +230,7 @@
                 <option value="">All Types</option><option>Income</option><option>Expense</option>
               </select>
               <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Categories</option><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option>
+                <option value="">All Categories</option>
               </select>
               <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
               <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
@@ -301,7 +301,7 @@
       <h3>Edit Transaction</h3>
       <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Sales</option><option>Other Income</option><option>Food</option><option>Transport</option><option>Supplies</option><option>Other Expense</option></select>
+      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></select>
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
       <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></textarea>
       <div style="text-align:right;margin-top:10px">
@@ -397,6 +397,64 @@
         installBtn: document.getElementById('installBtn')
       };
 
+      const incomeCategories = ['Sales', 'Other Income'];
+      const expenseCategories = [
+        'Office rent',
+        'Repairs and maintenance',
+        'Advertising',
+        'Agency fees',
+        'Legal expenses',
+        'Stationery and office expenses',
+        'Security costs',
+        'Electricity',
+        'Office Water',
+        'Salaries and wages',
+        'Audit fees',
+        'Telephone expenses',
+        'Internet',
+        'Traveling and car expenses',
+        'Depreciation',
+        'Loan monthly installment',
+        'Other expenses',
+        'Legal fees(Term Loan)',
+        'Bank charges and interest',
+        'Car Tracker charges',
+        'Loan interest',
+        'Contractors all risk insurance',
+        'Credit protection insurance',
+        'Valuation fees',
+        'Architect fees',
+        'County approval fees',
+        'Nema fees',
+        'NCA fees',
+        'Consents/land control board cos'
+      ];
+
+      function updateCategories(select, type) {
+        select.innerHTML = '';
+        const cats = type === 'Expense' ? expenseCategories : incomeCategories;
+        cats.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat;
+          select.appendChild(opt);
+        });
+      }
+
+      els.txType.addEventListener('change', () => updateCategories(els.txCategory, els.txType.value));
+      els.editType.addEventListener('change', () => updateCategories(els.editCategory, els.editType.value));
+
+      updateCategories(els.txCategory, els.txType.value);
+      updateCategories(els.editCategory, els.editType.value);
+
+      const allCategories = [...new Set([...incomeCategories, ...expenseCategories])].sort();
+      allCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        els.fCategory.appendChild(opt);
+      });
+
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
@@ -489,7 +547,7 @@
         editKey = key;
         const t = transactions.find(t => t.key === key);
         if (!t) return;
-        els.editDate.value = t.date; els.editType.value = t.type; els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
         openModal(els.editModal);
       }
       els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
