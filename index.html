@@ -147,15 +147,6 @@
           </div>
         </div>
 
-        <div class="field" style="max-width: 200px; margin: 0 auto;">
-          <label>Business</label>
-          <select id="businessSelect">
-            <option value="selelo1">Selelo 1</option>
-            <option value="selelo2">Selelo 2</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-
         <!-- Premium Navigation -->
         <div class="nav-icons">
           <a href="#transactions" class="nav-item">
@@ -171,16 +162,7 @@
               <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
             <span>Marketplace</span>
-          </a>
-          <a href="contacts.html" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            <span>Contacts</span>
-          </a>
+          </a
         </div>
 
         <div class="controls">
@@ -348,8 +330,7 @@
         txRef = db.ref('transactions');
       } catch (e) { console.warn('Firebase DB unavailable', e); }
 
-      let currentBusiness = localStorage.getItem('selelo_current_business') || 'selelo1';
-      let KEY_TX = `selelo_tx_local_${currentBusiness}`;
+      const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
@@ -360,7 +341,6 @@
       let usingFirebase = !!txRef;
 
       const els = {
-        businessSelect: document.getElementById('businessSelect'),
         adminBtn: document.getElementById('adminBtn'),
         addBtn: document.getElementById('addBtn'),
         clearBtn: document.getElementById('clearBtn'),
@@ -475,20 +455,6 @@
         els.fCategory.appendChild(opt);
       });
 
-      els.businessSelect.value = currentBusiness;
-      els.businessSelect.addEventListener('change', () => {
-        currentBusiness = els.businessSelect.value;
-        localStorage.setItem('selelo_current_business', currentBusiness);
-        KEY_TX = `selelo_tx_local_${currentBusiness}`;
-        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-        if (usingFirebase && txRef) {
-          txRef.off();
-          txRef = firebase.database().ref(`businesses/${currentBusiness}/transactions`);
-          txRef.on('value', snapshotHandler);
-        }
-        renderTransactions();
-      });
-
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
@@ -524,20 +490,17 @@
       }
       applyAdminUI();
 
-      const snapshotHandler = (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
-          saveLocal();
-        } else {
-          transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-        }
-        renderTransactions();
-      };
-
       if (usingFirebase && txRef) {
-        txRef = firebase.database().ref(`businesses/${currentBusiness}/transactions`);
-        txRef.on('value', snapshotHandler, (err) => {
+        txRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
+            saveLocal();
+          } else {
+            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
+          }
+          renderTransactions();
+        }, (err) => {
           console.error('Firebase read error', err);
           usingFirebase = false;
           transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
