@@ -1,269 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selelo Digital Business Card</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <style>
-        :root {
-            --bg-gradient-start: #020617;
-            --bg-gradient-end: #0f172a;
-            --card-bg: rgba(2,6,23,0.95);
-            --text-primary: #fff;
-            --text-secondary: rgba(255,255,255,0.7);
-            --text-muted: rgba(255,255,255,0.6);
-            --border-color: rgba(255,255,255,0.12);
-            --accent-primary: #2563eb;
-            --accent-secondary: #06b6d4;
-            --accent-alt: #f97316;
-            --accent-alt-secondary: #facc15;
-            --shadow-color: rgba(0,0,0,0.7);
-            --input-bg: #020617;
-            --input-focus: #06b6d4;
-            --neon-glow: #00ffff;
-            --holo-bg: rgba(0, 255, 255, 0.1);
-            --animation-duration: 0.3s;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selelo Digital Business Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+/* ───────────── GLOBAL STYLES ───────────── */
+body{font-family:'Poppins',sans-serif;margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#020617;position:relative;color:#fff;}
+.container{width:100%;max-width:460px;padding:1.5rem;}
+.card-app{background:rgba(2,6,23,0.95);border-radius:1.5rem;padding:1.8rem;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.7);}
+.title{text-align:center;margin-bottom:1.2rem;}
+.title h1{font-size:1.5rem;font-weight:600;}
+.title p{font-size:0.9rem;opacity:0.8;}
+.buttons{display:flex;gap:0.8rem;margin:1.2rem 0;flex-wrap:wrap;}
+.btn{padding:0.8rem 1rem;border:none;border-radius:0.8rem;font-weight:500;cursor:pointer;transition:0.3s;}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#06b6d4);color:white;}
+.btn-alt{background:linear-gradient(135deg,#f97316,#facc15);color:#000;}
+.btn-dark{background:#0f172a;border:1px solid rgba(255,255,255,0.12);color:white;}
+.btn-danger{background:linear-gradient(135deg,#ff4d4d,#ff1a1a);color:white;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,255,255,0.3);}
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+/* ───────────── REAL BUSINESS CARD DESIGN ───────────── */
+.card-preview{cursor:pointer;margin:1rem 0;}
+#realCard{
+    width: 380px;
+    height: 220px;
+    background: white;
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+}
 
-        body {
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            color:var(--text-primary);
-            position: relative;
-            overflow: hidden;
-        }
+/* LEFT SIDE */
+.card-left{
+    width: 55%;
+    padding: 20px;
+    color:#0f172a;
+}
+.card-left h1{font-size:20px;font-weight:600;margin:0;}
+.card-left h3{font-size:14px;font-weight:400;color:#444;margin:4px 0;}
+.line{width:40px;height:3px;background:#f97316;margin:8px 0 12px;}
+.info p{font-size:12px;margin:5px 0;}
 
-        /* Futuristic background effects */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(0,255,255,0.08), transparent 50%);
-            animation: pulse 10s infinite ease-in-out;
-            pointer-events: none;
-        }
+/* RIGHT SIDE */
+.card-right{
+    width:45%;
+    position:relative;
+    background:#f8f8f8;
+}
+.circle{position:absolute;border-radius:50%;}
+.circle.big{width:240px;height:240px;background:#facc15;right:-80px;top:-20px;}
+.circle.mid{width:180px;height:180px;background:#ef4444;right:-40px;top:20px;}
+.circle.small{width:120px;height:120px;background:#dc2626;right:-10px;top:60px;}
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
-        }
+/* LOGO */
+.logo-box{
+    position:absolute;
+    bottom:20px;
+    right:25px;
+    width:90px;
+    height:90px;
+    background:white;
+    border-radius:50%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.logo-box img{width:40px;margin-bottom:3px;}
+.logo-box p{font-size:9px;line-height:1.1;margin:0;text-align:center;}
 
-        .container { width:100%; max-width:460px; padding:1.5rem; position: relative; z-index: 1; }
+/* FORM SECTION */
+.form-section{margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.12);}
+.form-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.admin-badge{padding:0.4rem 0.8rem;border-radius:999px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:white;font-size:0.75rem;font-weight:600;display:none;}
+.form-group{margin-bottom:1rem;}
+.form-group label{font-size:0.8rem;opacity:0.8;display:block;margin-bottom:0.3rem;}
+.form-group input{width:100%;padding:0.7rem;border-radius:0.6rem;border:1px solid rgba(255,255,255,0.12);background:#020617;color:white;}
+.form-group input:focus{outline:none;border-color:#06b6d4;box-shadow:0 0 10px rgba(0,255,255,0.3);}
+.footer{text-align:center;margin-top:1.5rem;font-size:0.8rem;opacity:0.7;}
 
-        .card-app {
-            background:var(--card-bg);
-            border-radius:1.5rem;
-            padding:1.8rem;
-            box-shadow:0 20px 50px var(--shadow-color), 0 0 20px rgba(0,255,255,0.15);
-            border:1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-        }
+/* FULLSCREEN */
+.fullscreen{position:fixed;inset:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(6px);}
+.fullscreen.show{display:flex;}
+.fullscreen img{max-width:94%;max-height:94%;border-radius:1rem;box-shadow:0 10px 40px rgba(0,0,0,0.6);}
+.close-full{position:absolute;top:1.2rem;right:1.5rem;font-size:2rem;color:white;cursor:pointer;}
 
-        .card-app::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(transparent, rgba(0,255,255,0.05), transparent);
-            transform: rotate(45deg);
-            animation: scan 6s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes scan {
-            0% { top: -50%; }
-            100% { top: 150%; }
-        }
-
-        .title { text-align:center; margin-bottom:1.2rem; }
-        .title h1 { font-size:1.5rem; font-weight:600; text-shadow: 0 0 10px var(--neon-glow); }
-        .title p { font-size:0.9rem; opacity:0.8; }
-
-        .card-preview {
-            margin:1rem 0;
-            border-radius:1rem;
-            overflow:hidden;
-            background:#000;
-            cursor:pointer;
-            transition:transform var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
-            box-shadow: 0 0 15px rgba(0,255,255,0.2);
-        }
-        .card-preview:hover { transform:scale(1.02); box-shadow: 0 0 25px rgba(0,255,255,0.4); }
-
-        .card-content {
-            padding:1.5rem;
-            text-align:center;
-            background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
-            color:white;
-            position: relative;
-        }
-
-        .card-content::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 0, var(--holo-bg), transparent 70%);
-            opacity: 0.5;
-        }
-
-        .profile-pic {
-            width:110px; height:110px; border-radius:50%;
-            margin:0 auto 1rem; object-fit:cover;
-            border:4px solid rgba(255,255,255,0.9);
-            box-shadow: 0 0 15px var(--neon-glow);
-            display:none;
-        }
-
-        .buttons {
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-            gap:0.9rem;
-            margin:1.2rem 0;
-        }
-
-        .btn {
-            padding:0.8rem;
-            border:none;
-            border-radius:0.8rem;
-            font-weight:500;
-            cursor:pointer;
-            transition:all var(--animation-duration) ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 300%; height: 300%;
-            background: rgba(255,255,255,0.2);
-            transform: translate(-50%, -50%) scale(0);
-            border-radius: 50%;
-            transition: transform 0.6s ease;
-        }
-
-        .btn:active::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .btn-primary    { background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary)); color:white; }
-        .btn-alt        { background:linear-gradient(135deg,var(--accent-alt),var(--accent-alt-secondary)); color:#000; }
-        .btn-dark       { background:#0f172a; border:1px solid var(--border-color); color:white; }
-        .btn-danger     { background:linear-gradient(135deg,#ff4d4d,#ff1a1a); color:white; }
-
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,255,255,0.3); }
-
-        .form-section {
-            margin-top:1.8rem;
-            padding-top:1.5rem;
-            border-top:1px solid var(--border-color);
-        }
-
-        .form-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .admin-badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 999px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: none;
-        }
-
-        .form-group { margin-bottom:1rem; }
-        .form-group label { font-size:0.8rem; opacity:0.8; display:block; margin-bottom:0.3rem; }
-        .form-group input {
-            width:100%;
-            padding:0.7rem;
-            border-radius:0.6rem;
-            border:1px solid var(--border-color);
-            background:var(--input-bg);
-            color:white;
-            transition: box-shadow var(--animation-duration) ease;
-        }
-
-        .form-group input:focus { outline:none; border-color:var(--accent-secondary); box-shadow: 0 0 10px rgba(0,255,255,0.3); }
-
-        .footer { text-align:center; margin-top:1.5rem; font-size:0.8rem; opacity:0.7; }
-
-        .fullscreen {
-            position:fixed; inset:0;
-            background:rgba(0,0,0,0.92);
-            display:none;
-            align-items:center; justify-content:center;
-            z-index:9999;
-            backdrop-filter:blur(6px);
-        }
-
-        .fullscreen.show { display:flex; }
-        .fullscreen img { max-width:94%; max-height:94%; border-radius:1rem; box-shadow:0 10px 40px rgba(0,0,0,0.6); }
-
-        .close-full { position:absolute; top:1.2rem; right:1.5rem; font-size:2rem; color:white; cursor:pointer; }
-
-        /* Admin Password Modal */
-        .admin-prompt {
-            position:fixed; inset:0;
-            background:rgba(0,0,0,0.85);
-            display:none;
-            align-items:center; justify-content:center;
-            z-index:10000;
-        }
-
-        .admin-modal {
-            background:var(--card-bg);
-            padding:2rem;
-            border-radius:1.2rem;
-            width:90%; max-width:420px;
-            border:1px solid var(--border-color);
-            box-shadow: 0 0 20px rgba(0,255,255,0.2);
-        }
-
-        .admin-modal h3 { margin-bottom:1rem; text-shadow: 0 0 5px var(--neon-glow); }
-        .admin-modal input {
-            width:100%; padding:0.9rem; margin:1rem 0;
-            border-radius:0.6rem;
-            border:1px solid var(--border-color);
-            background:#0f172a; color:white;
-        }
-
-        .admin-buttons { display:flex; gap:1rem; justify-content:flex-end; }
-    </style>
+/* ADMIN PROMPT */
+.admin-prompt{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:10000;}
+.admin-modal{background:rgba(2,6,23,0.95);padding:2rem;border-radius:1.2rem;width:90%;max-width:420px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 0 20px rgba(0,255,255,0.2);}
+.admin-modal h3{margin-bottom:1rem;}
+.admin-modal input{width:100%;padding:0.9rem;margin:1rem 0;border-radius:0.6rem;border:1px solid rgba(255,255,255,0.12);background:#0f172a;color:white;}
+.admin-buttons{display:flex;gap:1rem;justify-content:flex-end;}
+</style>
 </head>
 <body>
-
 <div class="container">
     <div class="card-app">
+
         <div class="title">
             <h1>Selelo Business Card</h1>
             <p>Digital Professional Identity</p>
         </div>
 
+        <!-- CARD PREVIEW -->
         <div class="card-preview" id="cardPreview" onclick="openFullscreen()">
-            <div class="card-content">
-                <img id="profilePic" class="profile-pic" src="Screenshot_20260128_212358_X.jpg"alt="Profile">
-                <h2 id="cardName">Joshua Tapatayia</h2>
-                <p id="cardRole">Managing Director</p>
-                <p>📞 <span id="cardPhone">0717650981 / 0712373717</span></p>
-                <p>✉️ <span id="cardEmail">Selelobizpark@gmail.com</span></p>
-                <p>📍 <span id="cardLocation">Kitengela, Kajiado</span></p>
+            <div id="realCard">
+
+                <!-- LEFT SIDE -->
+                <div class="card-left">
+                    <h1 id="cardName">Joshua Tapatayia</h1>
+                    <h3 id="cardRole">Managing Director</h3>
+                    <div class="line"></div>
+                    <div class="info">
+                        <p>📞 <span id="cardPhone">0717650981 / 0712373717</span></p>
+                        <p>✉️ <span id="cardEmail">Selelobizpark@gmail.com</span></p>
+                        <p>📍 <span id="cardLocation">Kitengela, Kajiado</span></p>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="card-right">
+                    <div class="circle big"></div>
+                    <div class="circle mid"></div>
+                    <div class="circle small"></div>
+
+                    <div class="logo-box">
+                        <img src="Screenshot_20260128_212358_X.jpg" alt="Logo">
+                        <p>SELELO BUSINESS PARK<br><b>LTD</b></p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -274,44 +146,29 @@
             <button class="btn btn-dark" onclick="saveContact()">Save Contact</button>
         </div>
 
+        <!-- FORM SECTION -->
         <div class="form-section">
             <div class="form-header">
                 <h3>Edit Card Details</h3>
                 <span id="adminBadge" class="admin-badge">ADMIN</span>
             </div>
-            <p style="font-size:0.85rem; opacity:0.7; margin-bottom:1rem;">
-                (Admin password required to make changes)
-            </p>
+
+            <p style="font-size:0.85rem; opacity:0.7; margin-bottom:1rem;">(Admin password required to make changes)</p>
 
             <div class="form-group">
                 <label>Profile Picture</label>
                 <input id="profilePicInput" type="file" accept="image/*">
             </div>
-            <div class="form-group">
-                <label>Name</label>
-                <input id="nameInput" type="text" value="Joshua Tapatayia">
-            </div>
-            <div class="form-group">
-                <label>Position</label>
-                <input id="roleInput" type="text" value="Managing Director">
-            </div>
-            <div class="form-group">
-                <label>Phone</label>
-                <input id="phoneInput" type="text" value="0717650981 / 0712373717">
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <input id="emailInput" type="email" value="Selelobizpark@gmail.com">
-            </div>
-            <div class="form-group">
-                <label>Location</label>
-                <input id="locationInput" type="text" value="Kitengela, Kajiado">
-            </div>
+            <div class="form-group"><label>Name</label><input id="nameInput" type="text" value="Joshua Tapatayia"></div>
+            <div class="form-group"><label>Position</label><input id="roleInput" type="text" value="Managing Director"></div>
+            <div class="form-group"><label>Phone</label><input id="phoneInput" type="text" value="0717650981 / 0712373717"></div>
+            <div class="form-group"><label>Email</label><input id="emailInput" type="email" value="Selelobizpark@gmail.com"></div>
+            <div class="form-group"><label>Location</label><input id="locationInput" type="text" value="Kitengela, Kajiado"></div>
 
-            <div style="display: flex; gap: 0.8rem; margin-top: 1rem;">
+            <div style="display:flex;gap:0.8rem;margin-top:1rem;">
                 <button class="btn btn-primary" onclick="attemptSave()">Save Changes</button>
                 <button class="btn btn-dark" onclick="goBack()">Back</button>
-                <button id="signOutBtn" class="btn btn-danger" onclick="signOutAdmin()" style="display: none;">Sign Out</button>
+                <button id="signOutBtn" class="btn btn-danger" onclick="signOutAdmin()" style="display:none;">Sign Out</button>
             </div>
         </div>
 
@@ -319,13 +176,13 @@
     </div>
 </div>
 
-<!-- Fullscreen viewer -->
+<!-- FULLSCREEN VIEWER -->
 <div class="fullscreen" id="fullscreen">
     <span class="close-full" onclick="closeFullscreen()">×</span>
     <img id="fullImage" alt="Business Card Fullscreen">
 </div>
 
-<!-- Admin password prompt -->
+<!-- ADMIN PROMPT -->
 <div class="admin-prompt" id="adminPrompt">
     <div class="admin-modal">
         <h3>Admin Access Required</h3>
@@ -339,228 +196,49 @@
 </div>
 
 <script>
-    // ──────────────────────────────────────────────
-    // Admin protection – same as index.html
-    // ──────────────────────────────────────────────
-    const KEY_ADMIN = "selelo_admin_final";
-    const ADMIN_PASSWORDS = ["0742147197", "0721235005"];
-
-    let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-
-    const elements = {
-        adminPrompt: document.getElementById("adminPrompt"),
-        adminPassInput: document.getElementById("adminPassInput"),
-        adminBadge: document.getElementById("adminBadge"),
-        signOutBtn: document.getElementById("signOutBtn"),
-        nameInput: document.getElementById("nameInput"),
-        roleInput: document.getElementById("roleInput"),
-        phoneInput: document.getElementById("phoneInput"),
-        emailInput: document.getElementById("emailInput"),
-        locationInput: document.getElementById("locationInput"),
-        profilePicInput: document.getElementById("profilePicInput"),
-        profilePic: document.getElementById("profilePic"),
-        cardName: document.getElementById("cardName"),
-        cardRole: document.getElementById("cardRole"),
-        cardPhone: document.getElementById("cardPhone"),
-        cardEmail: document.getElementById("cardEmail"),
-        cardLocation: document.getElementById("cardLocation"),
-        fullImage: document.getElementById("fullImage"),
-        fullscreen: document.getElementById("fullscreen")
-    };
-
-    // Update admin UI (badge + sign out)
-    function updateAdminUI() {
-        if (isAdmin) {
-            elements.adminBadge.style.display = "inline-block";
-            elements.signOutBtn.style.display = "block";
-        } else {
-            elements.adminBadge.style.display = "none";
-            elements.signOutBtn.style.display = "none";
-        }
-    }
-
-    // Protect edit action with prompt
-    function protectEditAction(callback) {
-        if (isAdmin) {
-            callback();
-            return;
-        }
-        elements.adminPrompt.style.display = "flex";
-        elements.adminPassInput.value = "";
-        elements.adminPassInput.focus();
-        window.pendingEditAction = callback;
-    }
-
-    function verifyAdminForEdit() {
-        const pass = (elements.adminPassInput.value || "").trim();
-        if (ADMIN_PASSWORDS.includes(pass)) {
-            localStorage.setItem(KEY_ADMIN, "true");
-            isAdmin = true;
-            updateAdminUI();
-            elements.adminPrompt.style.display = "none";
-
-            if (window.pendingEditAction) {
-                window.pendingEditAction();
-                window.pendingEditAction = null;
-            }
-
-            alert("Admin access granted.");
-        } else {
-            alert("Incorrect password.");
-        }
-    }
-
-    function cancelAdminPrompt() {
-        elements.adminPrompt.style.display = "none";
-        window.pendingEditAction = null;
-    }
-
-    function signOutAdmin() {
-        if (confirm("Sign out from admin mode?")) {
-            localStorage.setItem(KEY_ADMIN, "false");
-            isAdmin = false;
-            updateAdminUI();
-            alert("Signed out. Password required for editing.");
-        }
-    }
-
-    function goBack() {
-        window.location.href = "index.html";  // Or "marketplace.html" if preferred
-    }
-
-    // Block editing if not admin
-    function blockIfNotAdmin(e) {
-        if (!isAdmin) {
-            e.preventDefault();
-            e.target.blur();
-            protectEditAction(() => e.target.focus());
-        }
-    }
-
-    ['nameInput','roleInput','phoneInput','emailInput','locationInput'].forEach(id => {
-        const el = document.getElementById(id);
-        el.addEventListener('focus', blockIfNotAdmin);
-        el.addEventListener('keydown', e => {
-            if (!isAdmin && e.key !== "Tab" && e.key !== "Shift") {
-                blockIfNotAdmin(e);
-            }
-        });
-    });
-
-    elements.profilePicInput.addEventListener('click', e => {
-        if (!isAdmin) {
-            e.preventDefault();
-            protectEditAction(() => elements.profilePicInput.click());
-        }
-    });
-
-    function attemptSave() {
-        protectEditAction(() => {
-            const data = {
-                name: elements.nameInput.value,
-                role: elements.roleInput.value,
-                phone: elements.phoneInput.value,
-                email: elements.emailInput.value,
-                location: elements.locationInput.value
-            };
-            localStorage.setItem('selelocard', JSON.stringify(data));
-            alert("Changes saved successfully.");
-        });
-    }
-
-    // Live preview
-    function updatePreview() {
-        elements.cardName.textContent   = elements.nameInput.value.trim()   || "Name";
-        elements.cardRole.textContent   = elements.roleInput.value.trim()   || "Position";
-        elements.cardPhone.textContent  = elements.phoneInput.value.trim()  || "Phone";
-        elements.cardEmail.textContent  = elements.emailInput.value.trim()  || "Email";
-        elements.cardLocation.textContent = elements.locationInput.value.trim() || "Location";
-    }
-
-    document.querySelectorAll('#nameInput, #roleInput, #phoneInput, #emailInput, #locationInput')
-        .forEach(input => input.addEventListener('input', updatePreview));
-
-    // Profile picture
-    elements.profilePicInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-            elements.profilePic.src = ev.target.result;
-            elements.profilePic.style.display = "block";
-            localStorage.setItem('seleloProfilePic', ev.target.result);
-        };
-        reader.readAsDataURL(file);
-    });
-
-    // Load saved data
-    window.addEventListener('load', () => {
-        const saved = localStorage.getItem('selelocard');
-        if (saved) {
-            const d = JSON.parse(saved);
-            elements.nameInput.value    = d.name    || "";
-            elements.roleInput.value    = d.role    || "";
-            elements.phoneInput.value   = d.phone   || "";
-            elements.emailInput.value   = d.email   || "";
-            elements.locationInput.value = d.location || "";
-            updatePreview();
-        }
-
-        const savedPic = localStorage.getItem('seleloProfilePic');
-        if (savedPic) {
-            elements.profilePic.src = savedPic;
-            elements.profilePic.style.display = "block";
-        }
-
-        updateAdminUI();
-    });
-
-    // Public features
-    function openFullscreen() {
-        html2canvas(document.getElementById("cardPreview")).then(canvas => {
-            elements.fullImage.src = canvas.toDataURL("image/png");
-            elements.fullscreen.classList.add("show");
-        });
-    }
-
-    function closeFullscreen() {
-        elements.fullscreen.classList.remove("show");
-    }
-
-    function shareWhatsApp() {
-        const text = `📇 *Selelo Business Card*\n${elements.nameInput.value} - ${elements.roleInput.value}\n📞 ${elements.phoneInput.value}\n✉️ ${elements.emailInput.value}\n📍 ${elements.locationInput.value}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function saveContact() {
-        const name = elements.nameInput.value.trim();
-        const phone = (elements.phoneInput.value || "").split('/')[0].trim();
-        const email = elements.emailInput.value.trim();
-        const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:\( {name}\nTEL: \){phone}\nEMAIL:${email}\nORG:Selelo Business Park LTD\nEND:VCARD`;
-        const blob = new Blob([vcard], { type: 'text/vcard' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${name || 'contact'}.vcf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function downloadCard() {
-        html2canvas(document.getElementById("cardPreview")).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'selelo-business-card.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    }
-
-    // Esc key
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeFullscreen();
-    });
+// ================= ADMIN LOGIC =================
+const KEY_ADMIN = "selelo_admin_final";
+const ADMIN_PASSWORDS = ["0742147197", "0721235005"];
+let isAdmin = localStorage.getItem(KEY_ADMIN)==="true";
+const elements = {
+    adminPrompt: document.getElementById("adminPrompt"),
+    adminPassInput: document.getElementById("adminPassInput"),
+    adminBadge: document.getElementById("adminBadge"),
+    signOutBtn: document.getElementById("signOutBtn"),
+    nameInput: document.getElementById("nameInput"),
+    roleInput: document.getElementById("roleInput"),
+    phoneInput: document.getElementById("phoneInput"),
+    emailInput: document.getElementById("emailInput"),
+    locationInput: document.getElementById("locationInput"),
+    profilePicInput: document.getElementById("profilePicInput"),
+    cardName: document.getElementById("cardName"),
+    cardRole: document.getElementById("cardRole"),
+    cardPhone: document.getElementById("cardPhone"),
+    cardEmail: document.getElementById("cardEmail"),
+    cardLocation: document.getElementById("cardLocation"),
+    fullImage: document.getElementById("fullImage"),
+    fullscreen: document.getElementById("fullscreen")
+};
+function updateAdminUI(){isAdmin?(elements.adminBadge.style.display="inline-block",elements.signOutBtn.style.display="block"):(elements.adminBadge.style.display="none",elements.signOutBtn.style.display="none");}
+function protectEditAction(callback){if(isAdmin){callback();return;}elements.adminPrompt.style.display="flex";elements.adminPassInput.value="";elements.adminPassInput.focus();window.pendingEditAction=callback;}
+function verifyAdminForEdit(){const pass=(elements.adminPassInput.value||"").trim();if(ADMIN_PASSWORDS.includes(pass)){localStorage.setItem(KEY_ADMIN,"true");isAdmin=true;updateAdminUI();elements.adminPrompt.style.display="none";window.pendingEditAction&&(window.pendingEditAction(),window.pendingEditAction=null);alert("Admin access granted.");}else{alert("Incorrect password.");}}
+function cancelAdminPrompt(){elements.adminPrompt.style.display="none";window.pendingEditAction=null;}
+function signOutAdmin(){if(confirm("Sign out from admin mode?")){localStorage.setItem(KEY_ADMIN,"false");isAdmin=false;updateAdminUI();alert("Signed out. Password required for editing.");}}
+function goBack(){window.location.href="index.html";}
+function blockIfNotAdmin(e){if(!isAdmin){e.preventDefault();e.target.blur();protectEditAction(()=>e.target.focus());}}
+['nameInput','roleInput','phoneInput','emailInput','locationInput'].forEach(id=>{const el=document.getElementById(id);el.addEventListener('focus',blockIfNotAdmin);el.addEventListener('keydown',e=>{if(!isAdmin&&e.key!=="Tab"&&e.key!=="Shift"){blockIfNotAdmin(e);}});});
+elements.profilePicInput.addEventListener('click',e=>{if(!isAdmin){e.preventDefault();protectEditAction(()=>elements.profilePicInput.click());}});
+function attemptSave(){protectEditAction(()=>{const data={name:elements.nameInput.value,role:elements.roleInput.value,phone:elements.phoneInput.value,email:elements.emailInput.value,location:elements.locationInput.value};localStorage.setItem('selelocard',JSON.stringify(data));alert("Changes saved successfully.");});}
+function updatePreview(){elements.cardName.textContent=elements.nameInput.value.trim()||"Name";elements.cardRole.textContent=elements.roleInput.value.trim()||"Position";elements.cardPhone.textContent=elements.phoneInput.value.trim()||"Phone";elements.cardEmail.textContent=elements.emailInput.value.trim()||"Email";elements.cardLocation.textContent=elements.locationInput.value.trim()||"Location";}
+document.querySelectorAll('#nameInput, #roleInput, #phoneInput, #emailInput, #locationInput').forEach(input=>input.addEventListener('input',updatePreview));
+elements.profilePicInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{elements.cardName.src=ev.target.result;localStorage.setItem('seleloProfilePic',ev.target.result);};reader.readAsDataURL(file);});
+window.addEventListener('load',()=>{const saved=localStorage.getItem('selelocard');if(saved){const d=JSON.parse(saved);elements.nameInput.value=d.name||"";elements.roleInput.value=d.role||"";elements.phoneInput.value=d.phone||"";elements.emailInput.value=d.email||"";elements.locationInput.value=d.location||"";updatePreview();}updateAdminUI();});
+function openFullscreen(){html2canvas(document.getElementById("cardPreview")).then(canvas=>{elements.fullImage.src=canvas.toDataURL("image/png");elements.fullscreen.classList.add("show");});}
+function closeFullscreen(){elements.fullscreen.classList.remove("show");}
+function shareWhatsApp(){const text=`📇 *Selelo Business Card*\n${elements.nameInput.value} - ${elements.roleInput.value}\n📞 ${elements.phoneInput.value}\n✉️ ${elements.emailInput.value}\n📍 ${elements.locationInput.value}`;window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');}
+function saveContact(){const name=elements.nameInput.value.trim();const phone=(elements.phoneInput.value||"").split('/')[0].trim();const email=elements.emailInput.value.trim();const vcard=`BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nORG:Selelo Business Park LTD\nEND:VCARD`;const blob=new Blob([vcard],{type:'text/vcard'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${name||'contact'}.vcf`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+function downloadCard(){html2canvas(document.getElementById("cardPreview")).then(canvas=>{const link=document.createElement('a');link.download='selelo-business-card.png';link.href=canvas.toDataURL('image/png');link.click();});}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFullscreen();});
 </script>
 </body>
 </html>
