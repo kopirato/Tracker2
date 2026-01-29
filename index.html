@@ -229,154 +229,153 @@
   <div class="shell">
     <main class="card">
 
-      <div class="top">
-        <div class="brand">
-          <img src="11.png" class="logo" alt="Selelo Business Park Logo" loading="lazy" onerror="this.style.display='none'">
-          <div>
-            <h1>Selelo Business Park</h1>
-            <div class="sub">The BizHub – Modern Workspace Solutions</div>
-          </div>
-        </div>
-
-        <!-- Fixed & Beautiful Navigation -->
-        <nav class="nav-icons" aria-label="Main navigation">
-          <a href="#transactions" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="4" width="18" height="16" rx="2"/>
-              <path d="M3 10h18"/>
-              <path d="M9 14h6"/>
-            </svg>
-            <span>Transactions</span>
-          </a>
-
-          <a href="marketplace.html" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 01-8 0"/>
-            </svg>
-            <span>Marketplace</span>
-          </a>
-
-          <a href="businesscard.html" class="nav-item">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="5" width="18" height="14" rx="2"/>
-              <path d="M8 10h.01"/>
-              <path d="M16 10h.01"/>
-              <path d="M12 14h.01"/>
-              <path d="M3 7h18"/>
-            </svg>
-            <span>Business Card</span>
-          </a>
-        </nav>
-
-        <div class="controls">
-          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
-          <button id="themeBtn" class="btn btn-theme">Theme</button>
-          <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
-        </div>
+  <div class="top">
+    <div class="brand">
+      <img src="11.png" class="logo" alt="Selelo Business Park Logo" loading="lazy" onerror="this.style.display='none'">
+      <div>
+        <h1>Selelo Business Park</h1>
+        <div class="sub">The BizHub – Modern Workspace Solutions</div>
       </div>
+    </div>
 
-      <!-- Quick Actions -->
-      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
-        <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
-        <button id="genPL" class="btn btn-ghost">Generate P&L</button>
-        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
-      </div>
+    <!-- Fixed & Beautiful Navigation -->
+    <nav class="nav-icons" aria-label="Main navigation">
+      <a href="#transactions" class="nav-item">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <path d="M3 10h18"/>
+          <path d="M9 14h6"/>
+        </svg>
+        <span>Transactions</span>
+      </a>
 
-      <a id="transactions"></a>
+      <a href="marketplace.html" class="nav-item">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span>Marketplace</span>
+      </a>
 
-      <div class="grid">
-        <section>
-          <div id="addPanel" class="panel">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div>
-                <h2 style="font-size:17px;margin:0">Add Transaction</h2>
-                <div class="sub">Sign in as admin to add, edit or delete</div>
-              </div>
-              <div id="adminBadgeWrap"></div>
-            </div>
+      <a href="businesscard.html" class="nav-item">
+        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M8 10h.01"/>
+          <path d="M16 10h.01"/>
+          <path d="M12 14h.01"/>
+          <path d="M3 7h18"/>
+        </svg>
+        <span>Business Card</span>
+      </a>
+    </nav>
 
-            <div class="fields">
-              <div class="field"><label>Date</label><input id="txDate" type="date"></div>
-              <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-              <div class="field"><label>Category</label><select id="txCategory"></select></div>
-              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
-            </div>
-
-            <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
-
-            <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-              <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
-              <button id="clearBtn" class="btn btn-ghost">Clear</button>
-              <div id="txMsg" style="color:var(--good);font-size:13px"></div>
-            </div>
-          </div>
-
-          <div class="panel" style="margin-top:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <h3 style="margin:0;font-size:16px">Transactions</h3>
-              <div class="sub">Filter and manage</div>
-            </div>
-
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Types</option><option>Income</option><option>Expense</option>
-              </select>
-              <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Categories</option>
-              </select>
-              <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txTbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <aside>
-          <div class="panel dashboard">
-            <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
-              <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
-              <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
-              <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
-            </div>
-            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
-          </div>
-
-          <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
-            <h3 style="margin-bottom:12px">Charts</h3>
-            <canvas id="chartIE" height="140"></canvas>
-            <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
-            <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
-          </div>
-
-          <div class="panel" style="margin-top:16px">
-            <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
-            <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
-            <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
-            <div style="display:flex;gap:8px">
-              <button id="showPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
-            </div>
-            <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
-          </div>
-        </aside>
-      </div>
-
-      <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
-    </main>
+    <div class="controls">
+      <button id="adminBtn" class="btn btn-admin">Admin Login</button>
+      <button id="themeBtn" class="btn btn-theme">Theme</button>
+      <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
+    </div>
   </div>
+
+  <!-- Quick Actions -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
+    <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
+    <button id="genPL" class="btn btn-ghost">Generate P&L</button>
+    <button id="downloadPL" class="btn btn-admin">Download P&L</button>
+  </div>
+
+  <a id="transactions"></a>
+
+  <div class="grid">
+    <section>
+      <div id="addPanel" class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <h2 style="font-size:17px;margin:0">Add Transaction</h2>
+            <div class="sub">Sign in as admin to add, edit or delete</div>
+          </div>
+          <div id="adminBadgeWrap"></div>
+        </div>
+
+        <div class="fields">
+          <div class="field"><label>Date</label><input id="txDate" type="date"></div>
+          <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
+          <div class="field"><label>Category</label><select id="txCategory"></select></div>
+          <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+        </div>
+
+        <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+          <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
+          <button id="clearBtn" class="btn btn-ghost">Clear</button>
+          <div id="txMsg" style="color:var(--good);font-size:13px"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h3 style="margin:0;font-size:16px">Transactions</h3>
+          <div class="sub">Filter and manage</div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+          <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+            <option value="">All Types</option><option>Income</option><option>Expense</option>
+          </select>
+          <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+            <option value="">All Categories</option>
+          </select>
+          <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+          <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+          <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+          <button id="applyFilter" class="btn btn-ghost">Apply</button>
+          <button id="resetFilter" class="btn btn-ghost">Reset</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+            <tbody id="txTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="panel dashboard">
+        <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
+          <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
+          <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
+          <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
+        </div>
+        <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
+      </div>
+
+      <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
+        <h3 style="margin-bottom:12px">Charts</h3>
+        <canvas id="chartIE" height="140"></canvas>
+        <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
+        <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
+        <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
+        <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
+        <div style="display:flex;gap:8px">
+          <button id="showPLBtn" class="btn btn-ghost">Show</button>
+          <button id="downloadPLBtn" class="btn btn-admin">Download</button>
+        </div>
+        <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
+</main>  </div>
 
   <!-- Modals remain unchanged -->
   <div id="adminModal" class="modal">
@@ -541,7 +540,7 @@
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": ''' }[m])); }
       function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
@@ -703,7 +702,7 @@
             actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
             actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
           }
-          tr.innerHTML = `<td>\( {esc(t.date)}</td><td> \){esc(t.type)}</td><td>${esc(t.category)}</td><td>KES \( {Number(t.amount).toLocaleString()}</td><td> \){esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
           if (t.type === 'Income') inc += Number(t.amount);
           if (t.type === 'Expense') exp += Number(t.amount);
@@ -765,7 +764,7 @@
       els.exportCsv.addEventListener('click', () => {
         if (!transactions.length) { alert('No transactions to export'); return; }
         let csv = 'Date,Type,Category,Amount,Notes\n';
-        transactions.forEach(t => csv += `"\( {t.date}"," \){t.type}","\( {t.category}"," \){t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
         const blob = new Blob([csv], { type:'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
@@ -779,7 +778,10 @@
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const br = {};
         arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        let html = `<strong>Period:</strong> ${m || 'All'}
+<strong>Income:</strong> KES ${inc.toLocaleString()}
+<strong>Expense:</strong> KES ${exp.toLocaleString()}
+<strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
         for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
         html += '</ul></div>';
         els.plView.innerHTML = html;
@@ -820,7 +822,13 @@
         const inv = 'INV-' + (10000 + idx);
         const issued = new Date().toLocaleDateString();
         let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
-          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}
+<strong>Issued:</strong> ${issued}
+<strong>Date:</strong> ${t.date}
+<strong>Type:</strong> ${t.type}
+<strong>Category:</strong> ${t.category}
+<strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}
+<strong>Notes:</strong> ${esc(t.notes || '-')}</div>
           <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
@@ -883,3 +891,4 @@
   </script>
 </body>
 </html>
+
