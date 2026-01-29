@@ -6,7 +6,7 @@
   <title>SELELO BUSINESS PARK</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -17,15 +17,12 @@
       --accent2: #D4A574;
       --good: #4ade80;
       --danger: #D9534F;
-      --glass: rgba(255,255,255,0.07);
-      --glass-strong: rgba(255,255,255,0.11);
-      --shadow: 0 12px 32px rgba(0,0,0,0.5);
-      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.09);
     }
-
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: Inter, sans-serif;
       background: var(--bg) url('2.png') center/cover no-repeat fixed;
       color: var(--text);
       min-height: 100vh;
@@ -34,142 +31,62 @@
     }
     body::before {
       content: ""; position: fixed; inset: 0;
-      background: linear-gradient(180deg, rgba(26,18,11,0.82), rgba(0,0,0,0.72));
-      backdrop-filter: blur(4px);
+      background: linear-gradient(180deg, rgba(26,18,11,0.78), rgba(0,0,0,0.65));
+      backdrop-filter: blur(3px);
       z-index: 1;
     }
 
     /* Welcome Splash */
     #welcome {
       position: fixed; inset: 0; z-index: 9999;
-      background: radial-gradient(circle at center, rgba(226,114,91,0.22), transparent 75%);
+      background: radial-gradient(circle at center, rgba(226,114,91,0.18), transparent 70%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      animation: fadeOut 4s forwards;
+      animation: fadeOut 3.8s forwards;
       pointer-events: none;
     }
     #welcome h1 {
-      font-size: clamp(2.2rem, 6vw, 3.2rem);
-      font-weight: 800; letter-spacing: 4px; text-transform: uppercase;
+      font-size: 42px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
       background: linear-gradient(90deg, var(--accent1), var(--accent2));
       -webkit-background-clip: text; background-clip: text; color: transparent;
-      margin-bottom: 10px;
-      animation: glow 2.8s ease-in-out infinite alternate;
+      margin-bottom: 8px;
+      animation: glow 2.2s ease-in-out infinite alternate;
     }
-    #welcome p { font-size: clamp(1rem, 3vw, 1.3rem); letter-spacing: 6px; opacity: 0.92; }
-    @keyframes glow { from { text-shadow: 0 0 24px rgba(226,114,91,0.7); } to { text-shadow: 0 0 48px rgba(212,165,116,0.9); } }
-    @keyframes fadeOut { 0%, 80% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+    #welcome p { font-size: 17px; letter-spacing: 5px; opacity: 0.9; }
+    @keyframes glow { from { text-shadow: 0 0 20px rgba(226,114,91,0.6); } to { text-shadow: 0 0 40px rgba(212,165,116,0.8); } }
+    @keyframes fadeOut { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
-    .shell { padding: clamp(1rem, 4vw, 2rem); position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
-    .card { 
-      background: var(--glass); 
-      border-radius: 24px; 
-      padding: clamp(1.2rem, 3vw, 1.8rem); 
-      backdrop-filter: blur(16px); 
-      border: 1px solid rgba(255,255,255,0.12); 
-      box-shadow: var(--shadow); 
-      flex: 1; 
-      display: flex; 
-      flex-direction: column;
-    }
+    .shell { padding: 16px; position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
+    .card { background: var(--glass); border-radius: 20px; padding: 20px; backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.45); flex: 1; display: flex; flex-direction: column; }
 
-    .top { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
-    .brand { display: flex; align-items: center; gap: 1rem; }
-    .logo { width: 64px; height: 64px; border-radius: 16px; object-fit: cover; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-    h1 { font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: 800; text-transform: uppercase; letter-spacing: 1.4px; }
-    .sub { font-size: 0.875rem; opacity: 0.88; font-weight: 500; }
+    .top { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+    h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
+    .sub { font-size: 13px; opacity: 0.85; }
 
-    /* Modern Corporate Navigation */
+    /* Premium SVG Nav */
     .nav-icons {
-      display: flex;
-      justify-content: center;
-      gap: clamp(1.2rem, 4vw, 2.5rem);
-      padding: 1rem 1.2rem;
-      background: var(--glass-strong);
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      flex-wrap: wrap;
+      display: flex; justify-content: center; gap: 28px; padding: 12px 0;
+      background: rgba(255,255,255,0.04); border-radius: 16px;
     }
-
     .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text);
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: var(--transition);
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
-      min-width: 80px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--text); font-size: 11px; opacity: 0.9; transition: all 0.3s ease; text-decoration:none;
     }
+    .nav-item:hover { transform: translateY(-6px); opacity: 1; color: var(--accent1); }
+    .nav-icon-svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; transition: all 0.3s; }
+    .nav-item:hover .nav-icon-svg { stroke: var(--accent1); transform: scale(1.15); }
 
-    .nav-item:hover,
-    .nav-item:focus {
-      background: rgba(226,114,91,0.12);
-      transform: translateY(-4px) scale(1.08);
-      color: var(--accent1);
-      box-shadow: 0 8px 24px rgba(226,114,91,0.25);
-    }
-
-    .nav-icon-svg {
-      width: 32px;
-      height: 32px;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      transition: var(--transition);
-    }
-
-    .nav-item:hover .nav-icon-svg {
-      stroke: var(--accent1);
-      transform: scale(1.15);
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 0.9rem;
-      flex-wrap: wrap;
-    }
-
+    .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
     .btn {
-      padding: 0.75rem 1.4rem;
-      border-radius: 14px;
-      font-weight: 700;
-      font-size: 0.875rem;
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-      letter-spacing: 0.4px;
+      padding: 11px 18px; border-radius: 14px; font-weight: 700; font-size: 13px;
+      border: none; cursor: pointer; transition: all 0.25s;
     }
+    .btn-admin { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 5px 18px rgba(226,114,91,0.35); }
+    .btn-admin:active { transform: translateY(2px); }
+    .btn-ghost, .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--text); }
 
-    .btn-admin {
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      color: #042;
-      box-shadow: 0 6px 20px rgba(226,114,91,0.4);
-    }
-
-    .btn-admin:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(226,114,91,0.5); }
-    .btn-admin:active { transform: translateY(1px); }
-
-    .btn-ghost, .btn-theme {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--text);
-    }
-
-    .btn-ghost:hover, .btn-theme:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: var(--accent1);
-      color: var(--accent1);
-    }
-
-    .grid { display: flex; flex-direction: column; gap: 1.5rem; flex: 1; }
+    .grid { display: flex; flex-direction: column; gap: 20px; flex: 1; }
     .panel { background: var(--glass-strong); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
     .fields { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
     .field { display: flex; flex-direction: column; gap: 6px; }
@@ -202,19 +119,11 @@
 
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
-      .nav-icons { gap: 1rem; padding: 0.8rem; }
-      .nav-item { min-width: 70px; font-size: 0.7rem; padding: 0.5rem 0.8rem; }
-      .nav-icon-svg { width: 28px; height: 28px; }
-      .brand { flex-direction: column; text-align: center; gap: 0.6rem; }
-      .logo { width: 56px; height: 56px; }
-      h1 { font-size: 1.4rem; }
+      .nav-icons { gap: 20px; }
+      #welcome h1 { font-size: 36px; }
+      .logo { width: 50px; height: 50px; }
+      h1 { font-size: 20px; }
       .card { padding: 16px; }
-    }
-
-    @media (max-width: 400px) {
-      .nav-icons { flex-direction: column; align-items: center; gap: 0.8rem; }
-      .nav-item { width: 100%; max-width: 220px; }
-      .controls { flex-direction: column; gap: 0.7rem; }
     }
   </style>
 </head>
@@ -229,155 +138,153 @@
   <div class="shell">
     <main class="card">
 
-  <div class="top">
-    <div class="brand">
-      <img src="11.png" class="logo" alt="Selelo Business Park Logo" loading="lazy" onerror="this.style.display='none'">
-      <div>
-        <h1>Selelo Business Park</h1>
-        <div class="sub">The BizHub – Modern Workspace Solutions</div>
-      </div>
-    </div>
-
-    <!-- Fixed & Beautiful Navigation -->
-    <nav class="nav-icons" aria-label="Main navigation">
-      <a href="#transactions" class="nav-item">
-        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="4" width="18" height="16" rx="2"/>
-          <path d="M3 10h18"/>
-          <path d="M9 14h6"/>
-        </svg>
-        <span>Transactions</span>
-      </a>
-
-      <a href="marketplace.html" class="nav-item">
-        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-        <span>Marketplace</span>
-      </a>
-
-      <a href="businesscard.html" class="nav-item">
-        <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="5" width="18" height="14" rx="2"/>
-          <path d="M8 10h.01"/>
-          <path d="M16 10h.01"/>
-          <path d="M12 14h.01"/>
-          <path d="M3 7h18"/>
-        </svg>
-        <span>Business Card</span>
-      </a>
-    </nav>
-
-    <div class="controls">
-      <button id="adminBtn" class="btn btn-admin">Admin Login</button>
-      <button id="themeBtn" class="btn btn-theme">Theme</button>
-      <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
-    </div>
-  </div>
-
-  <!-- Quick Actions -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
-    <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
-    <button id="genPL" class="btn btn-ghost">Generate P&L</button>
-    <button id="downloadPL" class="btn btn-admin">Download P&L</button>
-  </div>
-
-  <a id="transactions"></a>
-
-  <div class="grid">
-    <section>
-      <div id="addPanel" class="panel">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="top">
+        <div class="brand">
+          <img src="11.png" class="logo" alt="Logo" loading="lazy" onerror="this.style.display='none'">
           <div>
-            <h2 style="font-size:17px;margin:0">Add Transaction</h2>
-            <div class="sub">Sign in as admin to add, edit or delete</div>
+            <h1>Selelo Business Park</h1>
+            <div class="sub">The BizHub</div>
           </div>
-          <div id="adminBadgeWrap"></div>
         </div>
 
-        <div class="fields">
-          <div class="field"><label>Date</label><input id="txDate" type="date"></div>
-          <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-          <div class="field"><label>Category</label><select id="txCategory"></select></div>
-          <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+        <!-- Premium Navigation -->
+        <div class="nav-icons">
+          <a href="#transactions" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 14h6"/>
+            </svg>
+            <span>Transactions</span>
+          </a>
+          <a href="marketplace.html" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span>Marketplace</span>
+          </a
+
+          <a href="businesscard.html" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span>Business Card</span>
+          </a
+            
         </div>
 
-        <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
-
-        <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-          <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
-          <button id="clearBtn" class="btn btn-ghost">Clear</button>
-          <div id="txMsg" style="color:var(--good);font-size:13px"></div>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:20px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <h3 style="margin:0;font-size:16px">Transactions</h3>
-          <div class="sub">Filter and manage</div>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-          <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-          <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-            <option value="">All Types</option><option>Income</option><option>Expense</option>
-          </select>
-          <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-            <option value="">All Categories</option>
-          </select>
-          <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-          <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-          <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-          <button id="applyFilter" class="btn btn-ghost">Apply</button>
-          <button id="resetFilter" class="btn btn-ghost">Reset</button>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-            <tbody id="txTbody"></tbody>
-          </table>
+        <div class="controls">
+          <button id="adminBtn" class="btn btn-admin">Admin Login</button>
+          <button id="themeBtn" class="btn btn-theme">Theme</button>
+          <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
         </div>
       </div>
-    </section>
 
-    <aside>
-      <div class="panel dashboard">
-        <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
-          <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
-          <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
-          <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
-        </div>
-        <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
+      <!-- Quick Actions -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
+        <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
+        <button id="genPL" class="btn btn-ghost">Generate P&L</button>
+        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
       </div>
 
-      <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
-        <h3 style="margin-bottom:12px">Charts</h3>
-        <canvas id="chartIE" height="140"></canvas>
-        <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
-        <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
+      <!-- Anchor for smooth scroll -->
+      <a id="transactions"></a>
+
+      <div class="grid">
+        <section>
+          <div id="addPanel" class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div>
+                <h2 style="font-size:17px;margin:0">Add Transaction</h2>
+                <div class="sub">Sign in as admin to add, edit or delete</div>
+              </div>
+              <div id="adminBadgeWrap"></div>
+            </div>
+
+            <div class="fields">
+              <div class="field"><label>Date</label><input id="txDate" type="date"></div>
+              <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
+              <div class="field"><label>Category</label><select id="txCategory"></select></div>
+              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+            </div>
+
+            <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
+
+            <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+              <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
+              <button id="clearBtn" class="btn btn-ghost">Clear</button>
+              <div id="txMsg" style="color:var(--good);font-size:13px"></div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:20px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 style="margin:0;font-size:16px">Transactions</h3>
+              <div class="sub">Filter and manage</div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+              <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <option value="">All Types</option><option>Income</option><option>Expense</option>
+              </select>
+              <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+                <option value="">All Categories</option>
+              </select>
+              <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
+              <button id="applyFilter" class="btn btn-ghost">Apply</button>
+              <button id="resetFilter" class="btn btn-ghost">Reset</button>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+                <tbody id="txTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <aside>
+          <div class="panel dashboard">
+            <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
+              <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
+              <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
+              <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
+            </div>
+            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
+          </div>
+
+          <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
+            <h3 style="margin-bottom:12px">Charts</h3>
+            <canvas id="chartIE" height="140"></canvas>
+            <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
+            <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
+          </div>
+
+          <div class="panel" style="margin-top:16px">
+            <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
+            <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
+            <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
+            <div style="display:flex;gap:8px">
+              <button id="showPLBtn" class="btn btn-ghost">Show</button>
+              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
+            </div>
+            <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
+          </div>
+        </aside>
       </div>
 
-      <div class="panel" style="margin-top:16px">
-        <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
-        <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
-        <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
-        <div style="display:flex;gap:8px">
-          <button id="showPLBtn" class="btn btn-ghost">Show</button>
-          <button id="downloadPLBtn" class="btn btn-admin">Download</button>
-        </div>
-        <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
-      </div>
-    </aside>
+      <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
+    </main>
   </div>
 
-  <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
-</main>  </div>
-
-  <!-- Modals remain unchanged -->
+  <!-- Modals -->
   <div id="adminModal" class="modal">
     <div class="modal-panel">
       <h3>Administrator access</h3>
@@ -390,7 +297,7 @@
     </div>
   </div>
 
-  <div id="editModal" class="modal">
+  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
       <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
@@ -416,11 +323,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script>
-    // ────────────────────────────────────────────────────────────────────────────────
-    // Your original JavaScript logic remains 100% unchanged below this line
-    // Only the HTML structure (especially navigation) was improved
-    // ────────────────────────────────────────────────────────────────────────────────
-
     document.addEventListener('DOMContentLoaded', () => {
       const firebaseConfig = {
         apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
@@ -497,17 +399,44 @@
       };
 
       const incomeCategories = [
-        'Room Rental','Parking Fees','Sales of Construction Materials','Construction Services',
-        'Co-Working Space Rental','Event Hosting','Sales','Other Income'
+        'Room Rental',
+        'Parking Fees',
+        'Sales of Construction Materials',
+        'Construction Services',
+        'Co-Working Space Rental',
+        'Event Hosting',
+        'Sales',
+        'Other Income'
       ];
       const expenseCategories = [
-        'Office rent','Repairs and maintenance','Advertising','Agency fees','Legal expenses',
-        'Stationery and office expenses','Security costs','Electricity','Office Water',
-        'Salaries and wages','Audit fees','Telephone expenses','Internet',
-        'Traveling and car expenses','Depreciation','Loan monthly installment','Other expenses',
-        'Legal fees(Term Loan)','Bank charges and interest','Car Tracker charges','Loan interest',
-        'Contractors all risk insurance','Credit protection insurance','Valuation fees',
-        'Architect fees','County approval fees','Nema fees','NCA fees',
+        'Office rent',
+        'Repairs and maintenance',
+        'Advertising',
+        'Agency fees',
+        'Legal expenses',
+        'Stationery and office expenses',
+        'Security costs',
+        'Electricity',
+        'Office Water',
+        'Salaries and wages',
+        'Audit fees',
+        'Telephone expenses',
+        'Internet',
+        'Traveling and car expenses',
+        'Depreciation',
+        'Loan monthly installment',
+        'Other expenses',
+        'Legal fees(Term Loan)',
+        'Bank charges and interest',
+        'Car Tracker charges',
+        'Loan interest',
+        'Contractors all risk insurance',
+        'Credit protection insurance',
+        'Valuation fees',
+        'Architect fees',
+        'County approval fees',
+        'Nema fees',
+        'NCA fees',
         'Consents/land control board cos'
       ];
 
@@ -540,7 +469,7 @@
       function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&', '<': '<', '>': '>', '"': '"', "'": ''' }[m])); }
+      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
       function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
@@ -778,10 +707,7 @@
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const br = {};
         arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}
-<strong>Income:</strong> KES ${inc.toLocaleString()}
-<strong>Expense:</strong> KES ${exp.toLocaleString()}
-<strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
         for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
         html += '</ul></div>';
         els.plView.innerHTML = html;
@@ -822,13 +748,7 @@
         const inv = 'INV-' + (10000 + idx);
         const issued = new Date().toLocaleDateString();
         let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
-          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}
-<strong>Issued:</strong> ${issued}
-<strong>Date:</strong> ${t.date}
-<strong>Type:</strong> ${t.type}
-<strong>Category:</strong> ${t.category}
-<strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}
-<strong>Notes:</strong> ${esc(t.notes || '-')}</div>
+          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
           <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
@@ -889,6 +809,6 @@
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
+  <script src="adminDashboard.js"></script> <!-- NEW JS FILE -->
 </body>
-</html>
-
+  </html>
