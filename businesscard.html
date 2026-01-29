@@ -24,169 +24,136 @@
             --input-focus: #06b6d4;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
 
         body {
             background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-primary);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:var(--text-primary);
         }
 
-        .container {
-            width: 100%;
-            max-width: 460px;
-            padding: 1.5rem;
-        }
+        .container { width:100%; max-width:460px; padding:1.5rem; }
 
         .card-app {
-            background: var(--card-bg);
-            border-radius: 1.5rem;
-            padding: 1.8rem;
-            box-shadow: 0 20px 50px var(--shadow-color);
-            border: 1px solid var(--border-color);
+            background:var(--card-bg);
+            border-radius:1.5rem;
+            padding:1.8rem;
+            box-shadow:0 20px 50px var(--shadow-color);
+            border:1px solid var(--border-color);
         }
 
-        .title { text-align: center; margin-bottom: 1.2rem; }
-        .title h1 { font-size: 1.5rem; font-weight: 600; }
-        .title p { font-size: 0.9rem; opacity: 0.8; }
+        .title { text-align:center; margin-bottom:1.2rem; }
+        .title h1 { font-size:1.5rem; font-weight:600; }
+        .title p { font-size:0.9rem; opacity:0.8; }
 
         .card-preview {
-            margin: 1rem 0;
-            border-radius: 1rem;
-            overflow: hidden;
-            background: #000;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            margin:1rem 0;
+            border-radius:1rem;
+            overflow:hidden;
+            background:#000;
+            cursor:pointer;
+            transition:transform 0.3s ease;
         }
-        .card-preview:hover { transform: scale(1.02); }
+        .card-preview:hover { transform:scale(1.02); }
 
         .card-content {
-            padding: 1.5rem;
-            text-align: center;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
+            padding:1.5rem;
+            text-align:center;
+            background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+            color:white;
         }
 
         .profile-pic {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            object-fit: cover;
-            border: 4px solid rgba(255,255,255,0.9);
-            display: none;
+            width:110px; height:110px; border-radius:50%;
+            margin:0 auto 1rem; object-fit:cover;
+            border:4px solid rgba(255,255,255,0.9);
+            display:none;
         }
 
         .buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 0.9rem;
-            margin: 1.2rem 0;
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+            gap:0.9rem;
+            margin:1.2rem 0;
         }
 
         .btn {
-            padding: 0.8rem;
-            border: none;
-            border-radius: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s;
+            padding:0.8rem;
+            border:none;
+            border-radius:0.8rem;
+            font-weight:500;
+            cursor:pointer;
+            transition:all 0.25s;
         }
 
-        .btn-primary    { background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white; }
-        .btn-alt        { background: linear-gradient(135deg, var(--accent-alt), var(--accent-alt-secondary)); color: #000; }
-        .btn-dark       { background: #0f172a; border: 1px solid var(--border-color); color: white; }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .btn-primary    { background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary)); color:white; }
+        .btn-alt        { background:linear-gradient(135deg,var(--accent-alt),var(--accent-alt-secondary)); color:#000; }
+        .btn-dark       { background:#0f172a; border:1px solid var(--border-color); color:white; }
 
         .form-section {
-            margin-top: 1.8rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            display: none; /* hidden until admin */
+            margin-top:1.8rem;
+            padding-top:1.5rem;
+            border-top:1px solid var(--border-color);
         }
 
-        .form-section.admin-visible { display: block; }
-
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { font-size: 0.8rem; opacity: 0.8; display: block; margin-bottom: 0.3rem; }
+        .form-group { margin-bottom:1rem; }
+        .form-group label { font-size:0.8rem; opacity:0.8; display:block; margin-bottom:0.3rem; }
         .form-group input {
-            width: 100%;
-            padding: 0.7rem;
-            border-radius: 0.6rem;
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            color: white;
+            width:100%;
+            padding:0.7rem;
+            border-radius:0.6rem;
+            border:1px solid var(--border-color);
+            background:var(--input-bg);
+            color:white;
         }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent-secondary);
-        }
+        .form-group input:focus { outline:none; border-color:var(--accent-secondary); }
 
-        .form-group input[type="file"] { padding: 0.4rem; }
-
-        .footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; opacity: 0.7; }
+        .footer { text-align:center; margin-top:1.5rem; font-size:0.8rem; opacity:0.7; }
 
         .fullscreen {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            backdrop-filter: blur(6px);
+            position:fixed; inset:0;
+            background:rgba(0,0,0,0.92);
+            display:none;
+            align-items:center; justify-content:center;
+            z-index:9999;
+            backdrop-filter:blur(6px);
         }
 
-        .fullscreen.show { display: flex; }
-        .fullscreen img { max-width: 94%; max-height: 94%; border-radius: 1rem; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        .fullscreen.show { display:flex; }
+        .fullscreen img { max-width:94%; max-height:94%; border-radius:1rem; box-shadow:0 10px 40px rgba(0,0,0,0.6); }
 
-        .close-full { position: absolute; top: 1.2rem; right: 1.5rem; font-size: 2rem; color: white; cursor: pointer; }
+        .close-full { position:absolute; top:1.2rem; right:1.5rem; font-size:2rem; color:white; cursor:pointer; }
 
+        /* Admin Password Modal */
         .admin-prompt {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
+            position:fixed; inset:0;
+            background:rgba(0,0,0,0.85);
+            display:none;
+            align-items:center; justify-content:center;
+            z-index:10000;
         }
 
         .admin-modal {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1.2rem;
-            width: 90%;
-            max-width: 420px;
-            border: 1px solid var(--border-color);
+            background:var(--card-bg);
+            padding:2rem;
+            border-radius:1.2rem;
+            width:90%; max-width:420px;
+            border:1px solid var(--border-color);
         }
 
-        .admin-modal h3 { margin-bottom: 1rem; }
+        .admin-modal h3 { margin-bottom:1rem; }
         .admin-modal input {
-            width: 100%;
-            padding: 0.9rem;
-            margin: 1rem 0;
-            border-radius: 0.6rem;
-            border: 1px solid var(--border-color);
-            background: #0f172a;
-            color: white;
+            width:100%; padding:0.9rem; margin:1rem 0;
+            border-radius:0.6rem;
+            border:1px solid var(--border-color);
+            background:#0f172a; color:white;
         }
 
-        .admin-buttons { display: flex; gap: 1rem; justify-content: flex-end; }
+        .admin-buttons { display:flex; gap:1rem; justify-content:flex-end; }
     </style>
 </head>
 <body>
@@ -216,9 +183,12 @@
             <button class="btn btn-dark" onclick="saveContact()">Save Contact</button>
         </div>
 
-        <!-- Admin-only Edit Section -->
-        <div class="form-section" id="editSection">
-            <h3>Edit Card Details (Admin Only)</h3>
+        <div class="form-section">
+            <h3>Edit Card Details</h3>
+            <p style="font-size:0.85rem; opacity:0.7; margin-bottom:1rem;">
+                (Admin password required to make changes)
+            </p>
+
             <div class="form-group">
                 <label>Profile Picture</label>
                 <input id="profilePicInput" type="file" accept="image/*">
@@ -243,44 +213,43 @@
                 <label>Location</label>
                 <input id="locationInput" type="text" value="Kitengela, Kajiado">
             </div>
-            <button class="btn btn-primary" id="saveBtn" onclick="saveDetails()">Save Changes</button>
+
+            <button class="btn btn-primary" onclick="attemptSave()">Save Changes</button>
         </div>
 
         <div class="footer">© 2026 Selelo Business Park LTD</div>
     </div>
 </div>
 
-<!-- Fullscreen -->
+<!-- Fullscreen viewer -->
 <div class="fullscreen" id="fullscreen">
     <span class="close-full" onclick="closeFullscreen()">×</span>
-    <img id="fullImage" alt="Business Card">
+    <img id="fullImage" alt="Business Card Fullscreen">
 </div>
 
-<!-- Admin Password Prompt (same style as index.html) -->
+<!-- Admin password prompt (same style & logic as index.html) -->
 <div class="admin-prompt" id="adminPrompt">
     <div class="admin-modal">
         <h3>Admin Access Required</h3>
-        <p>To edit the business card, please enter the admin password.</p>
+        <p>Enter admin password to edit or save changes.</p>
         <input id="adminPassInput" type="password" placeholder="Admin password">
         <div class="admin-buttons">
             <button class="btn btn-dark" onclick="cancelAdminPrompt()">Cancel</button>
-            <button class="btn btn-primary" onclick="checkAdminPassword()">Confirm</button>
+            <button class="btn btn-primary" onclick="verifyAdminForEdit()">Confirm</button>
         </div>
     </div>
 </div>
 
 <script>
     // ──────────────────────────────────────────────
-    // Admin protection logic (copied & adapted from index.html)
+    // Admin protection – same system as index.html
     // ──────────────────────────────────────────────
     const KEY_ADMIN = "selelo_admin_final";
-    const ADMIN_PASSWORDS = ["0742147197", "0721235005"]; // same as index.html
+    const ADMIN_PASSWORDS = ["0742147197", "0721235005"];
 
     let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
 
-    const els = {
-        editSection: document.getElementById("editSection"),
-        saveBtn: document.getElementById("saveBtn"),
+    const elements = {
         adminPrompt: document.getElementById("adminPrompt"),
         adminPassInput: document.getElementById("adminPassInput"),
         nameInput: document.getElementById("nameInput"),
@@ -299,140 +268,181 @@
         fullscreen: document.getElementById("fullscreen")
     };
 
-    function applyAdminUI() {
+    // ──────────────────────────────────────────────
+    // Protect editing actions
+    // ──────────────────────────────────────────────
+
+    function protectEditAction(callback) {
         if (isAdmin) {
-            els.editSection.classList.add("admin-visible");
-            els.saveBtn.disabled = false;
-        } else {
-            els.editSection.classList.remove("admin-visible");
-            els.saveBtn.disabled = true;
+            callback();
+            return;
         }
+        // Show password prompt
+        elements.adminPrompt.style.display = "flex";
+        elements.adminPassInput.value = "";
+        elements.adminPassInput.focus();
+
+        // Remember what we wanted to do after successful login
+        window.pendingEditAction = callback;
     }
 
-    function showAdminPrompt() {
-        if (isAdmin) return;
-        els.adminPrompt.style.display = "flex";
-        els.adminPassInput.focus();
-    }
-
-    function cancelAdminPrompt() {
-        els.adminPrompt.style.display = "none";
-        els.adminPassInput.value = "";
-    }
-
-    function checkAdminPassword() {
-        const pass = (els.adminPassInput.value || "").trim();
+    function verifyAdminForEdit() {
+        const pass = (elements.adminPassInput.value || "").trim();
         if (ADMIN_PASSWORDS.includes(pass)) {
             localStorage.setItem(KEY_ADMIN, "true");
             isAdmin = true;
-            applyAdminUI();
-            cancelAdminPrompt();
-            alert("Admin access granted. You can now edit the card.");
+            elements.adminPrompt.style.display = "none";
+
+            // Run the pending action if any
+            if (window.pendingEditAction) {
+                window.pendingEditAction();
+                window.pendingEditAction = null;
+            }
+
+            alert("Admin access granted. You can now edit and save.");
         } else {
             alert("Incorrect password.");
         }
     }
 
-    // Auto-check admin on load
-    applyAdminUI();
-
-    // If user tries to interact with edit fields without admin → prompt
-    els.nameInput.addEventListener('focus', () => { if (!isAdmin) showAdminPrompt(); });
-    els.roleInput.addEventListener('focus', () => { if (!isAdmin) showAdminPrompt(); });
-    // ... you can add to other inputs if desired
-
-    // Live preview update (always allowed)
-    function updateCard() {
-        els.cardName.textContent   = els.nameInput.value || "Name";
-        els.cardRole.textContent   = els.roleInput.value || "Position";
-        els.cardPhone.textContent  = els.phoneInput.value || "Phone";
-        els.cardEmail.textContent  = els.emailInput.value || "Email";
-        els.cardLocation.textContent = els.locationInput.value || "Location";
+    function cancelAdminPrompt() {
+        elements.adminPrompt.style.display = "none";
+        window.pendingEditAction = null;
     }
 
-    [els.nameInput, els.roleInput, els.phoneInput, els.emailInput, els.locationInput]
-        .forEach(el => el.addEventListener('input', updateCard));
+    // ──────────────────────────────────────────────
+    // Input protection – trigger on focus / change attempt
+    // ──────────────────────────────────────────────
 
-    // Profile picture upload (only if admin)
-    els.profilePicInput.addEventListener('change', e => {
-        if (!isAdmin) { showAdminPrompt(); return; }
+    function blockIfNotAdmin(e) {
+        if (!isAdmin) {
+            e.preventDefault();
+            e.target.blur();
+            protectEditAction(() => {
+                // Re-focus after successful auth (optional UX)
+                e.target.focus();
+            });
+        }
+    }
+
+    // Protect typing / changing values
+    ['nameInput','roleInput','phoneInput','emailInput','locationInput'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('focus', blockIfNotAdmin);
+        el.addEventListener('keydown', e => {
+            if (!isAdmin && e.key !== "Tab" && e.key !== "Shift") {
+                blockIfNotAdmin(e);
+            }
+        });
+    });
+
+    // Protect file upload
+    elements.profilePicInput.addEventListener('click', e => {
+        if (!isAdmin) {
+            e.preventDefault();
+            protectEditAction(() => elements.profilePicInput.click());
+        }
+    });
+
+    // Protect save button
+    function attemptSave() {
+        protectEditAction(() => {
+            const data = {
+                name: elements.nameInput.value,
+                role: elements.roleInput.value,
+                phone: elements.phoneInput.value,
+                email: elements.emailInput.value,
+                location: elements.locationInput.value
+            };
+            localStorage.setItem('selelocard', JSON.stringify(data));
+            alert("Changes saved successfully.");
+        });
+    }
+
+    // ──────────────────────────────────────────────
+    // Live preview – always allowed (viewing is public)
+    // ──────────────────────────────────────────────
+
+    function updatePreview() {
+        elements.cardName.textContent   = elements.nameInput.value.trim()   || "Name";
+        elements.cardRole.textContent   = elements.roleInput.value.trim()   || "Position";
+        elements.cardPhone.textContent  = elements.phoneInput.value.trim()  || "Phone";
+        elements.cardEmail.textContent  = elements.emailInput.value.trim()  || "Email";
+        elements.cardLocation.textContent = elements.locationInput.value.trim() || "Location";
+    }
+
+    document.querySelectorAll('#nameInput, #roleInput, #phoneInput, #emailInput, #locationInput')
+        .forEach(input => input.addEventListener('input', updatePreview));
+
+    // Profile picture preview
+    elements.profilePicInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = ev => {
-            els.profilePic.src = ev.target.result;
-            els.profilePic.style.display = "block";
+            elements.profilePic.src = ev.target.result;
+            elements.profilePic.style.display = "block";
             localStorage.setItem('seleloProfilePic', ev.target.result);
         };
         reader.readAsDataURL(file);
     });
 
-    function saveDetails() {
-        if (!isAdmin) { showAdminPrompt(); return; }
+    // ──────────────────────────────────────────────
+    // Load saved values on page load (public)
+    // ──────────────────────────────────────────────
 
-        const data = {
-            name: els.nameInput.value,
-            role: els.roleInput.value,
-            phone: els.phoneInput.value,
-            email: els.emailInput.value,
-            location: els.locationInput.value
-        };
-
-        localStorage.setItem('selelocard', JSON.stringify(data));
-        alert("Card details saved successfully");
-    }
-
-    // Load saved data (view always works)
-    window.onload = () => {
+    window.addEventListener('load', () => {
         const saved = localStorage.getItem('selelocard');
         if (saved) {
             const d = JSON.parse(saved);
-            els.nameInput.value    = d.name;
-            els.roleInput.value    = d.role;
-            els.phoneInput.value   = d.phone;
-            els.emailInput.value   = d.email;
-            els.locationInput.value = d.location;
-            updateCard();
+            elements.nameInput.value    = d.name    || "";
+            elements.roleInput.value    = d.role    || "";
+            elements.phoneInput.value   = d.phone   || "";
+            elements.emailInput.value   = d.email   || "";
+            elements.locationInput.value = d.location || "";
+            updatePreview();
         }
 
         const savedPic = localStorage.getItem('seleloProfilePic');
         if (savedPic) {
-            els.profilePic.src = savedPic;
-            els.profilePic.style.display = "block";
+            elements.profilePic.src = savedPic;
+            elements.profilePic.style.display = "block";
         }
-    };
+    });
 
     // ──────────────────────────────────────────────
-    // Rest of your original functions (unchanged)
+    // Public features (no admin required)
     // ──────────────────────────────────────────────
 
     function openFullscreen() {
         html2canvas(document.getElementById("cardPreview")).then(canvas => {
-            els.fullImage.src = canvas.toDataURL("image/png");
-            els.fullscreen.classList.add("show");
+            elements.fullImage.src = canvas.toDataURL("image/png");
+            elements.fullscreen.classList.add("show");
         });
     }
 
     function closeFullscreen() {
-        els.fullscreen.classList.remove("show");
+        elements.fullscreen.classList.remove("show");
     }
 
     function shareWhatsApp() {
-        const text = `📇 *Selelo Business Card*\n${els.nameInput.value} - ${els.roleInput.value}\n📞 ${els.phoneInput.value}\n✉️ ${els.emailInput.value}\n📍 ${els.locationInput.value}`;
+        const text = `📇 *Selelo Business Card*\n${elements.nameInput.value} - ${elements.roleInput.value}\n📞 ${elements.phoneInput.value}\n✉️ ${elements.emailInput.value}\n📍 ${elements.locationInput.value}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function saveContact() {
-        const name = els.nameInput.value;
-        const phone = els.phoneInput.value.split('/')[0].trim();
-        const email = els.emailInput.value;
+        const name = elements.nameInput.value.trim();
+        const phone = (elements.phoneInput.value || "").split('/')[0].trim();
+        const email = elements.emailInput.value.trim();
         const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:\( {name}\nTEL: \){phone}\nEMAIL:${email}\nORG:Selelo Business Park LTD\nEND:VCARD`;
-        const blob = new Blob([vcard], {type: 'text/vcard'});
+        const blob = new Blob([vcard], { type: 'text/vcard' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${name}.vcf`;
+        a.download = `${name || 'contact'}.vcf`;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
 
@@ -445,7 +455,7 @@
         });
     }
 
-    // Optional: Esc to close fullscreen
+    // Close fullscreen with Esc
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape') closeFullscreen();
     });
