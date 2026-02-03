@@ -11,10 +11,9 @@
 
 <style>
 
-/* ================= RESET ================= */
-*{box-sizing:border-box}
+/* ============ GLOBAL ============ */
 
-/* ================= BODY ================= */
+*{box-sizing:border-box}
 
 body{
 margin:0;
@@ -27,7 +26,7 @@ background:radial-gradient(circle at top,#0f172a,#020617);
 color:white;
 }
 
-/* ================= CONTAINER ================= */
+/* ============ CONTAINER ============ */
 
 .container{
 width:100%;
@@ -35,7 +34,7 @@ max-width:480px;
 padding:20px;
 }
 
-/* ================= APP ================= */
+/* ============ APP ============ */
 
 .card-app{
 background:rgba(15,23,42,.95);
@@ -46,24 +45,17 @@ box-shadow:0 0 40px rgba(0,255,255,.15);
 backdrop-filter:blur(12px);
 }
 
-/* ================= HEADER ================= */
+/* ============ HEADER ============ */
 
 .title{
 text-align:center;
-margin-bottom:20px;
+margin-bottom:15px;
 }
 
-.title h1{
-margin:0;
-font-size:22px;
-}
+.title h1{margin:0;font-size:22px}
+.title p{opacity:.7;font-size:13px}
 
-.title p{
-opacity:.7;
-font-size:13px;
-}
-
-/* ================= ADMIN BAR ================= */
+/* ============ ADMIN BAR ============ */
 
 .admin-bar{
 display:flex;
@@ -80,17 +72,12 @@ font-size:11px;
 display:none;
 }
 
-.back-btn{
-font-size:12px;
-cursor:pointer;
-opacity:.8;
+.admin-controls{
+display:flex;
+gap:8px;
 }
 
-.back-btn:hover{
-opacity:1;
-}
-
-/* ================= CARD ================= */
+/* ============ CARD ============ */
 
 .card-preview{
 display:flex;
@@ -106,7 +93,6 @@ background:white;
 border-radius:15px;
 display:flex;
 overflow:hidden;
-box-shadow:0 5px 25px rgba(0,0,0,.4);
 }
 
 /* Left */
@@ -117,28 +103,14 @@ padding:20px;
 color:#020617;
 }
 
-.card-left h1{
-margin:0;
-font-size:20px;
-}
-
-.card-left h3{
-margin:4px 0;
-font-size:14px;
-color:#555;
-}
+.card-left h1{margin:0;font-size:20px}
+.card-left h3{margin:4px 0;font-size:14px;color:#555}
 
 .line{
-width:40px;
-height:3px;
-background:#f97316;
-margin:8px 0;
+width:40px;height:3px;background:#f97316;margin:8px 0;
 }
 
-.info p{
-font-size:12px;
-margin:4px 0;
-}
+.info p{font-size:12px;margin:4px 0}
 
 /* Right */
 
@@ -148,36 +120,13 @@ background:#f8fafc;
 position:relative;
 }
 
-.circle{
-position:absolute;
-border-radius:50%;
-}
+.circle{position:absolute;border-radius:50%}
 
-.big{
-width:200px;
-height:200px;
-background:#fde047;
-right:-80px;
-top:-30px;
-}
+.big{width:200px;height:200px;background:#fde047;right:-80px;top:-30px}
+.mid{width:150px;height:150px;background:#fb7185;right:-40px;top:20px}
+.small{width:90px;height:90px;background:#ef4444;right:-10px;top:70px}
 
-.mid{
-width:150px;
-height:150px;
-background:#fb7185;
-right:-40px;
-top:20px;
-}
-
-.small{
-width:90px;
-height:90px;
-background:#ef4444;
-right:-10px;
-top:70px;
-}
-
-/* ================= BUTTONS ================= */
+/* ============ BUTTONS ============ */
 
 .buttons{
 display:grid;
@@ -196,44 +145,24 @@ color:white;
 transition:.25s;
 }
 
-.btn:active{
-transform:scale(.96);
-}
+.btn:active{transform:scale(.96)}
 
-.btn-primary{
-background:linear-gradient(135deg,#2563eb,#06b6d4);
-}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#06b6d4)}
+.btn-alt{background:linear-gradient(135deg,#fb923c,#fde047);color:black}
+.btn-dark{background:#020617;border:1px solid rgba(255,255,255,.15)}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626)}
 
-.btn-alt{
-background:linear-gradient(135deg,#fb923c,#fde047);
-color:black;
-}
-
-.btn-dark{
-background:#020617;
-border:1px solid rgba(255,255,255,.15);
-}
-
-.btn-danger{
-background:linear-gradient(135deg,#ef4444,#dc2626);
-}
-
-/* ================= FORM ================= */
+/* ============ FORM ============ */
 
 .form-section{
-margin-top:25px;
+margin-top:20px;
 border-top:1px solid rgba(255,255,255,.1);
 padding-top:20px;
 }
 
-.form-group{
-margin-bottom:12px;
-}
+.form-group{margin-bottom:12px}
 
-label{
-font-size:12px;
-opacity:.7;
-}
+label{font-size:12px;opacity:.7}
 
 input{
 width:100%;
@@ -244,12 +173,12 @@ background:#020617;
 color:white;
 }
 
-input:focus{
-outline:none;
-border-color:#06b6d4;
+input:disabled{
+opacity:.5;
+cursor:not-allowed;
 }
 
-/* ================= FULLSCREEN ================= */
+/* ============ FULLSCREEN ============ */
 
 .fullscreen{
 position:fixed;
@@ -261,14 +190,9 @@ justify-content:center;
 z-index:9999;
 }
 
-.fullscreen.show{
-display:flex;
-}
+.fullscreen.show{display:flex}
 
-.fullscreen img{
-max-width:95%;
-border-radius:20px;
-}
+.fullscreen img{max-width:95%;border-radius:20px}
 
 .close-full{
 position:absolute;
@@ -278,7 +202,7 @@ font-size:28px;
 cursor:pointer;
 }
 
-/* ================= ADMIN MODAL ================= */
+/* ============ ADMIN MODAL ============ */
 
 .admin-modal{
 position:fixed;
@@ -295,15 +219,11 @@ background:#020617;
 padding:25px;
 border-radius:15px;
 width:90%;
-max-width:350px;
+max-width:340px;
 border:1px solid rgba(255,255,255,.1);
 }
 
-.admin-box h3{
-margin-top:0;
-}
-
-/* ================= FOOTER ================= */
+/* ============ FOOTER ============ */
 
 .footer{
 text-align:center;
@@ -332,9 +252,17 @@ font-size:12px;
 
 <div class="admin-bar">
 
-<span class="back-btn" onclick="goBack()">⬅ Back</span>
-
 <span class="badge" id="adminBadge">ADMIN</span>
+
+<div class="admin-controls">
+
+<button class="btn btn-dark" id="loginBtn" onclick="openAdmin()">Admin Login</button>
+
+<button class="btn btn-danger" id="logoutBtn" onclick="logoutAdmin()" style="display:none">
+Logout
+</button>
+
+</div>
 
 </div>
 
@@ -378,11 +306,8 @@ font-size:12px;
 <div class="buttons">
 
 <button class="btn btn-primary" onclick="openFullscreen()">Fullscreen</button>
-
 <button class="btn btn-primary" onclick="downloadCard()">Download</button>
-
 <button class="btn btn-alt" onclick="shareWhatsApp()">WhatsApp</button>
-
 <button class="btn btn-dark" onclick="saveContact()">Save Contact</button>
 
 </div>
@@ -418,21 +343,11 @@ font-size:12px;
 <input id="locationInput">
 </div>
 
-<div style="display:flex;gap:10px;">
-
 <button class="btn btn-primary" onclick="saveData()">Save</button>
 
-<button class="btn btn-danger" onclick="logoutAdmin()">Sign Out</button>
-
 </div>
 
-</div>
-
-<div class="footer">
-
-© 2026 Selelo Business Park LTD
-
-</div>
+<div class="footer">© 2026 Selelo Business Park LTD</div>
 
 </div>
 
@@ -443,12 +358,11 @@ font-size:12px;
 <div class="fullscreen" id="fullscreen">
 
 <span class="close-full" onclick="closeFullscreen()">×</span>
-
 <img id="fullImage">
 
 </div>
 
-<!-- ADMIN LOGIN -->
+<!-- ADMIN MODAL -->
 
 <div class="admin-modal" id="adminModal">
 
@@ -456,14 +370,11 @@ font-size:12px;
 
 <h3>Admin Login</h3>
 
-<p>Enter password to edit</p>
-
-<input id="adminPass" type="password">
+<input id="adminPass" type="password" placeholder="Enter password">
 
 <br><br>
 
 <button class="btn btn-primary" onclick="loginAdmin()">Login</button>
-
 <button class="btn btn-dark" onclick="closeAdmin()">Cancel</button>
 
 </div>
@@ -472,15 +383,15 @@ font-size:12px;
 
 <script>
 
-/* ================= CONFIG ================= */
+/* ============ CONFIG ============ */
 
 const ADMIN_PASS="0742147197";
 
-/* ================= STATE ================= */
+/* ============ STATE ============ */
 
 let isAdmin=false;
 
-/* ================= ELEMENTS ================= */
+/* ============ ELEMENTS ============ */
 
 const el={
 
@@ -502,35 +413,24 @@ fullImage:document.getElementById("fullImage"),
 adminModal:document.getElementById("adminModal"),
 adminBadge:document.getElementById("adminBadge"),
 
+loginBtn:document.getElementById("loginBtn"),
+logoutBtn:document.getElementById("logoutBtn"),
+
 adminPass:document.getElementById("adminPass")
 
 };
 
-/* ================= INIT ================= */
+/* ============ INIT ============ */
 
 window.onload=()=>{
 
-const saved=localStorage.getItem("cardData");
-
-if(saved){
-
-const d=JSON.parse(saved);
-
-el.nameInput.value=d.name;
-el.roleInput.value=d.role;
-el.phoneInput.value=d.phone;
-el.emailInput.value=d.email;
-el.locationInput.value=d.location;
-
-updateCard();
-
-}
-
+loadData();
 checkAdmin();
+updateCard();
 
 };
 
-/* ================= ADMIN ================= */
+/* ============ ADMIN ============ */
 
 function checkAdmin(){
 
@@ -538,15 +438,39 @@ isAdmin=localStorage.getItem("admin")==="true";
 
 el.adminBadge.style.display=isAdmin?"inline":"none";
 
+el.loginBtn.style.display=isAdmin?"none":"inline";
+
+el.logoutBtn.style.display=isAdmin?"inline":"none";
+
 lockInputs(!isAdmin);
 
 }
 
 function lockInputs(lock){
 
-document.querySelectorAll("input").forEach(i=>{
-i.disabled=lock;
+Object.values(el).forEach(v=>{
+
+if(v instanceof HTMLInputElement && v!==el.adminPass){
+
+v.disabled=lock;
+
+}
+
 });
+
+}
+
+function openAdmin(){
+
+el.adminModal.style.display="flex";
+el.adminPass.value="";
+el.adminPass.focus();
+
+}
+
+function closeAdmin(){
+
+el.adminModal.style.display="none";
 
 }
 
@@ -558,15 +482,15 @@ localStorage.setItem("admin","true");
 
 isAdmin=true;
 
-el.adminModal.style.display="none";
+closeAdmin();
 
 checkAdmin();
 
-alert("Admin Activated");
+alert("Admin Logged In");
 
 }else{
 
-alert("Wrong Password");
+alert("Wrong password");
 
 }
 
@@ -574,7 +498,7 @@ alert("Wrong Password");
 
 function logoutAdmin(){
 
-if(confirm("Sign out admin?")){
+if(confirm("Logout admin?")){
 
 localStorage.removeItem("admin");
 
@@ -586,47 +510,23 @@ checkAdmin();
 
 }
 
-function closeAdmin(){
+/* ============ DATA ================= */
 
-el.adminModal.style.display="none";
+function loadData(){
 
-}
+const d=localStorage.getItem("cardData");
 
-/* Open modal when trying to edit */
+if(!d) return;
 
-document.querySelectorAll("input").forEach(i=>{
+const data=JSON.parse(d);
 
-i.addEventListener("focus",()=>{
-
-if(!isAdmin){
-
-el.adminModal.style.display="flex";
-
-i.blur();
+el.nameInput.value=data.name||"";
+el.roleInput.value=data.role||"";
+el.phoneInput.value=data.phone||"";
+el.emailInput.value=data.email||"";
+el.locationInput.value=data.location||"";
 
 }
-
-});
-
-});
-
-/* ================= UPDATE CARD ================= */
-
-function updateCard(){
-
-el.cardName.textContent=el.nameInput.value;
-el.cardRole.textContent=el.roleInput.value;
-el.cardPhone.textContent=el.phoneInput.value;
-el.cardEmail.textContent=el.emailInput.value;
-el.cardLocation.textContent=el.locationInput.value;
-
-}
-
-document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input",updateCard);
-});
-
-/* ================= SAVE ================= */
 
 function saveData(){
 
@@ -648,29 +548,41 @@ location:el.locationInput.value
 
 localStorage.setItem("cardData",JSON.stringify(data));
 
-alert("Saved Successfully");
+alert("Saved");
 
 }
 
-/* ================= NAV ================= */
+/* ============ UPDATE ================= */
 
-function goBack(){
+function updateCard(){
 
-history.back();
+el.cardName.textContent=el.nameInput.value||"Name";
+el.cardRole.textContent=el.roleInput.value||"Position";
+el.cardPhone.textContent=el.phoneInput.value||"Phone";
+el.cardEmail.textContent=el.emailInput.value||"Email";
+el.cardLocation.textContent=el.locationInput.value||"Location";
 
 }
 
-/* ================= FULLSCREEN ================= */
+document.querySelectorAll("input").forEach(i=>{
+
+if(i!==el.adminPass){
+
+i.addEventListener("input",updateCard);
+
+}
+
+});
+
+/* ============ FULLSCREEN ================= */
 
 function openFullscreen(){
 
 html2canvas(document.getElementById("realCard"),{
-scale:2,
-useCORS:true
+scale:2,useCORS:true
 }).then(c=>{
 
 el.fullImage.src=c.toDataURL();
-
 el.fullscreen.classList.add("show");
 
 });
@@ -683,46 +595,44 @@ el.fullscreen.classList.remove("show");
 
 }
 
-/* ================= DOWNLOAD ================= */
+/* ============ DOWNLOAD ================= */
 
 function downloadCard(){
 
 html2canvas(document.getElementById("realCard"),{
-scale:2,
-useCORS:true
+scale:2,useCORS:true
 }).then(c=>{
 
 const a=document.createElement("a");
 
 a.href=c.toDataURL();
 a.download="selelo-card.png";
-
 a.click();
 
 });
 
 }
 
-/* ================= SHARE ================= */
+/* ============ SHARE ================= */
 
 function shareWhatsApp(){
 
-const text=
+const t=
 `📇 ${el.nameInput.value}
 ${el.roleInput.value}
 📞 ${el.phoneInput.value}
 ✉️ ${el.emailInput.value}
 📍 ${el.locationInput.value}`;
 
-window.open("https://wa.me/?text="+encodeURIComponent(text));
+window.open("https://wa.me/?text="+encodeURIComponent(t));
 
 }
 
-/* ================= CONTACT ================= */
+/* ============ CONTACT ================= */
 
 function saveContact(){
 
-const vcard=
+const v=
 `BEGIN:VCARD
 VERSION:3.0
 FN:${el.nameInput.value}
@@ -730,13 +640,12 @@ TEL:${el.phoneInput.value}
 EMAIL:${el.emailInput.value}
 END:VCARD`;
 
-const blob=new Blob([vcard]);
+const blob=new Blob([v]);
 
 const a=document.createElement("a");
 
 a.href=URL.createObjectURL(blob);
 a.download="contact.vcf";
-
 a.click();
 
 }
