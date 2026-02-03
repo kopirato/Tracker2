@@ -100,6 +100,10 @@
       background: transparent; border: 1px solid rgba(255,255,255,0.15); padding: 10px 12px;
       border-radius: 10px; color: var(--text); font-size: 13px; transition: var(--transition);
     }
+    select option {
+      background: var(--bg);
+      color: var(--text);
+    }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 2px rgba(226,114,91,0.2); }
 
     .table-wrap { margin-top: 10px; overflow: auto; max-height: 50vh; border-radius: 10px; }
@@ -242,6 +246,13 @@
               <input id="fMin" type="number" placeholder="Min" style="width:80px;padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);font-size:12px">
               <input id="fMax" type="number" placeholder="Max" style="width:80px;padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);font-size:12px">
               <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);font-size:12px">
+              <select id="fSort" style="padding:8px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);font-size:12px">
+                <option value="">Sort By</option>
+                <option value="date_asc">Date Asc</option>
+                <option value="date_desc">Date Desc</option>
+                <option value="amount_asc">Amount Asc</option>
+                <option value="amount_desc">Amount Desc</option>
+              </select>
               <button id="applyFilter" class="btn btn-ghost" style="padding:8px 12px">Apply</button>
               <button id="resetFilter" class="btn btn-ghost" style="padding:8px 12px">Reset</button>
             </div>
@@ -373,6 +384,7 @@
         fMin: document.getElementById('fMin'),
         fMax: document.getElementById('fMax'),
         fNotes: document.getElementById('fNotes'),
+        fSort: document.getElementById('fSort'),
         applyFilter: document.getElementById('applyFilter'),
         resetFilter: document.getElementById('resetFilter'),
         statIncome: document.getElementById('statIncome'),
@@ -610,7 +622,7 @@
 
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => {
-        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
+        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; els.fSort.value = '';
         renderTransactions();
       });
 
@@ -625,10 +637,21 @@
         return true;
       }
 
+      function sortTransactions(arr) {
+        const sort = els.fSort.value;
+        if (sort === 'date_asc') return arr.sort((a, b) => new Date(a.date) - new Date(b.date));
+        if (sort === 'date_desc') return arr.sort((a, b) => new Date(b.date) - new Date(a.date));
+        if (sort === 'amount_asc') return arr.sort((a, b) => a.amount - b.amount);
+        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - a.amount);
+        return arr;
+      }
+
       function renderTransactions() {
         els.txTbody.innerHTML = '';
         let inc = 0, exp = 0;
-        transactions.filter(passesFilters).forEach(t => {
+        let filtered = transactions.filter(passesFilters);
+        filtered = sortTransactions(filtered);
+        filtered.forEach(t => {
           const tr = document.createElement('tr');
           const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
           if (isAdmin) {
@@ -650,7 +673,14 @@
         const b = e.target.closest('button[data-act]');
         if (!b) return;
         const act = b.dataset.act, key = b.dataset.key;
-        if (act === 'edit') openEdit(key);
+        if (act === 'edit') {
+          openEdit(key);
+          const editModal = els.editModal;
+          const rect = b.getBoundingClientRect();
+          editModal.style.top = `${rect.top + window.scrollY}px`;
+          editModal.style.left = `${rect.left + window.scrollX}px`;
+          editModal.style.transform = 'none';
+        }
         if (act === 'del') deleteTx(key);
         if (act === 'rcpt') openReceipt(key);
       });
@@ -749,7 +779,6 @@
         els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
-      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
 
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
