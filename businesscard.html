@@ -4,232 +4,134 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Selelo Digital Business Card</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<title>Smart Admin Editor</title>
 
 <style>
 
-/* ============ GLOBAL ============ */
-
-*{box-sizing:border-box}
+/* GENERAL */
 
 body{
 margin:0;
-font-family:Poppins,sans-serif;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:radial-gradient(circle at top,#0f172a,#020617);
-color:white;
+font-family:Arial,Helvetica,sans-serif;
+background:#f3f4f6;
 }
 
-/* ============ CONTAINER ============ */
-
-.container{
-width:100%;
-max-width:480px;
-padding:20px;
-}
-
-/* ============ APP ============ */
-
-.card-app{
-background:rgba(15,23,42,.95);
-border-radius:25px;
-padding:25px;
-border:1px solid rgba(255,255,255,.1);
-box-shadow:0 0 40px rgba(0,255,255,.15);
-backdrop-filter:blur(12px);
-}
-
-/* ============ HEADER ============ */
-
-.title{
-text-align:center;
-margin-bottom:15px;
-}
-
-.title h1{margin:0;font-size:22px}
-.title p{opacity:.7;font-size:13px}
-
-/* ============ ADMIN BAR ============ */
+/* ADMIN BAR */
 
 .admin-bar{
+background:#111;
+color:#fff;
+padding:10px 15px;
 display:flex;
-justify-content:space-between;
 align-items:center;
-margin-bottom:15px;
+justify-content:space-between;
+}
+
+.back-btn{
+cursor:pointer;
+opacity:.8;
+font-size:14px;
+}
+
+.back-btn:hover{
+opacity:1;
+text-decoration:underline;
 }
 
 .badge{
-padding:5px 12px;
-border-radius:20px;
-background:linear-gradient(135deg,#2563eb,#06b6d4);
-font-size:11px;
-display:none;
-}
-
-.admin-controls{
-display:flex;
-gap:8px;
-}
-
-/* ============ CARD ============ */
-
-.card-preview{
-display:flex;
-justify-content:center;
-margin:15px 0;
-cursor:pointer;
-}
-
-#realCard{
-width:380px;
-height:220px;
-background:white;
-border-radius:15px;
-display:flex;
-overflow:hidden;
-}
-
-/* Left */
-
-.card-left{
-width:60%;
-padding:20px;
-color:#020617;
-}
-
-.card-left h1{margin:0;font-size:20px}
-.card-left h3{margin:4px 0;font-size:14px;color:#555}
-
-.line{
-width:40px;height:3px;background:#f97316;margin:8px 0;
-}
-
-.info p{font-size:12px;margin:4px 0}
-
-/* Right */
-
-.card-right{
-width:40%;
-background:#f8fafc;
-position:relative;
-}
-
-.circle{position:absolute;border-radius:50%}
-
-.big{width:200px;height:200px;background:#fde047;right:-80px;top:-30px}
-.mid{width:150px;height:150px;background:#fb7185;right:-40px;top:20px}
-.small{width:90px;height:90px;background:#ef4444;right:-10px;top:70px}
-
-/* ============ BUTTONS ============ */
-
-.buttons{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-margin:15px 0;
-}
-
-.btn{
-padding:12px;
-border:none;
-border-radius:14px;
-font-weight:600;
-cursor:pointer;
-color:white;
-transition:.25s;
-}
-
-.btn:active{transform:scale(.96)}
-
-.btn-primary{background:linear-gradient(135deg,#2563eb,#06b6d4)}
-.btn-alt{background:linear-gradient(135deg,#fb923c,#fde047);color:black}
-.btn-dark{background:#020617;border:1px solid rgba(255,255,255,.15)}
-.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626)}
-
-/* ============ FORM ============ */
-
-.form-section{
-margin-top:20px;
-border-top:1px solid rgba(255,255,255,.1);
-padding-top:20px;
-}
-
-.form-group{margin-bottom:12px}
-
-label{font-size:12px;opacity:.7}
-
-input{
-width:100%;
-padding:10px;
-border-radius:10px;
-border:1px solid rgba(255,255,255,.15);
-background:#020617;
-color:white;
-}
-
-input:disabled{
-opacity:.5;
-cursor:not-allowed;
-}
-
-/* ============ FULLSCREEN ============ */
-
-.fullscreen{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.9);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:9999;
-}
-
-.fullscreen.show{display:flex}
-
-.fullscreen img{max-width:95%;border-radius:20px}
-
-.close-full{
-position:absolute;
-top:20px;
-right:25px;
-font-size:28px;
-cursor:pointer;
-}
-
-/* ============ ADMIN MODAL ============ */
-
-.admin-modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.85);
-display:none;
-align-items:center;
-justify-content:center;
-z-index:10000;
-}
-
-.admin-box{
-background:#020617;
-padding:25px;
-border-radius:15px;
-width:90%;
-max-width:340px;
-border:1px solid rgba(255,255,255,.1);
-}
-
-/* ============ FOOTER ============ */
-
-.footer{
-text-align:center;
-margin-top:15px;
-opacity:.6;
+background:#0d6efd;
+padding:4px 8px;
+border-radius:4px;
 font-size:12px;
+}
+
+.admin-controls button{
+margin-left:6px;
+padding:6px 10px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+}
+
+.btn-dark{
+background:#333;
+color:#fff;
+}
+
+.btn-danger{
+background:#dc3545;
+color:#fff;
+}
+
+/* CONTENT */
+
+.container{
+max-width:900px;
+margin:30px auto;
+background:#fff;
+padding:25px;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+h1{
+text-align:center;
+}
+
+.editable{
+border:1px dashed transparent;
+padding:6px;
+}
+
+.editable[contenteditable="true"]{
+border-color:#0d6efd;
+background:#eef4ff;
+}
+
+/* MODAL */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:1000;
+}
+
+.modal-box{
+background:#fff;
+padding:25px;
+border-radius:8px;
+width:300px;
+text-align:center;
+}
+
+.modal-box input{
+width:100%;
+padding:8px;
+margin:10px 0;
+}
+
+.modal-box button{
+padding:8px 15px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+}
+
+.btn-primary{
+background:#0d6efd;
+color:#fff;
+}
+
+.btn-secondary{
+background:#6c757d;
+color:#fff;
 }
 
 </style>
@@ -237,28 +139,21 @@ font-size:12px;
 
 <body>
 
-<div class="container">
-
-<div class="card-app">
-
-<!-- HEADER -->
-
-<div class="title">
-<h1>Selelo Business Card</h1>
-<p>Digital Professional Identity</p>
-</div>
-
 <!-- ADMIN BAR -->
 
 <div class="admin-bar">
 
-<span class="badge" id="adminBadge">ADMIN</span>
+<span class="back-btn" onclick="goBack()">⬅ Back</span>
+
+<span class="badge" id="adminBadge">GUEST</span>
 
 <div class="admin-controls">
 
-<button class="btn btn-dark" id="loginBtn" onclick="openAdmin()">Admin Login</button>
+<button class="btn-dark" id="loginBtn" onclick="openLogin()">
+Admin Login
+</button>
 
-<button class="btn btn-danger" id="logoutBtn" onclick="logoutAdmin()" style="display:none">
+<button class="btn-danger" id="logoutBtn" onclick="logout()" style="display:none">
 Logout
 </button>
 
@@ -266,227 +161,88 @@ Logout
 
 </div>
 
-<!-- CARD -->
+<!-- MAIN CONTENT -->
 
-<div class="card-preview" onclick="openFullscreen()">
+<div class="container">
 
-<div id="realCard">
+<h1 class="editable" id="title">My Smart Website</h1>
 
-<div class="card-left">
+<p class="editable" id="para1">
+Welcome to this system. Login as admin to edit this content.
+</p>
 
-<h1 id="cardName">Joshua Tapatayia</h1>
-<h3 id="cardRole">Managing Director</h3>
-
-<div class="line"></div>
-
-<div class="info">
-
-<p>📞 <span id="cardPhone">0717650981</span></p>
-<p>✉️ <span id="cardEmail">Selelobizpark@gmail.com</span></p>
-<p>📍 <span id="cardLocation">Kitengela</span></p>
+<p class="editable" id="para2">
+This website supports editing, saving and restoring content.
+</p>
 
 </div>
 
-</div>
+<!-- LOGIN MODAL -->
 
-<div class="card-right">
+<div class="modal" id="loginModal">
 
-<div class="circle big"></div>
-<div class="circle mid"></div>
-<div class="circle small"></div>
-
-</div>
-
-</div>
-
-</div>
-
-<!-- BUTTONS -->
-
-<div class="buttons">
-
-<button class="btn btn-primary" onclick="openFullscreen()">Fullscreen</button>
-<button class="btn btn-primary" onclick="downloadCard()">Download</button>
-<button class="btn btn-alt" onclick="shareWhatsApp()">WhatsApp</button>
-<button class="btn btn-dark" onclick="saveContact()">Save Contact</button>
-
-</div>
-
-<!-- FORM -->
-
-<div class="form-section">
-
-<h3>Edit Details (Admin Only)</h3>
-
-<div class="form-group">
-<label>Name</label>
-<input id="nameInput">
-</div>
-
-<div class="form-group">
-<label>Position</label>
-<input id="roleInput">
-</div>
-
-<div class="form-group">
-<label>Phone</label>
-<input id="phoneInput">
-</div>
-
-<div class="form-group">
-<label>Email</label>
-<input id="emailInput">
-</div>
-
-<div class="form-group">
-<label>Location</label>
-<input id="locationInput">
-</div>
-
-<button class="btn btn-primary" onclick="saveData()">Save</button>
-
-</div>
-
-<div class="footer">© 2026 Selelo Business Park LTD</div>
-
-</div>
-
-</div>
-
-<!-- FULLSCREEN -->
-
-<div class="fullscreen" id="fullscreen">
-
-<span class="close-full" onclick="closeFullscreen()">×</span>
-<img id="fullImage">
-
-</div>
-
-<!-- ADMIN MODAL -->
-
-<div class="admin-modal" id="adminModal">
-
-<div class="admin-box">
+<div class="modal-box">
 
 <h3>Admin Login</h3>
 
-<input id="adminPass" type="password" placeholder="Enter password">
+<input type="password" id="password" placeholder="Enter Password">
 
-<br><br>
+<button class="btn-primary" onclick="login()">Login</button>
 
-<button class="btn btn-primary" onclick="loginAdmin()">Login</button>
-<button class="btn btn-dark" onclick="closeAdmin()">Cancel</button>
+<button class="btn-secondary" onclick="closeLogin()">Cancel</button>
+
+</div>
 
 </div>
 
-</div>
+<!-- SCRIPT -->
 
 <script>
 
-/* ============ CONFIG ============ */
+/* CONFIG */
 
-const ADMIN_PASS="0742147197";
+const ADMIN_PASSWORD = "admin123"; // CHANGE THIS
 
-/* ============ STATE ============ */
+let isAdmin = false;
 
-let isAdmin=false;
+/* BACK */
 
-/* ============ ELEMENTS ============ */
-
-const el={
-
-nameInput:document.getElementById("nameInput"),
-roleInput:document.getElementById("roleInput"),
-phoneInput:document.getElementById("phoneInput"),
-emailInput:document.getElementById("emailInput"),
-locationInput:document.getElementById("locationInput"),
-
-cardName:document.getElementById("cardName"),
-cardRole:document.getElementById("cardRole"),
-cardPhone:document.getElementById("cardPhone"),
-cardEmail:document.getElementById("cardEmail"),
-cardLocation:document.getElementById("cardLocation"),
-
-fullscreen:document.getElementById("fullscreen"),
-fullImage:document.getElementById("fullImage"),
-
-adminModal:document.getElementById("adminModal"),
-adminBadge:document.getElementById("adminBadge"),
-
-loginBtn:document.getElementById("loginBtn"),
-logoutBtn:document.getElementById("logoutBtn"),
-
-adminPass:document.getElementById("adminPass")
-
-};
-
-/* ============ INIT ============ */
-
-window.onload=()=>{
-
-loadData();
-checkAdmin();
-updateCard();
-
-};
-
-/* ============ ADMIN ============ */
-
-function checkAdmin(){
-
-isAdmin=localStorage.getItem("admin")==="true";
-
-el.adminBadge.style.display=isAdmin?"inline":"none";
-
-el.loginBtn.style.display=isAdmin?"none":"inline";
-
-el.logoutBtn.style.display=isAdmin?"inline":"none";
-
-lockInputs(!isAdmin);
-
+function goBack(){
+if(history.length > 1){
+history.back();
+}else{
+window.location.href="index.html";
+}
 }
 
-function lockInputs(lock){
+/* LOGIN MODAL */
 
-Object.values(el).forEach(v=>{
-
-if(v instanceof HTMLInputElement && v!==el.adminPass){
-
-v.disabled=lock;
-
+function openLogin(){
+document.getElementById("loginModal").style.display="flex";
 }
 
-});
-
+function closeLogin(){
+document.getElementById("loginModal").style.display="none";
+document.getElementById("password").value="";
 }
 
-function openAdmin(){
+/* LOGIN */
 
-el.adminModal.style.display="flex";
-el.adminPass.value="";
-el.adminPass.focus();
+function login(){
 
-}
+const pass = document.getElementById("password").value;
 
-function closeAdmin(){
+if(pass === ADMIN_PASSWORD){
 
-el.adminModal.style.display="none";
-
-}
-
-function loginAdmin(){
-
-if(el.adminPass.value===ADMIN_PASS){
+isAdmin = true;
 
 localStorage.setItem("admin","true");
 
-isAdmin=true;
+enableEdit();
 
-closeAdmin();
+closeLogin();
 
-checkAdmin();
-
-alert("Admin Logged In");
+alert("Login successful");
 
 }else{
 
@@ -496,159 +252,104 @@ alert("Wrong password");
 
 }
 
-function logoutAdmin(){
+/* LOGOUT */
 
-if(confirm("Logout admin?")){
+function logout(){
+
+isAdmin = false;
 
 localStorage.removeItem("admin");
 
-isAdmin=false;
+disableEdit();
 
-checkAdmin();
-
-}
+alert("Logged out");
 
 }
 
-/* ============ DATA ================= */
+/* ENABLE EDITING */
 
-function loadData(){
+function enableEdit(){
 
-const d=localStorage.getItem("cardData");
+document.getElementById("adminBadge").innerText="ADMIN";
 
-if(!d) return;
+document.getElementById("loginBtn").style.display="none";
+document.getElementById("logoutBtn").style.display="inline-block";
 
-const data=JSON.parse(d);
+document.querySelectorAll(".editable").forEach(el=>{
 
-el.nameInput.value=data.name||"";
-el.roleInput.value=data.role||"";
-el.phoneInput.value=data.phone||"";
-el.emailInput.value=data.email||"";
-el.locationInput.value=data.location||"";
+el.contentEditable = true;
+
+el.addEventListener("input",saveContent);
+
+});
 
 }
 
-function saveData(){
+/* DISABLE EDITING */
 
-if(!isAdmin){
+function disableEdit(){
 
-alert("Admin required");
-return;
+document.getElementById("adminBadge").innerText="GUEST";
+
+document.getElementById("loginBtn").style.display="inline-block";
+document.getElementById("logoutBtn").style.display="none";
+
+document.querySelectorAll(".editable").forEach(el=>{
+
+el.contentEditable = false;
+
+});
+
 }
 
-const data={
+/* SAVE */
 
-name:el.nameInput.value,
-role:el.roleInput.value,
-phone:el.phoneInput.value,
-email:el.emailInput.value,
-location:el.locationInput.value
+function saveContent(){
 
+const data = {
+title: document.getElementById("title").innerHTML,
+p1: document.getElementById("para1").innerHTML,
+p2: document.getElementById("para2").innerHTML
 };
 
-localStorage.setItem("cardData",JSON.stringify(data));
-
-alert("Saved");
+localStorage.setItem("siteData",JSON.stringify(data));
 
 }
 
-/* ============ UPDATE ================= */
+/* LOAD */
 
-function updateCard(){
+function loadContent(){
 
-el.cardName.textContent=el.nameInput.value||"Name";
-el.cardRole.textContent=el.roleInput.value||"Position";
-el.cardPhone.textContent=el.phoneInput.value||"Phone";
-el.cardEmail.textContent=el.emailInput.value||"Email";
-el.cardLocation.textContent=el.locationInput.value||"Location";
+const data = JSON.parse(localStorage.getItem("siteData"));
 
-}
+if(!data) return;
 
-document.querySelectorAll("input").forEach(i=>{
-
-if(i!==el.adminPass){
-
-i.addEventListener("input",updateCard);
+document.getElementById("title").innerHTML = data.title;
+document.getElementById("para1").innerHTML = data.p1;
+document.getElementById("para2").innerHTML = data.p2;
 
 }
 
-});
+/* INIT */
 
-/* ============ FULLSCREEN ================= */
+function init(){
 
-function openFullscreen(){
+loadContent();
 
-html2canvas(document.getElementById("realCard"),{
-scale:2,useCORS:true
-}).then(c=>{
+if(localStorage.getItem("admin")==="true"){
 
-el.fullImage.src=c.toDataURL();
-el.fullscreen.classList.add("show");
+isAdmin=true;
+enableEdit();
 
-});
+}else{
 
-}
-
-function closeFullscreen(){
-
-el.fullscreen.classList.remove("show");
+disableEdit();
 
 }
 
-/* ============ DOWNLOAD ================= */
-
-function downloadCard(){
-
-html2canvas(document.getElementById("realCard"),{
-scale:2,useCORS:true
-}).then(c=>{
-
-const a=document.createElement("a");
-
-a.href=c.toDataURL();
-a.download="selelo-card.png";
-a.click();
-
-});
-
 }
 
-/* ============ SHARE ================= */
-
-function shareWhatsApp(){
-
-const t=
-`📇 ${el.nameInput.value}
-${el.roleInput.value}
-📞 ${el.phoneInput.value}
-✉️ ${el.emailInput.value}
-📍 ${el.locationInput.value}`;
-
-window.open("https://wa.me/?text="+encodeURIComponent(t));
-
-}
-
-/* ============ CONTACT ================= */
-
-function saveContact(){
-
-const v=
-`BEGIN:VCARD
-VERSION:3.0
-FN:${el.nameInput.value}
-TEL:${el.phoneInput.value}
-EMAIL:${el.emailInput.value}
-END:VCARD`;
-
-const blob=new Blob([v]);
-
-const a=document.createElement("a");
-
-a.href=URL.createObjectURL(blob);
-a.download="contact.vcf";
-a.click();
-
-}
+init();
 
 </script>
 
