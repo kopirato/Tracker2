@@ -131,7 +131,7 @@ body{font-family:'Poppins',sans-serif;margin:0;padding:0;display:flex;justify-co
                     <div class="circle small"></div>
 
                     <div class="logo-box">
-                        <img src="Screenshot_20260128_212358_X.jpg" alt="Logo">
+                        <img id="logoImg" src="Screenshot_20260128_212358_X.jpg" alt="Logo">
                         <p>SELELO BUSINESS PARK<br><b>LTD</b></p>
                     </div>
                 </div>
@@ -216,6 +216,7 @@ const elements = {
     cardPhone: document.getElementById("cardPhone"),
     cardEmail: document.getElementById("cardEmail"),
     cardLocation: document.getElementById("cardLocation"),
+    logoImg: document.getElementById("logoImg"),
     fullImage: document.getElementById("fullImage"),
     fullscreen: document.getElementById("fullscreen")
 };
@@ -231,13 +232,13 @@ elements.profilePicInput.addEventListener('click',e=>{if(!isAdmin){e.preventDefa
 function attemptSave(){protectEditAction(()=>{const data={name:elements.nameInput.value,role:elements.roleInput.value,phone:elements.phoneInput.value,email:elements.emailInput.value,location:elements.locationInput.value};localStorage.setItem('selelocard',JSON.stringify(data));alert("Changes saved successfully.");});}
 function updatePreview(){elements.cardName.textContent=elements.nameInput.value.trim()||"Name";elements.cardRole.textContent=elements.roleInput.value.trim()||"Position";elements.cardPhone.textContent=elements.phoneInput.value.trim()||"Phone";elements.cardEmail.textContent=elements.emailInput.value.trim()||"Email";elements.cardLocation.textContent=elements.locationInput.value.trim()||"Location";}
 document.querySelectorAll('#nameInput, #roleInput, #phoneInput, #emailInput, #locationInput').forEach(input=>input.addEventListener('input',updatePreview));
-elements.profilePicInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{elements.cardName.src=ev.target.result;localStorage.setItem('seleloProfilePic',ev.target.result);};reader.readAsDataURL(file);});
-window.addEventListener('load',()=>{const saved=localStorage.getItem('selelocard');if(saved){const d=JSON.parse(saved);elements.nameInput.value=d.name||"";elements.roleInput.value=d.role||"";elements.phoneInput.value=d.phone||"";elements.emailInput.value=d.email||"";elements.locationInput.value=d.location||"";updatePreview();}updateAdminUI();});
-function openFullscreen(){html2canvas(document.getElementById("cardPreview")).then(canvas=>{elements.fullImage.src=canvas.toDataURL("image/png");elements.fullscreen.classList.add("show");});}
+elements.profilePicInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{elements.logoImg.src=ev.target.result;localStorage.setItem('seleloProfilePic',ev.target.result);};reader.readAsDataURL(file);});
+window.addEventListener('load',()=>{const saved=localStorage.getItem('selelocard');if(saved){const d=JSON.parse(saved);elements.nameInput.value=d.name||"";elements.roleInput.value=d.role||"";elements.phoneInput.value=d.phone||"";elements.emailInput.value=d.email||"";elements.locationInput.value=d.location||"";updatePreview();}const savedPic=localStorage.getItem('seleloProfilePic');if(savedPic)elements.logoImg.src=savedPic;updateAdminUI();});
+function openFullscreen(){html2canvas(document.getElementById("realCard")).then(canvas=>{elements.fullImage.src=canvas.toDataURL("image/png");elements.fullscreen.classList.add("show");});}
 function closeFullscreen(){elements.fullscreen.classList.remove("show");}
 function shareWhatsApp(){const text=`📇 *Selelo Business Card*\n${elements.nameInput.value} - ${elements.roleInput.value}\n📞 ${elements.phoneInput.value}\n✉️ ${elements.emailInput.value}\n📍 ${elements.locationInput.value}`;window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');}
 function saveContact(){const name=elements.nameInput.value.trim();const phone=(elements.phoneInput.value||"").split('/')[0].trim();const email=elements.emailInput.value.trim();const vcard=`BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nORG:Selelo Business Park LTD\nEND:VCARD`;const blob=new Blob([vcard],{type:'text/vcard'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${name||'contact'}.vcf`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
-function downloadCard(){html2canvas(document.getElementById("cardPreview")).then(canvas=>{const link=document.createElement('a');link.download='selelo-business-card.png';link.href=canvas.toDataURL('image/png');link.click();});}
+function downloadCard(){html2canvas(document.getElementById("realCard")).then(canvas=>{const link=document.createElement('a');link.download='selelo-business-card.png';link.href=canvas.toDataURL('image/png');document.body.appendChild(link);link.click();document.body.removeChild(link);});}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFullscreen();});
 </script>
 </body>
