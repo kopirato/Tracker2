@@ -1,136 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SELELO BUSINESS PARK</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#111111">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Selelo Business Park">
-  
-  <style>
-    :root {
-      --bg: #1A120B;
-      --text: #F8F4F0;
-      --muted: #A89A8F;
-      --accent1: #E2725B;
-      --accent2: #D4A574;
-      --good: #4ade80;
-      --danger: #D9534F;
-      --glass: rgba(255,255,255,0.06);
-      --glass-strong: rgba(255,255,255,0.09);
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: Inter, sans-serif;
-      background: var(--bg) url('2.png') center/cover no-repeat fixed;
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: ""; position: fixed; inset: 0;
-      background: linear-gradient(180deg, rgba(26,18,11,0.78), rgba(0,0,0,0.65));
-      backdrop-filter: blur(3px);
-      z-index: 1;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selelo Digital Business Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+:root {
+  --bg: #1A120B;
+  --text: #F8F4F0;
+  --muted: #A89A8F;
+  --accent1: #E2725B;
+  --accent2: #D4A574;
+  --good: #4ade80;
+  --danger: #D9534F;
+  --glass: rgba(255,255,255,0.06);
+  --glass-strong: rgba(255,255,255,0.09);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Inter, sans-serif;
+  background: var(--bg) url('2.png') center/cover no-repeat fixed;
+  color: var(--text);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; inset: 0;
+  background: linear-gradient(180deg, rgba(26,18,11,0.78), rgba(0,0,0,0.65));
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
 
-    /* Welcome Splash */
-    #welcome {
-      position: fixed; inset: 0; z-index: 9999;
-      background: radial-gradient(circle at center, rgba(226,114,91,0.18), transparent 70%);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      animation: fadeOut 3.8s forwards;
-      pointer-events: none;
-    }
-    #welcome h1 {
-      font-size: 42px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
-      background: linear-gradient(90deg, var(--accent1), var(--accent2));
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      margin-bottom: 8px;
-      animation: glow 2.2s ease-in-out infinite alternate;
-    }
-    #welcome p { font-size: 17px; letter-spacing: 5px; opacity: 0.9; }
-    @keyframes glow { from { text-shadow: 0 0 20px rgba(226,114,91,0.6); } to { text-shadow: 0 0 40px rgba(212,165,116,0.8); } }
-    @keyframes fadeOut { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+/* ───────────── GLOBAL STYLES ───────────── */
+.container{width:100%;max-width:460px;padding:1.5rem;position: relative; z-index: 2;}
+.card-app{background:var(--glass);border-radius:1.5rem;padding:1.8rem;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.7);}
+.title{text-align:center;margin-bottom:1.2rem;}
+.title h1{font-size:1.5rem;font-weight:600;}
+.title p{font-size:0.9rem;opacity:0.8;}
+.buttons{display:flex;gap:0.8rem;margin:1.2rem 0;flex-wrap:wrap;}
+.btn{padding:0.8rem 1rem;border:none;border-radius:0.8rem;font-weight:500;cursor:pointer;transition:0.3s;}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#06b6d4);color:white;}
+.btn-alt{background:linear-gradient(135deg,#f97316,#facc15);color:#000;}
+.btn-dark{background:#0f172a;border:1px solid rgba(255,255,255,0.12);color:white;}
+.btn-danger{background:linear-gradient(135deg,#ff4d4d,#ff1a1a);color:white;}
+.btn:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,255,255,0.3);}
 
-    .shell { padding: 16px; position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
-    .card { background: var(--glass); border-radius: 20px; padding: 20px; backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.45); flex: 1; display: flex; flex-direction: column; }
+/* ───────────── REAL BUSINESS CARD DESIGN ───────────── */
+.card-preview{cursor:pointer;margin:1rem 0;}
+#realCard{
+    width: 380px;
+    height: 220px;
+    background: white;
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: "Poppins", sans-serif;
+}
 
-    .top { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .logo { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-    h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
-    .sub { font-size: 13px; opacity: 0.85; }
+/* LEFT SIDE */
+.card-left{
+    width: 55%;
+    padding: 20px;
+    color:#0f172a;
+}
+.card-left h1{font-size:20px;font-weight:600;margin:0;}
+.card-left h3{font-size:14px;font-weight:400;color:#444;margin:4px 0;}
+.line{width:40px;height:3px;background:#f97316;margin:8px 0 12px;}
+.info p{font-size:12px;margin:5px 0;}
 
-    /* Premium SVG Nav */
-    .nav-icons {
-      display: flex; justify-content: center; gap: 28px; padding: 12px 0;
-      background: rgba(255,255,255,0.04); border-radius: 16px;
-    }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      color: var(--text); font-size: 11px; opacity: 0.9; transition: all 0.3s ease; text-decoration:none;
-    }
-    .nav-item:hover { transform: translateY(-6px); opacity: 1; color: var(--accent1); }
-    .nav-icon-svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; transition: all 0.3s; }
-    .nav-item:hover .nav-icon-svg { stroke: var(--accent1); transform: scale(1.15); }
+/* RIGHT SIDE */
+.card-right{
+    width:45%;
+    position:relative;
+    background:#f8f8f8;
+}
+.circle{position:absolute;border-radius:50%;}
+.circle.big{width:240px;height:240px;background:#facc15;right:-80px;top:-20px;}
+.circle.mid{width:180px;height:180px;background:#ef4444;right:-40px;top:20px;}
+.circle.small{width:120px;height:120px;background:#dc2626;right:-10px;top:60px;}
 
-    .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-    .btn {
-      padding: 11px 18px; border-radius: 14px; font-weight: 700; font-size: 13px;
-      border: none; cursor: pointer; transition: all 0.25s;
-    }
-    .btn-admin { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 5px 18px rgba(226,114,91,0.35); }
-    .btn-admin:active { transform: translateY(2px); }
-    .btn-ghost, .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--text); }
+/* LOGO */
+.logo-box{
+    position:absolute;
+    bottom:20px;
+    right:25px;
+    width:90px;
+    height:90px;
+    background:white;
+    border-radius:50%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.logo-box img{width:40px;margin-bottom:3px;}
+.logo-box p{font-size:9px;line-height:1.1;margin:0;text-align:center;}
 
-    .grid { display: flex; flex-direction: column; gap: 20px; flex: 1; }
-    .panel { background: var(--glass-strong); padding: 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-    .fields { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    label { font-size: 12.5px; font-weight: 700; opacity: 0.9; }
-    input, select, textarea {
-      background: transparent; border: 1px solid rgba(255,255,255,0.18); padding: 12px 14px;
-      border-radius: 12px; color: var(--text); font-size: 14px;
-    }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 3px rgba(226,114,91,0.22); }
+/* FORM SECTION */
+.form-section{margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.12);}
+.form-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.admin-badge{padding:0.4rem 0.8rem;border-radius:999px;background:linear-gradient(135deg,#2563eb,#06b6d4);color:white;font-size:0.75rem;font-weight:600;display:none;}
+.form-group{margin-bottom:1rem;}
+.form-group label{font-size:0.8rem;opacity:0.8;display:block;margin-bottom:0.3rem;}
+.form-group input{width:100%;padding:0.7rem;border-radius:0.6rem;border:1px solid rgba(255,255,255,0.12);background:var(--bg);color:var(--text);}
+.form-group input:focus{outline:none;border-color:#06b6d4;box-shadow:0 0 10px rgba(0,255,255,0.3);}
+.footer{text-align:center;margin-top:1.5rem;font-size:0.8rem;opacity:0.7;}
 
-    .table-wrap { margin-top: 12px; overflow: auto; max-height: 56vh; border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 600px; }
-    th, td { padding: 11px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.09); }
-    th { font-weight: 600; font-size: 11.5px; opacity: 0.82; position: sticky; top: 0; background: rgba(255,255,255,0.04); }
+/* FULLSCREEN */
+.fullscreen{position:fixed;inset:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(6px);}
+.fullscreen.show{display:flex;}
+.fullscreen img{max-width:94%;max-height:94%;border-radius:1rem;box-shadow:0 10px 40px rgba(0,0,0,0.6);}
+.close-full{position:absolute;top:1.2rem;right:1.5rem;font-size:2rem;color:white;cursor:pointer;}
 
-    .action-btn, .delete-btn { padding: 6px 10px; border-radius: 8px; font-size: 12px; margin-right: 4px; }
-    .delete-btn { background: var(--danger); color: #fff; }
+/* ADMIN PROMPT */
+.admin-prompt{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:10000;}
+.admin-modal{background:var(--glass-strong);padding:2rem;border-radius:1.2rem;width:90%;max-width:420px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 0 20px rgba(0,255,255,0.2);}
+.admin-modal h3{margin-bottom:1rem;}
+.admin-modal input{width:100%;padding:0.9rem;margin:1rem 0;border-radius:0.6rem;border:1px solid rgba(255,255,255,0.12);background:var(--bg);color:var(--text);}
+.admin-buttons{display:flex;gap:1rem;justify-content:flex-end;}
 
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999;
-    }
-    .modal-panel {
-      background: var(--glass-strong); padding: 24px; border-radius: 16px; width: 90%; max-width: 420px; border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    }
-    .modal.show { display: flex; animation: drop 0.3s ease; }
-    @keyframes drop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* Header Styles from Main Page */
+.top { display: flex; flex-direction: column; gap: 18px; margin-bottom: 20px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.logo { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+h1 { font-size: 21px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; }
+.sub { font-size: 13px; opacity: 0.85; }
 
-    footer { text-align: center; margin-top: 24px; font-size: 12px; opacity: 0.7; }
+/* Premium SVG Nav */
+.nav-icons {
+  display: flex; justify-content: center; gap: 28px; padding: 12px 0;
+  background: rgba(255,255,255,0.04); border-radius: 16px;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--text); font-size: 11px; opacity: 0.9; transition: all 0.3s ease; text-decoration:none;
+}
+.nav-item:hover { transform: translateY(-6px); opacity: 1; color: var(--accent1); }
+.nav-icon-svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 2; transition: all 0.3s; }
+.nav-item:hover .nav-icon-svg { stroke: var(--accent1); transform: scale(1.15); }
 
-    @media (max-width: 480px) {
-      .fields { grid-template-columns: 1fr; }
-      .nav-icons { gap: 20px; }
-      #welcome h1 { font-size: 36px; }
-      .logo { width: 50px; height: 50px; }
-      h1 { font-size: 20px; }
-      .card { padding: 16px; }
-    }
-  </style>
+.controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.btn {
+  padding: 11px 18px; border-radius: 14px; font-weight: 700; font-size: 13px;
+  border: none; cursor: pointer; transition: all 0.25s;
+}
+.btn-admin { background: linear-gradient(90deg, var(--accent1), var(--accent2)); color: #042; box-shadow: 0 5px 18px rgba(226,114,91,0.35); }
+.btn-admin:active { transform: translateY(2px); }
+.btn-ghost, .btn-theme { background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--text); }
+
+@media (max-width: 480px) {
+  .nav-icons { gap: 20px; }
+  .logo { width: 50px; height: 50px; }
+  h1 { font-size: 20px; }
+  .card-app { padding: 16px; }
+}
+</style>
 </head>
 <body>
 
@@ -141,7 +173,7 @@
   </div>
 
   <div class="shell">
-    <main class="card">
+    <main class="card-app">
 
       <div class="top">
         <div class="brand">
@@ -154,7 +186,7 @@
 
         <!-- Premium Navigation -->
         <div class="nav-icons">
-          <a href="#transactions" class="nav-item">
+          <a href="index.html#transactions" class="nav-item">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 14h6"/>
             </svg>
@@ -185,633 +217,177 @@
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
-        <button id="exportCsv" class="btn btn-ghost">Export CSV</button>
-        <button id="genPL" class="btn btn-ghost">Generate P&L</button>
-        <button id="downloadPL" class="btn btn-admin">Download P&L</button>
-      </div>
+      <div class="title">
+            <h1>Selelo Business Card</h1>
+            <p>Digital Professional Identity</p>
+        </div>
 
-      <!-- Anchor for smooth scroll -->
-      <a id="transactions"></a>
+        <!-- CARD PREVIEW -->
+        <div class="card-preview" id="cardPreview" onclick="openFullscreen()">
+            <div id="realCard">
 
-      <div class="grid">
-        <section>
-          <div id="addPanel" class="panel">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <div>
-                <h2 style="font-size:17px;margin:0">Add Transaction</h2>
-                <div class="sub">Sign in as admin to add, edit or delete</div>
-              </div>
-              <div id="adminBadgeWrap"></div>
+                <!-- LEFT SIDE -->
+                <div class="card-left">
+                    <h1 id="cardName">Joshua Tapatayia</h1>
+                    <h3 id="cardRole">Managing Director</h3>
+                    <div class="line"></div>
+                    <div class="info">
+                        <p>📞 <span id="cardPhone">0717650981 / 0712373717</span></p>
+                        <p>✉️ <span id="cardEmail">Selelobizpark@gmail.com</span></p>
+                        <p>📍 <span id="cardLocation">Kitengela, Kajiado</span></p>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="card-right">
+                    <div class="circle big"></div>
+                    <div class="circle mid"></div>
+                    <div class="circle small"></div>
+
+                    <div class="logo-box">
+                        <img id="logoImg" src="Screenshot_20260128_212358_X.jpg" alt="Logo">
+                        <p>SELELO BUSINESS PARK<br><b>LTD</b></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="openFullscreen()">Fullscreen</button>
+            <button class="btn btn-primary" onclick="downloadCard()">Download Image</button>
+            <button class="btn btn-alt" onclick="shareWhatsApp()">WhatsApp</button>
+            <button class="btn btn-dark" onclick="saveContact()">Save Contact</button>
+        </div>
+
+        <!-- FORM SECTION -->
+        <div class="form-section">
+            <div class="form-header">
+                <h3>Edit Card Details</h3>
+                <span id="adminBadge" class="admin-badge">ADMIN</span>
             </div>
 
-            <div class="fields">
-              <div class="field"><label>Date</label><input id="txDate" type="date"></div>
-              <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
-              <div class="field"><label>Category</label><select id="txCategory"></select></div>
-              <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+            <p style="font-size:0.85rem; opacity:0.7; margin-bottom:1rem;">(Admin password required to make changes)</p>
+
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <input id="profilePicInput" type="file" accept="image/*">
             </div>
+            <div class="form-group"><label>Name</label><input id="nameInput" type="text" value="Joshua Tapatayia"></div>
+            <div class="form-group"><label>Position</label><input id="roleInput" type="text" value="Managing Director"></div>
+            <div class="form-group"><label>Phone</label><input id="phoneInput" type="text" value="0717650981 / 0712373717"></div>
+            <div class="form-group"><label>Email</label><input id="emailInput" type="email" value="Selelobizpark@gmail.com"></div>
+            <div class="form-group"><label>Location</label><input id="locationInput" type="text" value="Kitengela, Kajiado"></div>
 
-            <div style="margin-top:12px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..."></textarea></div>
-
-            <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-              <button id="addBtn" class="btn btn-admin" disabled>Add Transaction</button>
-              <button id="clearBtn" class="btn btn-ghost">Clear</button>
-              <div id="txMsg" style="color:var(--good);font-size:13px"></div>
+            <div style="display:flex;gap:0.8rem;margin-top:1rem;">
+                <button class="btn btn-primary" onclick="attemptSave()">Save Changes</button>
+                <button class="btn btn-dark" onclick="goBack()">Back</button>
+                <button id="signOutBtn" class="btn btn-danger" onclick="signOutAdmin()" style="display:none;">Sign Out</button>
             </div>
-          </div>
+        </div>
 
-          <div class="panel" style="margin-top:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <h3 style="margin:0;font-size:16px">Transactions</h3>
-              <div class="sub">Filter and manage</div>
-            </div>
-
-            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-              <input id="fMonth" type="month" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <select id="fType" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Types</option><option>Income</option><option>Expense</option>
-              </select>
-              <select id="fCategory" style="padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-                <option value="">All Categories</option>
-              </select>
-              <input id="fMin" type="number" placeholder="Min" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fMax" type="number" placeholder="Max" style="width:90px;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <input id="fNotes" type="text" placeholder="Notes contains" style="flex:1;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);font-size:13px">
-              <button id="applyFilter" class="btn btn-ghost">Apply</button>
-              <button id="resetFilter" class="btn btn-ghost">Reset</button>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
-                <tbody id="txTbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <aside>
-          <div class="panel dashboard">
-            <h3 style="font-size:16px;margin-bottom:12px">Overview</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
-              <div><div style="font-size:12px;opacity:0.8">Total Income</div><strong id="statIncome" style="font-size:19px">0</strong></div>
-              <div><div style="font-size:12px;opacity:0.8">Total Expense</div><strong id="statExpense" style="font-size:19px">0</strong></div>
-              <div><div style="font-size:12px;opacity:0.8">Balance</div><strong id="statBalance" style="font-size:19px">0</strong></div>
-            </div>
-            <div id="budgetAlert" class="sub" style="margin-top:8px;color:var(--danger)"></div>
-          </div>
-
-          <div id="chartsPanel" class="panel charts" style="margin-top:16px;display:none">
-            <h3 style="margin-bottom:12px">Charts</h3>
-            <canvas id="chartIE" height="140"></canvas>
-            <canvas id="chartCat" height="140" style="margin-top:12px"></canvas>
-            <canvas id="chartTrend" height="140" style="margin-top:12px"></canvas>
-          </div>
-
-          <div class="panel" style="margin-top:16px">
-            <h3 style="font-size:16px;margin-bottom:10px">Profit & Loss</h3>
-            <label for="reportMonth" class="sub" style="display:block;margin-bottom:6px">Month (optional)</label>
-            <input id="reportMonth" type="month" style="width:100%;padding:10px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);margin-bottom:10px">
-            <div style="display:flex;gap:8px">
-              <button id="showPLBtn" class="btn btn-ghost">Show</button>
-              <button id="downloadPLBtn" class="btn btn-admin">Download</button>
-            </div>
-            <div id="plView" style="margin-top:12px;font-size:13px;color:var(--muted)"></div>
-          </div>
-        </aside>
-      </div>
-
-      <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
+        <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
     </main>
   </div>
 
-  <!-- Modals -->
-  <div id="adminModal" class="modal">
-    <div class="modal-panel">
-      <h3>Administrator access</h3>
-      <p>Enter admin password to unlock add/edit/delete. Session stored locally on this device.</p>
-      <input id="adminPassword" type="password" placeholder="Admin password" style="width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:transparent;color:var(--text)">
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
-        <button id="adminCancel" class="btn btn-ghost">Cancel</button>
-        <button id="adminConfirm" class="btn btn-admin">Confirm</button>
-      </div>
+<!-- FULLSCREEN VIEWER -->
+<div class="fullscreen" id="fullscreen">
+    <span class="close-full" onclick="closeFullscreen()">×</span>
+    <img id="fullImage" alt="Business Card Fullscreen">
+</div>
+
+<!-- ADMIN PROMPT -->
+<div class="admin-prompt" id="adminPrompt">
+    <div class="admin-modal">
+        <h3>Admin Access Required</h3>
+        <p>Enter admin password to edit or save changes.</p>
+        <input id="adminPassInput" type="password" placeholder="Admin password">
+        <div class="admin-buttons">
+            <button class="btn btn-dark" onclick="cancelAdminPrompt()">Cancel</button>
+            <button class="btn btn-primary" onclick="verifyAdminForEdit()">Confirm</button>
+        </div>
     </div>
-  </div>
+</div>
 
-  <div id="editModal" class="modal" style="top:40%;transform:translateX(-50%) translateY(-50%)">
-    <div class="modal-panel">
-      <h3>Edit Transaction</h3>
-      <label style="font-size:13px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Type</label><select id="editType" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"><option>Income</option><option>Expense</option></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Category</label><select id="editCategory" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></select>
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)">
-      <label style="font-size:13px;color:var(--muted);margin-top:8px">Notes</label><textarea id="editNotes" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text)"></textarea>
-      <div style="text-align:right;margin-top:10px">
-        <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
-        <button id="editSaveBtn" class="btn btn-admin">Save</button>
-      </div>
-    </div>
-  </div>
+<script>
+// ================= ADMIN LOGIC =================
+const KEY_ADMIN = "selelo_admin_final";
+const ADMIN_PASSWORDS = ["0742147197", "0721235005"];
+let isAdmin = localStorage.getItem(KEY_ADMIN)==="true";
+const elements = {
+    adminPrompt: document.getElementById("adminPrompt"),
+    adminPassInput: document.getElementById("adminPassInput"),
+    adminBadge: document.getElementById("adminBadge"),
+    signOutBtn: document.getElementById("signOutBtn"),
+    nameInput: document.getElementById("nameInput"),
+    roleInput: document.getElementById("roleInput"),
+    phoneInput: document.getElementById("phoneInput"),
+    emailInput: document.getElementById("emailInput"),
+    locationInput: document.getElementById("locationInput"),
+    profilePicInput: document.getElementById("profilePicInput"),
+    cardName: document.getElementById("cardName"),
+    cardRole: document.getElementById("cardRole"),
+    cardPhone: document.getElementById("cardPhone"),
+    cardEmail: document.getElementById("cardEmail"),
+    cardLocation: document.getElementById("cardLocation"),
+    logoImg: document.getElementById("logoImg"),
+    fullImage: document.getElementById("fullImage"),
+    fullscreen: document.getElementById("fullscreen")
+};
+function updateAdminUI(){isAdmin?(elements.adminBadge.style.display="inline-block",elements.signOutBtn.style.display="block"):(elements.adminBadge.style.display="none",elements.signOutBtn.style.display="none");}
+function protectEditAction(callback){if(isAdmin){callback();return;}elements.adminPrompt.style.display="flex";elements.adminPassInput.value="";elements.adminPassInput.focus();window.pendingEditAction=callback;}
+function verifyAdminForEdit(){const pass=(elements.adminPassInput.value||"").trim();if(ADMIN_PASSWORDS.includes(pass)){localStorage.setItem(KEY_ADMIN,"true");isAdmin=true;updateAdminUI();elements.adminPrompt.style.display="none";window.pendingEditAction&&(window.pendingEditAction(),window.pendingEditAction=null);alert("Admin access granted.");}else{alert("Incorrect password.");}}
+function cancelAdminPrompt(){elements.adminPrompt.style.display="none";window.pendingEditAction=null;}
+function signOutAdmin(){if(confirm("Sign out from admin mode?")){localStorage.setItem(KEY_ADMIN,"false");isAdmin=false;updateAdminUI();alert("Signed out. Password required for editing.");}}
+function goBack(){window.location.href="index.html";}
+function blockIfNotAdmin(e){if(!isAdmin){e.preventDefault();e.target.blur();protectEditAction(()=>e.target.focus());}}
+['nameInput','roleInput','phoneInput','emailInput','locationInput'].forEach(id=>{const el=document.getElementById(id);el.addEventListener('focus',blockIfNotAdmin);el.addEventListener('keydown',e=>{if(!isAdmin&&e.key!=="Tab"&&e.key!=="Shift"){blockIfNotAdmin(e);}});});
+elements.profilePicInput.addEventListener('click',e=>{if(!isAdmin){e.preventDefault();protectEditAction(()=>elements.profilePicInput.click());}});
+function attemptSave(){protectEditAction(()=>{const data={name:elements.nameInput.value,role:elements.roleInput.value,phone:elements.phoneInput.value,email:elements.emailInput.value,location:elements.locationInput.value};localStorage.setItem('selelocard',JSON.stringify(data));alert("Changes saved successfully.");});}
+function updatePreview(){elements.cardName.textContent=elements.nameInput.value.trim()||"Name";elements.cardRole.textContent=elements.roleInput.value.trim()||"Position";elements.cardPhone.textContent=elements.phoneInput.value.trim()||"Phone";elements.cardEmail.textContent=elements.emailInput.value.trim()||"Email";elements.cardLocation.textContent=elements.locationInput.value.trim()||"Location";}
+document.querySelectorAll('#nameInput, #roleInput, #phoneInput, #emailInput, #locationInput').forEach(input=>input.addEventListener('input',updatePreview));
+elements.profilePicInput.addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{elements.logoImg.src=ev.target.result;localStorage.setItem('seleloProfilePic',ev.target.result);};reader.readAsDataURL(file);});
+window.addEventListener('load',()=>{const saved=localStorage.getItem('selelocard');if(saved){const d=JSON.parse(saved);elements.nameInput.value=d.name||"";elements.roleInput.value=d.role||"";elements.phoneInput.value=d.phone||"";elements.emailInput.value=d.email||"";elements.locationInput.value=d.location||"";updatePreview();}const savedPic=localStorage.getItem('seleloProfilePic');if(savedPic)elements.logoImg.src=savedPic;updateAdminUI();});
+function openFullscreen(){html2canvas(document.getElementById("realCard")).then(canvas=>{elements.fullImage.src=canvas.toDataURL("image/png");elements.fullscreen.classList.add("show");});}
+function closeFullscreen(){elements.fullscreen.classList.remove("show");}
+function shareWhatsApp(){const text=`📇 *Selelo Business Card*\n${elements.nameInput.value} - ${elements.roleInput.value}\n📞 ${elements.phoneInput.value}\n✉️ ${elements.emailInput.value}\n📍 ${elements.locationInput.value}`;window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');}
+function saveContact(){const name=elements.nameInput.value.trim();const phone=(elements.phoneInput.value||"").split('/')[0].trim();const email=elements.emailInput.value.trim();const vcard=`BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nORG:Selelo Business Park LTD\nEND:VCARD`;const blob=new Blob([vcard],{type:'text/vcard'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${name||'contact'}.vcf`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+function downloadCard(){html2canvas(document.getElementById("realCard")).then(canvas=>{const link=document.createElement('a');link.download='selelo-business-card.png';link.href=canvas.toDataURL('image/png');document.body.appendChild(link);link.click();document.body.removeChild(link);});}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFullscreen();});
 
-  <div id="receiptModal" class="modal">
-    <div class="modal-panel" id="receiptInner"></div>
-  </div>
+// Theme from Main Page
+(function applyTheme() {
+  const t = localStorage.getItem('selelo_theme_final') || 'dark';
+  if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
+})();
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = localStorage.getItem('selelo_theme_final') || 'dark';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('selelo_theme_final', next);
+  document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
+});
 
-  <!-- Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+// Install Button from Main Page
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'block';
+});
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const firebaseConfig = {
-        apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
-        authDomain: "selelo-tracker.firebaseapp.com",
-        projectId: "selelo-tracker",
-        storageBucket: "selelo-tracker.firebasestorage.app",
-        messagingSenderId: "42660826905",
-        appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88"
-      };
-      try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBtn').style.display = 'none';
+});
 
-      let txRef;
-      try {
-        const db = firebase.database();
-        txRef = db.ref('transactions');
-      } catch (e) { console.warn('Firebase DB unavailable', e); }
-
-      const KEY_TX = "selelo_tx_local";
-      const KEY_ADMIN = "selelo_admin_final";
-      const KEY_THEME = "selelo_theme_final";
-      const ADMIN_PASSWORDS = ["0742147197","0721235005"];
-      let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-      let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
-      let editKey = null;
-      let chartIE, chartCat, chartTrend;
-      let usingFirebase = !!txRef;
-
-      const els = {
-        adminBtn: document.getElementById('adminBtn'),
-        addBtn: document.getElementById('addBtn'),
-        clearBtn: document.getElementById('clearBtn'),
-        txDate: document.getElementById('txDate'),
-        txType: document.getElementById('txType'),
-        txCategory: document.getElementById('txCategory'),
-        txAmount: document.getElementById('txAmount'),
-        txNotes: document.getElementById('txNotes'),
-        txMsg: document.getElementById('txMsg'),
-        txTbody: document.getElementById('txTbody'),
-        fMonth: document.getElementById('fMonth'),
-        fType: document.getElementById('fType'),
-        fCategory: document.getElementById('fCategory'),
-        fMin: document.getElementById('fMin'),
-        fMax: document.getElementById('fMax'),
-        fNotes: document.getElementById('fNotes'),
-        applyFilter: document.getElementById('applyFilter'),
-        resetFilter: document.getElementById('resetFilter'),
-        statIncome: document.getElementById('statIncome'),
-        statExpense: document.getElementById('statExpense'),
-        statBalance: document.getElementById('statBalance'),
-        adminBadgeWrap: document.getElementById('adminBadgeWrap'),
-        chartsPanel: document.getElementById('chartsPanel'),
-        adminModal: document.getElementById('adminModal'),
-        adminPassword: document.getElementById('adminPassword'),
-        adminCancel: document.getElementById('adminCancel'),
-        adminConfirm: document.getElementById('adminConfirm'),
-        editModal: document.getElementById('editModal'),
-        editDate: document.getElementById('editDate'),
-        editType: document.getElementById('editType'),
-        editCategory: document.getElementById('editCategory'),
-        editAmount: document.getElementById('editAmount'),
-        editNotes: document.getElementById('editNotes'),
-        editCancelBtn: document.getElementById('editCancelBtn'),
-        editSaveBtn: document.getElementById('editSaveBtn'),
-        receiptModal: document.getElementById('receiptModal'),
-        receiptInner: document.getElementById('receiptInner'),
-        exportCsv: document.getElementById('exportCsv'),
-        genPL: document.getElementById('genPL'),
-        downloadPL: document.getElementById('downloadPL'),
-        reportMonth: document.getElementById('reportMonth'),
-        showPLBtn: document.getElementById('showPLBtn'),
-        plView: document.getElementById('plView'),
-        addPanel: document.getElementById('addPanel'),
-        installBtn: document.getElementById('installBtn')
-      };
-
-      const incomeCategories = [
-        'Room Rental',
-        'Parking Fees',
-        'Sales of Construction Materials',
-        'Construction Services',
-        'Co-Working Space Rental',
-        'Event Hosting',
-        'Sales',
-        'Other Income'
-      ];
-      const expenseCategories = [
-        'Office rent',
-        'Repairs and maintenance',
-        'Advertising',
-        'Agency fees',
-        'Legal expenses',
-        'Stationery and office expenses',
-        'Security costs',
-        'Electricity',
-        'Office Water',
-        'Salaries and wages',
-        'Audit fees',
-        'Telephone expenses',
-        'Internet',
-        'Traveling and car expenses',
-        'Depreciation',
-        'Loan monthly installment',
-        'Other expenses',
-        'Legal fees(Term Loan)',
-        'Bank charges and interest',
-        'Car Tracker charges',
-        'Loan interest',
-        'Contractors all risk insurance',
-        'Credit protection insurance',
-        'Valuation fees',
-        'Architect fees',
-        'County approval fees',
-        'Nema fees',
-        'NCA fees',
-        'Consents/land control board cos'
-      ];
-
-      function updateCategories(select, type) {
-        select.innerHTML = '';
-        const cats = type === 'Expense' ? expenseCategories : incomeCategories;
-        cats.forEach(cat => {
-          const opt = document.createElement('option');
-          opt.value = cat;
-          opt.textContent = cat;
-          select.appendChild(opt);
-        });
-      }
-
-      els.txType.addEventListener('change', () => updateCategories(els.txCategory, els.txType.value));
-      els.editType.addEventListener('change', () => updateCategories(els.editCategory, els.editType.value));
-
-      updateCategories(els.txCategory, els.txType.value);
-      updateCategories(els.editCategory, els.editType.value);
-
-      const allCategories = [...new Set([...incomeCategories, ...expenseCategories])].sort();
-      allCategories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        els.fCategory.appendChild(opt);
-      });
-
-      function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
-      function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
-      function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
-      function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
-
-      document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
-
-      (function applyTheme() {
-        const t = localStorage.getItem(KEY_THEME) || 'dark';
-        if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
-      })();
-      document.getElementById('themeBtn').addEventListener('click', () => {
-        const cur = localStorage.getItem(KEY_THEME) || 'dark';
-        const next = cur === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(KEY_THEME, next);
-        document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
-      });
-
-      function applyAdminUI() {
-        if (isAdmin) {
-          els.addPanel.classList.add('admin-active');
-          els.adminBadgeWrap.innerHTML = '<span style="display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#042;font-weight:800;font-size:12px">ADMIN</span>';
-          els.chartsPanel.style.display = 'block';
-        } else {
-          els.addPanel.classList.remove('admin-active');
-          els.adminBadgeWrap.innerHTML = '';
-          els.chartsPanel.style.display = 'none';
-        }
-        els.addBtn.disabled = !isAdmin;
-        renderTransactions();
-      }
-      applyAdminUI();
-
-      if (usingFirebase && txRef) {
-        txRef.on('value', (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
-            saveLocal();
-          } else {
-            transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-          }
-          renderTransactions();
-        }, (err) => {
-          console.error('Firebase read error', err);
-          usingFirebase = false;
-          transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-          renderTransactions();
-          notify('Using local storage (check internet)', 'var(--danger)');
-        });
-      } else {
-        usingFirebase = false;
-        transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
-      }
-
-      els.addBtn.addEventListener('click', () => {
-        if (!isAdmin) { alert('Admin only'); return; }
-        const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
-        const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
-        if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
-        const newTx = { date, type, category, amount, notes };
-        if (usingFirebase && txRef) {
-          txRef.push(newTx).then(() => {
-            notify('Added (synced to cloud)');
-            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
-          }).catch(e => {
-            console.error(e);
-            newTx.key = Date.now().toString();
-            transactions.push(newTx);
-            saveLocal();
-            renderTransactions();
-            notify('Added locally (cloud error)', 'var(--danger)');
-          });
-        } else {
-          newTx.key = Date.now().toString();
-          transactions.push(newTx);
-          saveLocal();
-          renderTransactions();
-          notify('Added locally');
-          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
-        }
-      });
-
-      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
-
-      function openEdit(key) {
-        if (!isAdmin) { alert('Admin only'); return; }
-        editKey = key;
-        const t = transactions.find(t => t.key === key);
-        if (!t) return;
-        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
-        openModal(els.editModal);
-      }
-      els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
-      els.editSaveBtn.addEventListener('click', () => {
-        if (!isAdmin || !editKey) return;
-        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
-        if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
-        if (usingFirebase && txRef) {
-          txRef.child(editKey).update(nd).then(() => {
-            closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
-          }).catch(e => {
-            const idx = transactions.findIndex(t => t.key === editKey);
-            if (idx > -1) transactions[idx] = { key: editKey, ...nd };
-            saveLocal();
-            renderTransactions();
-            notify('Edited locally', 'var(--danger)');
-          });
-        } else {
-          const idx = transactions.findIndex(t => t.key === editKey);
-          if (idx > -1) transactions[idx] = { key: editKey, ...nd };
-          saveLocal();
-          renderTransactions();
-          closeModal(els.editModal);
-          notify('Edited');
-          editKey = null;
-        }
-      });
-
-      function deleteTx(key) {
-        if (!isAdmin) { alert('Admin only'); return; }
-        if (!confirm('Delete this transaction?')) return;
-        if (usingFirebase && txRef) {
-          txRef.child(key).remove().then(() => notify('Deleted (synced)', 'var(--danger)')).catch(e => {
-            transactions = transactions.filter(t => t.key !== key);
-            saveLocal();
-            renderTransactions();
-            notify('Deleted locally', 'var(--danger)');
-          });
-        } else {
-          transactions = transactions.filter(t => t.key !== key);
-          saveLocal();
-          renderTransactions();
-          notify('Deleted', 'var(--danger)');
-        }
-      }
-
-      els.applyFilter.addEventListener('click', renderTransactions);
-      els.resetFilter.addEventListener('click', () => {
-        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = '';
-        renderTransactions();
-      });
-
-      function passesFilters(t) {
-        if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
-        if (els.fType.value && t.type !== els.fType.value) return false;
-        if (els.fCategory.value && t.category !== els.fCategory.value) return false;
-        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
-        if (t.amount < min || t.amount > max) return false;
-        const nf = (els.fNotes.value || '').toLowerCase();
-        if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
-        return true;
-      }
-
-      function renderTransactions() {
-        els.txTbody.innerHTML = '';
-        let inc = 0, exp = 0;
-        transactions.filter(passesFilters).forEach(t => {
-          const tr = document.createElement('tr');
-          const actions = [`<button class="action-btn" data-act="rcpt" data-key="${t.key}">Receipt</button>`];
-          if (isAdmin) {
-            actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
-            actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
-          }
-          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
-          els.txTbody.appendChild(tr);
-          if (t.type === 'Income') inc += Number(t.amount);
-          if (t.type === 'Expense') exp += Number(t.amount);
-        });
-        els.statIncome.textContent = inc.toLocaleString();
-        els.statExpense.textContent = exp.toLocaleString();
-        els.statBalance.textContent = (inc - exp).toLocaleString();
-        if (isAdmin) renderCharts();
-      }
-
-      els.txTbody.addEventListener('click', e => {
-        const b = e.target.closest('button[data-act]');
-        if (!b) return;
-        const act = b.dataset.act, key = b.dataset.key;
-        if (act === 'edit') openEdit(key);
-        if (act === 'del') deleteTx(key);
-        if (act === 'rcpt') openReceipt(key);
-      });
-
-      function renderCharts() {
-        if (!window.Chart) return;
-        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
-        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
-        try { if (chartIE) chartIE.destroy(); } catch (e) {}
-        chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
-          type: 'doughnut',
-          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-        });
-        const catMap = {};
-        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
-        try { if (chartCat) chartCat.destroy(); } catch (e) {}
-        chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
-          type: 'doughnut',
-          data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-        });
-        const monthly = {};
-        transactions.forEach(t => {
-          const m = t.date.slice(0,7);
-          monthly[m] = monthly[m] || { Income:0, Expense:0 };
-          monthly[m][t.type] += Number(t.amount);
-        });
-        const months = Object.keys(monthly).sort();
-        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
-        chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
-          type: 'line',
-          data: {
-            labels: months,
-            datasets: [
-              { label: 'Income', data: months.map(m => monthly[m].Income || 0), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.12)', fill:true },
-              { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
-            ]
-          },
-          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
-        });
-      }
-
-      els.exportCsv.addEventListener('click', () => {
-        if (!transactions.length) { alert('No transactions to export'); return; }
-        let csv = 'Date,Type,Category,Amount,Notes\n';
-        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
-        const blob = new Blob([csv], { type:'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        notify('CSV exported', 'var(--good)');
-      });
-
-      function generatePL() {
-        const m = els.reportMonth.value;
-        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
-        const br = {};
-        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
-        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
-        html += '</ul></div>';
-        els.plView.innerHTML = html;
-        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
-        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
-      }
-      els.genPL.addEventListener('click', generatePL);
-      els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
-
-      els.downloadPL.addEventListener('click', () => {
-        const m = els.reportMonth.value;
-        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
-        const { jsPDF } = window.jspdf || {};
-        if (!jsPDF) { alert('PDF library not ready'); return; }
-        const doc = new jsPDF();
-        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
-        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
-        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
-        let y = 72;
-        const br = {};
-        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
-        doc.text('Category breakdown:', 14, y); y += 8;
-        for (const k in br) {
-          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
-          if (y > 270) { doc.addPage(); y = 20; }
-        }
-        doc.save(`PL_${m || 'all'}.pdf`);
-      });
-
-      function openReceipt(key) {
-        const t = transactions.find(x => x.key === key);
-        if (!t) return;
-        const idx = transactions.findIndex(x => x.key === key);
-        const inv = 'INV-' + (10000 + idx);
-        const issued = new Date().toLocaleDateString();
-        let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
-          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
-          <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
-        els.receiptInner.innerHTML = html;
-        openModal(els.receiptModal);
-        setTimeout(()=>{
-          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
-            const w = window.open('','_blank','width=700,height=800');
-            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
-            w.document.close(); setTimeout(()=> w.print(), 300);
-          });
-          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
-        },60);
-      }
-
-      els.adminBtn.addEventListener('click', () => {
-        if (isAdmin) {
-          if (!confirm('Sign out admin?')) return;
-          setAdmin(false);
-          notify('Admin signed out', 'var(--muted)');
-          return;
-        }
-        els.adminPassword.value = '';
-        openModal(els.adminModal);
-        setTimeout(() => els.adminPassword.focus(), 120);
-      });
-      els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
-      els.adminConfirm.addEventListener('click', () => {
-        const p = (els.adminPassword.value || '').trim();
-        if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
-        closeModal(els.adminModal);
-        setAdmin(true);
-        notify('Admin session active', 'var(--good)');
-      });
-
-      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
-
-      let deferredPrompt = null;
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        els.installBtn.style.display = 'block';
-      });
-
-      els.installBtn.addEventListener('click', async () => {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        els.installBtn.style.display = 'none';
-      });
-
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(reg => {
-          console.log('SW registered:', reg.scope);
-        }).catch(err => console.warn('SW registration failed:', err));
-      }
-
-      renderTransactions();
-      window.addEventListener('beforeunload', saveLocal);
-    });
-  </script>
-  <script src="adminDashboard.js"></script> <!-- NEW JS FILE -->
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('SW registered:', reg.scope);
+  }).catch(err => console.warn('SW registration failed:', err));
+}
+</script>
 </body>
 </html>
