@@ -185,7 +185,7 @@
         </div>
       </div>
 
-      <!-- Quick Actions - Simplified to Dropdown -->
+      <!-- Quick Actions -->
       <div style="display:flex;justify-content:center;margin-bottom:16px">
         <select id="quickActions" class="btn btn-ghost" style="width: auto; padding: 9px 16px;">
           <option>Quick Actions</option>
@@ -394,9 +394,6 @@
         editSaveBtn: document.getElementById('editSaveBtn'),
         receiptModal: document.getElementById('receiptModal'),
         receiptInner: document.getElementById('receiptInner'),
-        exportCsv: document.getElementById('exportCsv'),
-        genPL: document.getElementById('genPL'),
-        downloadPL: document.getElementById('downloadPL'),
         reportMonth: document.getElementById('reportMonth'),
         showPLBtn: document.getElementById('showPLBtn'),
         plView: document.getElementById('plView'),
@@ -405,16 +402,6 @@
         quickActions: document.getElementById('quickActions')
       };
 
-      // Quick Actions Handler
-      els.quickActions.addEventListener('change', (e) => {
-        const val = e.target.value;
-        if (val === 'export') els.exportCsv.click();
-        if (val === 'genPL') els.genPL.click();
-        if (val === 'downloadPL') els.downloadPL.click();
-        e.target.value = '';
-      });
-
-      // Rest of the script remains the same...
       const incomeCategories = [
         'Room Rental',
         'Parking Fees',
@@ -707,14 +694,45 @@
         });
       }
 
-      els.exportCsv.addEventListener('click', () => {
-        if (!transactions.length) { alert('No transactions to export'); return; }
-        let csv = 'Date,Type,Category,Amount,Notes\n';
-        transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
-        const blob = new Blob([csv], { type:'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        notify('CSV exported', 'var(--good)');
+      // Quick Actions Handler
+      els.quickActions.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val === 'export') {
+          if (!transactions.length) { alert('No transactions to export'); return; }
+          let csv = 'Date,Type,Category,Amount,Notes\n';
+          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+          const blob = new Blob([csv], { type:'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+          notify('CSV exported', 'var(--good)');
+        }
+        if (val === 'genPL') {
+          generatePL();
+        }
+        if (val === 'downloadPL') {
+          const m = els.reportMonth.value;
+          const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+          const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+          const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+          const { jsPDF } = window.jspdf || {};
+          if (!jsPDF) { alert('PDF library not ready'); return; }
+          const doc = new jsPDF();
+          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+          doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+          doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+          doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+          doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+          let y = 72;
+          const br = {};
+          arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+          doc.text('Category breakdown:', 14, y); y += 8;
+          for (const k in br) {
+            doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+            if (y > 270) { doc.addPage(); y = 20; }
+          }
+          doc.save(`PL_${m || 'all'}.pdf`);
+        }
+        e.target.value = '';
       });
 
       function generatePL() {
@@ -731,53 +749,7 @@
         els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
-      els.genPL.addEventListener('click', generatePL);
       els.showPLBtn.addEventListener('click', ()=> { generatePL(); openModal(els.receiptModal); });
-
-      els.downloadPL.addEventListener('click', () => {
-        const m = els.reportMonth.value;
-        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
-        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
-        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
-        const { jsPDF } = window.jspdf || {};
-        if (!jsPDF) { alert('PDF library not ready'); return; }
-        const doc = new jsPDF();
-        doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
-        doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
-        doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
-        doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
-        doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
-        let y = 72;
-        const br = {};
-        arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
-        doc.text('Category breakdown:', 14, y); y += 8;
-        for (const k in br) {
-          doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
-          if (y > 270) { doc.addPage(); y = 20; }
-        }
-        doc.save(`PL_${m || 'all'}.pdf`);
-      });
-
-      function openReceipt(key) {
-        const t = transactions.find(x => x.key === key);
-        if (!t) return;
-        const idx = transactions.findIndex(x => x.key === key);
-        const inv = 'INV-' + (10000 + idx);
-        const issued = new Date().toLocaleDateString();
-        let html = `<div style="padding:20px;background:var(--glass);border-radius:16px;text-align:center"><img src="11.png" alt="logo" style="max-width:160px;margin-bottom:12px" onerror="this.style.display='none'"><h3>Receipt</h3>
-          <div style="margin-top:12px;font-size:13px;text-align:left;display:inline-block"><strong>No:</strong> ${inv}<br><strong>Issued:</strong> ${issued}<br><strong>Date:</strong> ${t.date}<br><strong>Type:</strong> ${t.type}<br><strong>Category:</strong> ${t.category}<br><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}<br><strong>Notes:</strong> ${esc(t.notes || '-')}</div>
-          <div style="margin-top:16px"><button id="printReceipt" class="btn btn-admin">Print</button> <button id="closeReceipt" class="btn btn-ghost">Close</button></div></div>`;
-        els.receiptInner.innerHTML = html;
-        openModal(els.receiptModal);
-        setTimeout(()=>{
-          document.getElementById('printReceipt')?.addEventListener('click', ()=> {
-            const w = window.open('','_blank','width=700,height=800');
-            w.document.write('<html><head><title>Receipt</title></head><body>' + els.receiptInner.innerHTML + '</body></html>');
-            w.document.close(); setTimeout(()=> w.print(), 300);
-          });
-          document.getElementById('closeReceipt')?.addEventListener('click', ()=> closeModal(els.receiptModal));
-        },60);
-      }
 
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
