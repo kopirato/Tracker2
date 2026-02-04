@@ -295,14 +295,14 @@
             <div id="plView" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
           </div>
 
-          <!-- New AI Assistant Panel -->
+          <!-- New AI Assistant Panel with WebLLM -->
           <div class="panel" style="margin-top:14px">
-            <h3 style="font-size:15px;margin-bottom:8px">AI Assistant (Powered by Grok)</h3>
-            <p class="sub" style="margin-bottom:8px">Ask questions or get insights on your transactions. Get your xAI API key from <a href="https://x.ai/api" target="_blank" style="color:var(--accent1)">x.ai/api</a>.</p>
-            <div class="field"><label>API Key</label><input id="aiApiKey" type="password" placeholder="Enter xAI API Key"></div>
+            <h3 style="font-size:15px;margin-bottom:8px">AI Assistant (Powered by WebLLM)</h3>
+            <p class="sub" style="margin-bottom:8px">Ask questions or get insights on your transactions. Runs locally in your browser (WebGPU required; no API key needed). Model loads on first use—be patient!</p>
+            <div id="aiStatus" style="font-size:12px;color:var(--muted);margin-bottom:8px">Status: Loading model...</div>
             <textarea id="aiPrompt" placeholder="e.g., Analyze my transactions for trends..." style="width:100%;min-height:80px;margin-top:8px;"></textarea>
             <div style="display:flex;gap:6px;margin-top:8px">
-              <button id="askAiBtn" class="btn btn-admin">Ask Grok</button>
+              <button id="askAiBtn" class="btn btn-admin">Ask AI</button>
               <button id="aiSummaryBtn" class="btn btn-ghost">Summarize Transactions</button>
               <button id="aiSuggestionsBtn" class="btn btn-ghost">Business Suggestions</button>
             </div>
@@ -353,6 +353,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm"></script> <!-- WebLLM CDN -->
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -375,7 +376,6 @@
       const KEY_TX = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
-      const KEY_AI_API = "selelo_ai_api_key";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
       let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
@@ -430,7 +430,7 @@
         installBtn: document.getElementById('installBtn'),
         quickActions: document.getElementById('quickActions'),
         // AI Elements
-        aiApiKey: document.getElementById('aiApiKey'),
+        aiStatus: document.getElementById('aiStatus'),
         aiPrompt: document.getElementById('aiPrompt'),
         askAiBtn: document.getElementById('askAiBtn'),
         aiSummaryBtn: document.getElementById('aiSummaryBtn'),
@@ -867,59 +867,70 @@
         }).catch(err => console.warn('SW registration failed:', err));
       }
 
-      // AI Integration
-      els.aiApiKey.value = localStorage.getItem(KEY_AI_API) || '';
-      els.aiApiKey.addEventListener('change', () => localStorage.setItem(KEY_AI_API, els.aiApiKey.value));
+      // WebLLM Integration (AI Assistant)
+      let aiEngine = null;
+      const modelId = 'Llama-3.1-8B-Instruct-q4f16_1-MLC'; // Quantized for better browser perf; change if needed
+      const initProgressCallback = (progress) => {
+        els.aiStatus.textContent = `Status: ${progress.text} (${Math.round(progress.progress * 100)}%)`;
+      };
 
-      async function askGrok(prompt) {
-        const apiKey = els.aiApiKey.value.trim();
-        if (!apiKey) {
-          els.aiMsg.textContent = 'Enter xAI API Key first.';
+      async function loadAiModel() {
+        if (!navigator.gpu) {
+          els.aiMsg.textContent = 'WebGPU not supported—use Chrome/Edge with GPU.';
           return;
         }
-        els.aiMsg.textContent = '';
-        els.aiResponse.textContent = 'Thinking...';
         try {
-          const response = await fetch('https://api.x.ai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-              model: 'grok-4',
-              messages: [{ role: 'user', content: prompt }],
-              temperature: 0.7,
-              max_tokens: 500
-            })
-          });
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          const data = await response.json();
-          els.aiResponse.textContent = data.choices[0].message.content.trim();
+          els.aiStatus.textContent = 'Status: Loading model (may take time on first run)...';
+          aiEngine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
+          els.aiStatus.textContent = 'Status: Model ready!';
+          els.aiMsg.textContent = '';
         } catch (e) {
           console.error(e);
-          els.aiMsg.textContent = 'Error: ' + (e.message || 'Failed to connect to Grok API. Check key and network.');
+          els.aiMsg.textContent = 'Error loading model: ' + e.message;
+          els.aiStatus.textContent = 'Status: Failed';
+        }
+      }
+
+      loadAiModel(); // Load on page start
+
+      async function askAi(prompt) {
+        if (!aiEngine) {
+          els.aiMsg.textContent = 'Model not ready—wait or reload.';
+          return;
+        }
+        els.aiResponse.textContent = 'Thinking...';
+        els.aiMsg.textContent = '';
+        try {
+          const messages = [
+            { role: 'system', content: 'You are a helpful business assistant for Selelo Business Park. Analyze transactions and provide insights.' },
+            { role: 'user', content: prompt }
+          ];
+          const reply = await aiEngine.chat.completions.create({ messages, temperature: 0.7, max_tokens: 500 });
+          els.aiResponse.textContent = reply.choices[0].message.content.trim();
+        } catch (e) {
+          console.error(e);
+          els.aiMsg.textContent = 'Error: ' + e.message;
         }
       }
 
       els.askAiBtn.addEventListener('click', () => {
         const prompt = els.aiPrompt.value.trim();
         if (!prompt) return;
-        askGrok(prompt);
+        askAi(prompt);
       });
 
       els.aiSummaryBtn.addEventListener('click', () => {
-        const txData = JSON.stringify(transactions, null, 2);
+        const txData = JSON.stringify(transactions.slice(0, 50)); // Limit for perf
         const prompt = `Summarize these business transactions for trends, key insights, and potential issues: ${txData}`;
-        els.aiPrompt.value = prompt; // Optional: show the generated prompt
-        askGrok(prompt);
+        els.aiPrompt.value = prompt; // Show for user
+        askAi(prompt);
       });
 
       els.aiSuggestionsBtn.addEventListener('click', () => {
-        const txData = JSON.stringify(transactions, null, 2);
-        const prompt = `Based on these transactions: ${txData}, provide business suggestions to improve profitability, reduce expenses, or optimize operations for Selelo Business Park.`;
-        els.aiPrompt.value = prompt; // Optional: show the generated prompt
-        askGrok(prompt);
+        const txData = JSON.stringify(transactions.slice(0, 50)); // Limit for perf
+        const prompt = `Based on these transactions: ${txData}, provide suggestions to improve profitability, reduce expenses, or optimize operations for Selelo Business Park.`;
+        els.aiPrompt.value = prompt; // Show for user
+        askAi(prompt);
       });
 
       renderTransactions();
