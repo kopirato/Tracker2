@@ -134,6 +134,12 @@
       h1 { font-size: 18px; }
       .card { padding: 14px; }
     }
+
+    @media print {
+      .no-print { display: none; }
+      body { background: white; color: black; }
+      .modal-panel { border: none; box-shadow: none; background: white; }
+    }
   </style>
 </head>
 <body>
@@ -225,6 +231,7 @@
             <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
               <button id="addBtn" class="btn btn-admin" disabled>Add</button>
               <button id="clearBtn" class="btn btn-ghost">Clear</button>
+              <button id="payrollBtn" class="btn btn-ghost" style="display:none">Calculate Payroll</button>
               <div id="txMsg" style="color:var(--good);font-size:12px"></div>
             </div>
           </div>
@@ -299,12 +306,12 @@
           <div class="panel" style="margin-top:14px">
             <h3 style="font-size:15px;margin-bottom:8px">AI Assistant (Powered by WebLLM)</h3>
             <p class="sub" style="margin-bottom:8px">Ask questions or get insights on your transactions. Runs locally in your browser (WebGPU required; no API key needed). Model loads on first use—be patient!</p>
-            <div id="aiStatus" style="font-size:12px;color:var(--muted);margin-bottom:8px">Status: Loading model...</div>
+            <div id="aiStatus" style="font-size:12px;color:var(--muted);margin-bottom:8px">Status: Checking WebGPU...</div>
             <textarea id="aiPrompt" placeholder="e.g., Analyze my transactions for trends..." style="width:100%;min-height:80px;margin-top:8px;"></textarea>
             <div style="display:flex;gap:6px;margin-top:8px">
-              <button id="askAiBtn" class="btn btn-admin">Ask AI</button>
-              <button id="aiSummaryBtn" class="btn btn-ghost">Summarize Transactions</button>
-              <button id="aiSuggestionsBtn" class="btn btn-ghost">Business Suggestions</button>
+              <button id="askAiBtn" class="btn btn-admin" disabled>Ask AI</button>
+              <button id="aiSummaryBtn" class="btn btn-ghost" disabled>Summarize Transactions</button>
+              <button id="aiSuggestionsBtn" class="btn btn-ghost" disabled>Business Suggestions</button>
             </div>
             <div id="aiResponse" style="margin-top:10px;font-size:12px;color:var(--text);max-height:200px;overflow:auto;"></div>
             <div id="aiMsg" style="color:var(--danger);font-size:12px;margin-top:4px"></div>
@@ -346,6 +353,21 @@
 
   <div id="receiptModal" class="modal">
     <div class="modal-panel" id="receiptInner"></div>
+  </div>
+
+  <!-- Payroll Modal -->
+  <div id="payrollModal" class="modal">
+    <div class="modal-panel">
+      <h3>Payroll Calculator (Kenya 2026)</h3>
+      <div class="field"><label>Employee Name</label><input id="payrollName" type="text" placeholder="Employee Name"></div>
+      <div class="field"><label>Gross Salary (KES)</label><input id="payrollGross" type="number" min="0" step="0.01" placeholder="Gross Salary"></div>
+      <button id="calculatePayroll" class="btn btn-admin">Calculate</button>
+      <div id="payrollResult" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
+      <div style="text-align:right;margin-top:8px">
+        <button id="payrollCancel" class="btn btn-ghost">Cancel</button>
+        <button id="payrollApply" class="btn btn-admin" disabled>Apply to Transaction</button>
+      </div>
+    </div>
   </div>
 
   <!-- Libraries -->
@@ -429,6 +451,14 @@
         addPanel: document.getElementById('addPanel'),
         installBtn: document.getElementById('installBtn'),
         quickActions: document.getElementById('quickActions'),
+        payrollBtn: document.getElementById('payrollBtn'),
+        payrollModal: document.getElementById('payrollModal'),
+        payrollName: document.getElementById('payrollName'),
+        payrollGross: document.getElementById('payrollGross'),
+        calculatePayroll: document.getElementById('calculatePayroll'),
+        payrollResult: document.getElementById('payrollResult'),
+        payrollCancel: document.getElementById('payrollCancel'),
+        payrollApply: document.getElementById('payrollApply'),
         // AI Elements
         aiStatus: document.getElementById('aiStatus'),
         aiPrompt: document.getElementById('aiPrompt'),
@@ -492,8 +522,17 @@
         });
       }
 
-      els.txType.addEventListener('change', () => updateCategories(els.txCategory, els.txType.value));
-      els.editType.addEventListener('change', () => updateCategories(els.editCategory, els.editType.value));
+      els.txType.addEventListener('change', () => {
+        updateCategories(els.txCategory, els.txType.value);
+        checkForPayroll();
+      });
+      els.txCategory.addEventListener('change', checkForPayroll);
+
+      function checkForPayroll() {
+        const type = els.txType.value;
+        const category = els.txCategory.value;
+        els.payrollBtn.style.display = (type === 'Expense' && category === 'Salaries and wages') ? 'block' : 'none';
+      }
 
       updateCategories(els.txCategory, els.txType.value);
       updateCategories(els.editCategory, els.editType.value);
@@ -721,12 +760,33 @@
           <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
           <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
           <div style="text-align:right;margin-top:12px">
+            <button id="printReceipt" class="btn btn-ghost">Print</button>
             <button id="closeReceipt" class="btn btn-ghost">Close</button>
           </div>
         `;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
         document.getElementById('closeReceipt').addEventListener('click', () => closeModal(els.receiptModal));
+        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.innerHTML));
+      }
+
+      function printReceipt(content) {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Print Receipt</title>
+              <style>
+                body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
+                h3 { text-align: center; }
+                p { margin: 5px 0; }
+              </style>
+            </head>
+            <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
       }
 
       function renderCharts() {
@@ -867,27 +927,135 @@
         }).catch(err => console.warn('SW registration failed:', err));
       }
 
+      // Payroll Functions (Kenya 2026)
+      function calculatePAYE(gross) {
+        let taxable = gross; // Assume no other deductions for simplicity; in reality, subtract NSSF employee, etc.
+        let paye = 0;
+        if (taxable > 800000) {
+          paye += (taxable - 800000) * 0.35;
+          taxable = 800000;
+        }
+        if (taxable > 500000) {
+          paye += (taxable - 500000) * 0.325;
+          taxable = 500000;
+        }
+        if (taxable > 32333) {
+          paye += (taxable - 32333) * 0.3;
+          taxable = 32333;
+        }
+        if (taxable > 24000) {
+          paye += (taxable - 24000) * 0.25;
+          taxable = 24000;
+        }
+        paye += taxable * 0.1;
+        paye -= 2400; // Personal relief
+        return Math.max(paye, 0);
+      }
+
+      function calculateNSSF(gross) {
+        const lel = 9000;
+        const uel = 108000;
+        const rate = 0.06;
+        const tier1 = Math.min(gross, lel) * rate;
+        const tier2 = Math.min(Math.max(gross - lel, 0), uel - lel) * rate;
+        const employee = tier1 + tier2;
+        const employer = employee;
+        return { employee, employer };
+      }
+
+      function calculateSHIF(gross) {
+        return Math.max(gross * 0.0275, 300);
+      }
+
+      function calculateHousingLevy(gross) {
+        const rate = 0.015;
+        const employee = gross * rate;
+        const employer = employee;
+        return { employee, employer };
+      }
+
+      function calculatePayroll(gross) {
+        const nssf = calculateNSSF(gross);
+        const shif = calculateSHIF(gross);
+        const housing = calculateHousingLevy(gross);
+        const paye = calculatePAYE(gross - nssf.employee); // Taxable after NSSF employee
+        const employeeDeductions = paye + nssf.employee + shif + housing.employee;
+        const netPay = gross - employeeDeductions;
+        const employerContributions = nssf.employer + housing.employer;
+        const totalCost = gross + employerContributions;
+        return { gross, netPay, totalCost, paye, nssfEmployee: nssf.employee, nssfEmployer: nssf.employer, shif, housingEmployee: housing.employee, housingEmployer: housing.employer };
+      }
+
+      els.payrollBtn.addEventListener('click', () => {
+        els.payrollGross.value = els.txAmount.value || '';
+        els.payrollName.value = '';
+        els.payrollResult.innerHTML = '';
+        els.payrollApply.disabled = true;
+        openModal(els.payrollModal);
+      });
+
+      els.payrollCancel.addEventListener('click', () => closeModal(els.payrollModal));
+
+      els.calculatePayroll.addEventListener('click', () => {
+        const gross = parseFloat(els.payrollGross.value);
+        if (isNaN(gross) || gross <= 0) { alert('Enter valid gross salary'); return; }
+        const result = calculatePayroll(gross);
+        let html = `
+          <strong>Gross Salary:</strong> KES ${result.gross.toLocaleString()}<br>
+          <strong>PAYE:</strong> KES ${result.paye.toLocaleString()}<br>
+          <strong>NSSF Employee:</strong> KES ${result.nssfEmployee.toLocaleString()}<br>
+          <strong>SHIF:</strong> KES ${result.shif.toLocaleString()}<br>
+          <strong>Housing Levy Employee:</strong> KES ${result.housingEmployee.toLocaleString()}<br>
+          <strong>Net Pay:</strong> KES ${result.netPay.toLocaleString()}<br>
+          <hr>
+          <strong>NSSF Employer:</strong> KES ${result.nssfEmployer.toLocaleString()}<br>
+          <strong>Housing Levy Employer:</strong> KES ${result.housingEmployer.toLocaleString()}<br>
+          <strong>Total Employer Cost:</strong> KES ${result.totalCost.toLocaleString()}
+        `;
+        els.payrollResult.innerHTML = html;
+        els.payrollApply.disabled = false;
+      });
+
+      els.payrollApply.addEventListener('click', () => {
+        const gross = parseFloat(els.payrollGross.value);
+        const name = els.payrollName.value.trim();
+        const result = calculatePayroll(gross);
+        els.txAmount.value = result.netPay.toFixed(2); // Set amount to net pay (paid to employee)
+        els.txNotes.value = `Employee: ${name || 'N/A'}\nGross: KES ${gross.toLocaleString()}\nNet Pay: KES ${result.netPay.toLocaleString()}\nDeductions: PAYE ${result.paye.toLocaleString()}, NSSF Emp ${result.nssfEmployee.toLocaleString()}, SHIF ${result.shif.toLocaleString()}, Housing Emp ${result.housingEmployee.toLocaleString()}\nEmployer Costs: NSSF ${result.nssfEmployer.toLocaleString()}, Housing ${result.housingEmployer.toLocaleString()}\nTotal Total Cost: KES ${result.totalCost.toLocaleString()}`;
+        closeModal(els.payrollModal);
+        notify('Payroll applied to transaction (Net Pay as amount)', 'var(--good)');
+      });
+
       // WebLLM Integration (AI Assistant)
       let aiEngine = null;
-      const modelId = 'Llama-3.1-8B-Instruct-q4f16_1-MLC'; // Quantized for better browser perf; change if needed
+      const modelId = 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC'; // Smaller model for faster loading and better compatibility
       const initProgressCallback = (progress) => {
         els.aiStatus.textContent = `Status: ${progress.text} (${Math.round(progress.progress * 100)}%)`;
+        console.log('Model loading progress:', progress);
       };
 
       async function loadAiModel() {
         if (!navigator.gpu) {
-          els.aiMsg.textContent = 'WebGPU not supported—use Chrome/Edge with GPU.';
+          els.aiMsg.textContent = 'WebGPU not supported. Please use latest Chrome or Edge with WebGPU enabled (check chrome://flags).';
+          els.aiStatus.textContent = 'Status: Unsupported browser';
+          console.error('WebGPU not available');
           return;
         }
         try {
-          els.aiStatus.textContent = 'Status: Loading model (may take time on first run)...';
+          els.aiStatus.textContent = 'Status: Initializing model engine...';
+          console.log('Starting model load for:', modelId);
           aiEngine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
           els.aiStatus.textContent = 'Status: Model ready!';
           els.aiMsg.textContent = '';
+          // Enable buttons once ready
+          els.askAiBtn.disabled = false;
+          els.aiSummaryBtn.disabled = false;
+          els.aiSuggestionsBtn.disabled = false;
+          console.log('Model loaded successfully');
         } catch (e) {
-          console.error(e);
-          els.aiMsg.textContent = 'Error loading model: ' + e.message;
-          els.aiStatus.textContent = 'Status: Failed';
+          console.error('Model load error:', e);
+          els.aiMsg.textContent = 'Error loading model: ' + e.message + '. Check console for details. Try reloading or checking GPU flags.';
+          els.aiStatus.textContent = 'Status: Failed to load';
         }
       }
 
@@ -895,10 +1063,10 @@
 
       async function askAi(prompt) {
         if (!aiEngine) {
-          els.aiMsg.textContent = 'Model not ready—wait or reload.';
+          els.aiMsg.textContent = 'Model not ready yet—please wait or reload the page.';
           return;
         }
-        els.aiResponse.textContent = 'Thinking...';
+        els.aiResponse.textContent = 'Generating response...';
         els.aiMsg.textContent = '';
         try {
           const messages = [
@@ -908,8 +1076,8 @@
           const reply = await aiEngine.chat.completions.create({ messages, temperature: 0.7, max_tokens: 500 });
           els.aiResponse.textContent = reply.choices[0].message.content.trim();
         } catch (e) {
-          console.error(e);
-          els.aiMsg.textContent = 'Error: ' + e.message;
+          console.error('AI query error:', e);
+          els.aiMsg.textContent = 'Error generating response: ' + e.message;
         }
       }
 
