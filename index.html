@@ -126,55 +126,6 @@
 
     footer { text-align: center; margin-top: 20px; font-size: 11px; opacity: 0.7; font-weight: 300; }
 
-    /* Modern Receipt and P&L Styles */
-    .receipt-content, .pl-content {
-      text-align: center;
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .receipt-content h3, .pl-content h3 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: var(--accent1);
-    }
-    .receipt-content table, .pl-content table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 5px;
-      font-size: 13px;
-    }
-    .receipt-content table td, .pl-content table td {
-      padding: 10px;
-      background: rgba(255,255,255,0.03);
-      border: none;
-    }
-    .receipt-content table td:first-child, .pl-content table td:first-child {
-      font-weight: 600;
-      text-align: left;
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
-    }
-    .receipt-content table td:last-child, .pl-content table td:last-child {
-      text-align: right;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
-    .pl-content table thead th {
-      background: rgba(255,255,255,0.05);
-      padding: 10px;
-    }
-    .pl-content table tbody tr.section {
-      background: rgba(255,255,255,0.08);
-    }
-    .pl-content table tbody tr.total {
-      font-weight: 600;
-      color: var(--accent1);
-    }
-
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
       .nav-icons { gap: 18px; }
@@ -188,9 +139,6 @@
       .no-print { display: none; }
       body { background: white; color: black; }
       .modal-panel { border: none; box-shadow: none; background: white; }
-      .receipt-content, .pl-content { background: white; border: none; box-shadow: none; color: black; }
-      .receipt-content table td, .pl-content table td { background: transparent; }
-      .receipt-content h3, .pl-content h3 { color: #E2725B; }
     }
   </style>
 </head>
@@ -375,9 +323,6 @@
     </main>
   </div>
 
-  <!-- Hidden div for PDF charts -->
-  <div id="pdfCharts" style="display:none"></div>
-
   <!-- Modals - Simplified Styles -->
   <div id="adminModal" class="modal">
     <div class="modal-panel">
@@ -428,7 +373,6 @@
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf-autotable.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm"></script> <!-- WebLLM CDN -->
@@ -809,26 +753,21 @@
         const t = transactions.find(tx => tx.key === key);
         if (!t) return;
         const html = `
-          <div class="receipt-content">
-            <img src="11.png" class="logo" alt="Logo" style="display:block;margin:0 auto 20px auto; width: 60px; height: auto;">
-            <h3>Receipt</h3>
-            <table>
-              <tr><td>Date</td><td>${esc(t.date)}</td></tr>
-              <tr><td>Type</td><td>${esc(t.type)}</td></tr>
-              <tr><td>Category</td><td>${esc(t.category)}</td></tr>
-              <tr><td>Amount</td><td>KES ${Number(t.amount).toLocaleString()}</td></tr>
-              <tr><td>Notes</td><td>${esc(t.notes || 'N/A')}</td></tr>
-            </table>
-            <div style="text-align:right;margin-top:12px">
-              <button id="printReceipt" class="btn btn-ghost">Print</button>
-              <button id="closeReceipt" class="btn btn-ghost">Close</button>
-            </div>
+          <h3>Receipt</h3>
+          <p><strong>Date:</strong> ${esc(t.date)}</p>
+          <p><strong>Type:</strong> ${esc(t.type)}</p>
+          <p><strong>Category:</strong> ${esc(t.category)}</p>
+          <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
+          <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
+          <div style="text-align:right;margin-top:12px">
+            <button id="printReceipt" class="btn btn-ghost">Print</button>
+            <button id="closeReceipt" class="btn btn-ghost">Close</button>
           </div>
         `;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
         document.getElementById('closeReceipt').addEventListener('click', () => closeModal(els.receiptModal));
-        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(html));
+        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.innerHTML));
       }
 
       function printReceipt(content) {
@@ -839,12 +778,8 @@
               <title>Print Receipt</title>
               <style>
                 body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
-                .receipt-content { text-align: center; }
                 h3 { text-align: center; }
-                table { width: 100%; max-width: 400px; margin: 0 auto; }
-                td { padding: 8px; }
-                td:first-child { font-weight: bold; text-align: left; }
-                td:last-child { text-align: right; }
+                p { margin: 5px 0; }
               </style>
             </head>
             <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
@@ -894,13 +829,12 @@
       }
 
       // Quick Actions Handler
-      els.quickActions.addEventListener('change', async (e) => {
+      els.quickActions.addEventListener('change', (e) => {
         const val = e.target.value;
         if (val === 'export') {
           if (!transactions.length) { alert('No transactions to export'); return; }
           let csv = 'Date,Type,Category,Amount,Notes\n';
-          const sorted = sortTransactions(transactions).map(t => `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"`);
-          csv += sorted.join('\n');
+          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
           const blob = new Blob([csv], { type:'text/csv' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
@@ -910,252 +844,45 @@
           generatePL();
         }
         if (val === 'downloadPL') {
-          await downloadPL();
+          const m = els.reportMonth.value;
+          const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+          const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+          const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+          const { jsPDF } = window.jspdf || {};
+          if (!jsPDF) { alert('PDF library not ready'); return; }
+          const doc = new jsPDF();
+          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+          doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
+          doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
+          doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
+          doc.text(`Net: KES ${(inc - exp).toLocaleString()}`, 14, 60);
+          let y = 72;
+          const br = {};
+          arr.forEach(t=> br[t.category] = (br[t.category]||0) + Number(t.amount));
+          doc.text('Category breakdown:', 14, y); y += 8;
+          for (const k in br) {
+            doc.text(`${k}: KES ${br[k].toLocaleString()}`, 16, y); y += 8;
+            if (y > 270) { doc.addPage(); y = 20; }
+          }
+          doc.save(`PL_${m || 'all'}.pdf`);
         }
         e.target.value = '';
       });
 
-      async function getBase64(url) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.crossOrigin = 'Anonymous';
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL('image/png'));
-          };
-          img.onerror = reject;
-          img.src = url;
-        });
-      }
-
-      async function downloadPL() {
-        const { jsPDF } = window.jspdf || {};
-        if (!jsPDF) { alert('PDF library not ready'); return; }
-        const doc = new jsPDF();
-        const m = els.reportMonth.value;
-        let period, months;
-        if (!m) {
-          const today = new Date();
-          const year = today.getFullYear();
-          const mon = today.getMonth() + 1;
-          const q = Math.ceil(mon / 3);
-          period = `Reporting Year: ${year} Operating Quarter: Q${q}`;
-          const startMon = (q - 1) * 3 + 1;
-          months = Array.from({length: 3}, (_, i) => `${year}-${String(startMon + i).padStart(2, '0')}`);
-        } else {
-          const year = m.slice(0, 4);
-          const mon = parseInt(m.slice(5));
-          const q = Math.ceil(mon / 3);
-          period = `Reporting Year: ${year} Operating Quarter: Q${q}`;
-          const startMon = (q - 1) * 3 + 1;
-          months = Array.from({length: 3}, (_, i) => `${year}-${String(startMon + i).padStart(2, '0')}`);
-        }
-        const arr = transactions.filter(t => months.some(mm => t.date.startsWith(mm)));
-        const monthNames = months.map(mm => new Date(mm + '-01').toLocaleString('default', { month: 'long' }));
-        const monthlyIncome = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0));
-        const monthlyExpense = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0));
-        const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
-        const totalExpense = monthlyExpense.reduce((a, b) => a + b, 0);
-        const monthlyNet = monthlyIncome.map((inc, i) => inc - monthlyExpense[i]);
-        const totalNet = totalIncome - totalExpense;
-
-        // Income categories
-        const incomeCats = [...new Set(arr.filter(t => t.type === 'Income').map(t => t.category))].sort();
-        const incomeRows = incomeCats.map(cat => {
-          const monthly = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0));
-          const total = monthly.reduce((a, b) => a + b, 0);
-          return [cat, ...monthly.map(v => `KES ${v.toLocaleString()}`), `KES ${total.toLocaleString()}`];
-        });
-        const grossRow = ['Gross Profit', ...monthlyIncome.map(v => `KES ${v.toLocaleString()}`), `KES ${totalIncome.toLocaleString()}`];
-
-        // Expense categories
-        const expenseCats = [...new Set(arr.filter(t => t.type === 'Expense').map(t => t.category))].sort();
-        const expenseRows = expenseCats.map(cat => {
-          const monthly = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0));
-          const total = monthly.reduce((a, b) => a + b, 0);
-          return [cat, ...monthly.map(v => `KES ${v.toLocaleString()}`), `KES ${total.toLocaleString()}`];
-        });
-        const totalExpenseRow = ['Total Expenses', ...monthlyExpense.map(v => `KES ${v.toLocaleString()}`), `KES ${totalExpense.toLocaleString()}`];
-        const netRow = ['Net Profit', ...monthlyNet.map(v => `KES ${v.toLocaleString()}`), `KES ${totalNet.toLocaleString()}`];
-
-        // Logo
-        let logoBase64;
-        try {
-          logoBase64 = await getBase64('11.png');
-          doc.addImage(logoBase64, 'PNG', 10, 10, 20, 20);
-        } catch (e) {
-          console.warn('Logo load failed');
-        }
-
-        doc.setFillColor(17, 46, 81);
-        doc.rect(0, 0, 210, 30, 'F');
-        doc.setFontSize(22);
-        doc.setTextColor(255, 255, 255);
-        doc.text('Profit Loss Statement', 10, 20);
-        doc.setFontSize(12);
-        doc.text(period, 140, 20);
-
-        // Charts
-        const pdfCharts = document.getElementById('pdfCharts');
-        const incomeCanvas = document.createElement('canvas');
-        incomeCanvas.width = 400;
-        incomeCanvas.height = 200;
-        pdfCharts.appendChild(incomeCanvas);
-
-        const incomeColors = ['#006400', '#228B22', '#32CD32', '#90EE90', '#556B2F'];
-        new Chart(incomeCanvas.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: monthNames,
-            datasets: incomeCats.map((cat, i) => ({
-              label: cat,
-              data: months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0)),
-              backgroundColor: incomeColors[i % incomeColors.length],
-            }))
-          },
-          options: {
-            plugins: { title: { display: true, text: 'Income at a Glance' }, legend: { position: 'right' } },
-            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
-          }
-        });
-        doc.text('Income at a Glance', 10, 35);
-        doc.addImage(incomeCanvas.toDataURL('image/png'), 'PNG', 10, 40, 80, 40);
-
-        const expenseCanvas = document.createElement('canvas');
-        expenseCanvas.width = 400;
-        expenseCanvas.height = 200;
-        pdfCharts.appendChild(expenseCanvas);
-
-        const expenseColors = ['#8B0000', '#B22222', '#DC143C', '#FF4500', '#CD5C5C'];
-        new Chart(expenseCanvas.getContext('2d'), {
-          type: 'bar',
-          data: {
-            labels: monthNames,
-            datasets: expenseCats.map((cat, i) => ({
-              label: cat,
-              data: months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0)),
-              backgroundColor: expenseColors[i % expenseColors.length],
-            }))
-          },
-          options: {
-            plugins: { title: { display: true, text: 'Expenses at a Glance' }, legend: { position: 'right' } },
-            scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
-          }
-        });
-        doc.text('Expenses at a Glance', 10, 85);
-        doc.addImage(expenseCanvas.toDataURL('image/png'), 'PNG', 10, 90, 80, 40);
-
-        // Clean up canvases
-        pdfCharts.innerHTML = '';
-
-        // Detailed Overview
-        doc.text('Detailed Overview', 100, 35);
-        doc.autoTable({
-          startY: 40,
-          margin: { left: 100 },
-          head: [['', ...monthNames, 'Total']],
-          body: [
-            ['Income'],
-            ...incomeRows,
-            grossRow,
-            ['Expenses'],
-            ...expenseRows,
-            totalExpenseRow,
-            netRow
-          ],
-          theme: 'grid',
-          headStyles: { fillColor: [17, 46, 81], textColor: 255 },
-          bodyStyles: { textColor: 0 },
-          didParseCell: function(data) {
-            if (data.row.section === 'body' && data.row.index === 0 || data.row.index === incomeRows.length + 1 || data.row.index === incomeRows.length + expenseRows.length + 2) {
-              data.cell.styles.fillColor = [245, 245, 245];
-              data.cell.styles.fontStyle = 'bold';
-              data.cell.colSpan = monthNames.length + 2;
-            }
-            if (data.row.section === 'body' && (data.row.index === incomeRows.length || data.row.index === incomeRows.length + expenseRows.length + 1 || data.row.index === incomeRows.length + expenseRows.length + 2)) {
-              data.cell.styles.fontStyle = 'bold';
-            }
-          }
-        });
-
-        doc.save(`PL_${m || 'all'}.pdf`);
-      }
-
       function generatePL() {
         const m = els.reportMonth.value;
-        let period, months;
-        if (!m) {
-          const today = new Date();
-          const year = today.getFullYear();
-          const mon = today.getMonth() + 1;
-          const q = Math.ceil(mon / 3);
-          period = `Reporting Year: ${year} Operating Quarter: Q${q}`;
-          const startMon = (q - 1) * 3 + 1;
-          months = Array.from({length: 3}, (_, i) => `${year}-${String(startMon + i).padStart(2, '0')}`);
-        } else {
-          const year = m.slice(0, 4);
-          const mon = parseInt(m.slice(5));
-          const q = Math.ceil(mon / 3);
-          period = `Reporting Year: ${year} Operating Quarter: Q${q}`;
-          const startMon = (q - 1) * 3 + 1;
-          months = Array.from({length: 3}, (_, i) => `${year}-${String(startMon + i).padStart(2, '0')}`);
-        }
-        const arr = transactions.filter(t => months.some(mm => t.date.startsWith(mm)));
-        const monthNames = months.map(mm => new Date(mm + '-01').toLocaleString('default', { month: 'long' }));
-        const monthlyIncome = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0));
-        const monthlyExpense = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0));
-        const totalIncome = monthlyIncome.reduce((a, b) => a + b, 0);
-        const totalExpense = monthlyExpense.reduce((a, b) => a + b, 0);
-        const monthlyNet = monthlyIncome.map((inc, i) => inc - monthlyExpense[i]);
-        const totalNet = totalIncome - totalExpense;
-
-        const incomeCats = [...new Set(arr.filter(t => t.type === 'Income').map(t => t.category))].sort();
-        const incomeRows = incomeCats.map(cat => {
-          const monthly = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0));
-          const total = monthly.reduce((a, b) => a + b, 0);
-          return `<tr><td>${cat}</td>${monthly.map(v => `<td>KES ${v.toLocaleString()}</td>`).join('')}<td>KES ${total.toLocaleString()}</td></tr>`;
-        }).join('');
-        const grossRow = `${monthlyIncome.map(v => `<td>KES ${v.toLocaleString()}</td>`).join('')}<td>KES ${totalIncome.toLocaleString()}</td>`;
-
-        const expenseCats = [...new Set(arr.filter(t => t.type === 'Expense').map(t => t.category))].sort();
-        const expenseRows = expenseCats.map(cat => {
-          const monthly = months.map(mm => arr.filter(t => t.date.startsWith(mm) && t.category === cat && t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0));
-          const total = monthly.reduce((a, b) => a + b, 0);
-          return `<tr><td>${cat}</td>${monthly.map(v => `<td>KES ${v.toLocaleString()}</td>`).join('')}<td>KES ${total.toLocaleString()}</td></tr>`;
-        }).join('');
-        const totalExpenseRow = `${monthlyExpense.map(v => `<td>KES ${v.toLocaleString()}</td>`).join('')}<td>KES ${totalExpense.toLocaleString()}</td>`;
-        const netRow = `${monthlyNet.map(v => `<td>KES ${v.toLocaleString()}</td>`).join('')}<td>KES ${totalNet.toLocaleString()}</td>`;
-
-        let html = `
-          <div class="pl-content">
-            <img src="11.png" class="logo" alt="Logo" style="display:block;margin:0 auto 10px auto;">
-            <h3>Profit & Loss Statement</h3>
-            <p>${period}</p>
-            <table>
-              <thead><tr><th></th>${monthNames.map(name => `<th>${name}</th>`).join('')}<th>Total</th></tr></thead>
-              <tbody>
-                <tr class="section"><td colspan="${monthNames.length + 2}">Income</td></tr>
-                ${incomeRows}
-                <tr class="total"><td>Gross Profit</td>${grossRow}</tr>
-                <tr class="section"><td colspan="${monthNames.length + 2}">Expenses</td></tr>
-                ${expenseRows}
-                <tr class="total"><td>Total Expenses</td>${totalExpenseRow}</tr>
-                <tr class="total"><td>Net Profit</td>${netRow}</tr>
-              </tbody>
-            </table>
-          </div>
-        `;
+        const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
+        const inc = arr.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        const br = {};
+        arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
+        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
+        html += '</ul></div>';
         els.plView.innerHTML = html;
+        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
+        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
-
-      els.showPLBtn.addEventListener('click', generatePL);
-      els.downloadPLBtn.addEventListener('click', async () => {
-        await downloadPL();
-      });
 
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
@@ -1314,11 +1041,6 @@
           console.error('WebGPU not available');
           return;
         }
-        if (typeof webllm === 'undefined') {
-          els.aiMsg.textContent = 'WebLLM library not loaded. Please check the console for errors.';
-          els.aiStatus.textContent = 'Status: Library not loaded';
-          return;
-        }
         try {
           els.aiStatus.textContent = 'Status: Initializing model engine...';
           console.log('Starting model load for:', modelId);
@@ -1383,5 +1105,6 @@
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
+  <script src="adminDashboard.js"></script>
 </body>
 </html>
