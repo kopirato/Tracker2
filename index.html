@@ -126,6 +126,57 @@
 
     footer { text-align: center; margin-top: 20px; font-size: 11px; opacity: 0.7; font-weight: 300; }
 
+    /* Modern Receipt and P&L Styles */
+    .receipt-content, .pl-content {
+      text-align: center;
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .receipt-content h3, .pl-content h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--accent1);
+    }
+    .receipt-content table, .pl-content table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 5px;
+      font-size: 13px;
+    }
+    .receipt-content table td, .pl-content table td {
+      padding: 10px;
+      background: rgba(255,255,255,0.03);
+      border: none;
+    }
+    .receipt-content table td:first-child, .pl-content table td:first-child {
+      font-weight: 600;
+      text-align: left;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+    .receipt-content table td:last-child, .pl-content table td:last-child {
+      text-align: right;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+    .pl-content ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+    .pl-content li {
+      background: rgba(255,255,255,0.03);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
       .nav-icons { gap: 18px; }
@@ -139,6 +190,9 @@
       .no-print { display: none; }
       body { background: white; color: black; }
       .modal-panel { border: none; box-shadow: none; background: white; }
+      .receipt-content, .pl-content { background: white; border: none; box-shadow: none; color: black; }
+      .receipt-content table td, .pl-content table td { background: transparent; }
+      .receipt-content h3, .pl-content h3 { color: #E2725B; }
     }
   </style>
 </head>
@@ -706,7 +760,7 @@
         if (sort === 'date_asc') return arr.sort((a, b) => new Date(a.date) - new Date(b.date));
         if (sort === 'date_desc') return arr.sort((a, b) => new Date(b.date) - new Date(a.date));
         if (sort === 'amount_asc') return arr.sort((a, b) => a.amount - b.amount);
-        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - a.amount);
+        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - b.amount);
         return arr;
       }
 
@@ -753,21 +807,26 @@
         const t = transactions.find(tx => tx.key === key);
         if (!t) return;
         const html = `
-          <h3>Receipt</h3>
-          <p><strong>Date:</strong> ${esc(t.date)}</p>
-          <p><strong>Type:</strong> ${esc(t.type)}</p>
-          <p><strong>Category:</strong> ${esc(t.category)}</p>
-          <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
-          <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
-          <div style="text-align:right;margin-top:12px">
-            <button id="printReceipt" class="btn btn-ghost">Print</button>
-            <button id="closeReceipt" class="btn btn-ghost">Close</button>
+          <div class="receipt-content">
+            <img src="11.png" class="logo" alt="Logo" style="display:block;margin:0 auto 10px auto;">
+            <h3>Receipt</h3>
+            <table>
+              <tr><td>Date</td><td>${esc(t.date)}</td></tr>
+              <tr><td>Type</td><td>${esc(t.type)}</td></tr>
+              <tr><td>Category</td><td>${esc(t.category)}</td></tr>
+              <tr><td>Amount</td><td>KES ${Number(t.amount).toLocaleString()}</td></tr>
+              <tr><td>Notes</td><td>${esc(t.notes || 'N/A')}</td></tr>
+            </table>
+            <div style="text-align:right;margin-top:12px">
+              <button id="printReceipt" class="btn btn-ghost">Print</button>
+              <button id="closeReceipt" class="btn btn-ghost">Close</button>
+            </div>
           </div>
         `;
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
         document.getElementById('closeReceipt').addEventListener('click', () => closeModal(els.receiptModal));
-        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.innerHTML));
+        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(html));
       }
 
       function printReceipt(content) {
@@ -778,8 +837,12 @@
               <title>Print Receipt</title>
               <style>
                 body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
+                .receipt-content { text-align: center; }
                 h3 { text-align: center; }
-                p { margin: 5px 0; }
+                table { width: 100%; max-width: 400px; margin: 0 auto; }
+                td { padding: 8px; }
+                td:first-child { font-weight: bold; text-align: left; }
+                td:last-child { text-align: right; }
               </style>
             </head>
             <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
@@ -828,8 +891,26 @@
         });
       }
 
+      // Helper to get base64 for PDF image
+      async function getBase64(url) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          };
+          img.onerror = reject;
+          img.src = url;
+        });
+      }
+
       // Quick Actions Handler
-      els.quickActions.addEventListener('change', (e) => {
+      els.quickActions.addEventListener('change', async (e) => {
         const val = e.target.value;
         if (val === 'export') {
           if (!transactions.length) { alert('No transactions to export'); return; }
@@ -851,7 +932,13 @@
           const { jsPDF } = window.jspdf || {};
           if (!jsPDF) { alert('PDF library not ready'); return; }
           const doc = new jsPDF();
-          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
+          try {
+            const logoBase64 = await getBase64('11.png');
+            doc.addImage(logoBase64, 'PNG', 14, 10, 20, 20); // Logo stamp
+          } catch (e) {
+            console.warn('Failed to add logo to PDF:', e);
+          }
+          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 40, 20);
           doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
           doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
           doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
@@ -876,12 +963,23 @@
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const br = {};
         arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
-        for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
-        html += '</ul></div>';
+        let html = `
+          <div class="pl-content">
+            <img src="11.png" class="logo" alt="Logo" style="display:block;margin:0 auto 10px auto;">
+            <h3>Profit & Loss Statement</h3>
+            <table>
+              <tr><td>Period</td><td>${m || 'All'}</td></tr>
+              <tr><td>Income</td><td>KES ${inc.toLocaleString()}</td></tr>
+              <tr><td>Expense</td><td>KES ${exp.toLocaleString()}</td></tr>
+              <tr><td>Net</td><td>KES ${(inc-exp).toLocaleString()}</td></tr>
+            </table>
+            <div style="margin-top:15px"><strong>Category Breakdown:</strong></div>
+            <table>
+              ${Object.keys(br).map(k => `<tr><td>${k}</td><td>KES ${br[k].toLocaleString()}</td></tr>`).join('')}
+            </table>
+          </div>
+        `;
         els.plView.innerHTML = html;
-        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
-        setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
 
       els.adminBtn.addEventListener('click', () => {
