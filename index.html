@@ -126,41 +126,6 @@
 
     footer { text-align: center; margin-top: 20px; font-size: 11px; opacity: 0.7; font-weight: 300; }
 
-    /* Modern Minimalist Styles for Generated Content */
-    .generated-content {
-      text-align: center;
-      background: var(--glass-strong);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.1);
-      max-width: 400px;
-      margin: 0 auto;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .generated-content h3 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: var(--accent1);
-    }
-    .generated-content p {
-      margin: 8px 0;
-      text-align: left;
-      display: flex;
-      justify-content: space-between;
-    }
-    .generated-content p strong {
-      font-weight: 500;
-      color: var(--muted);
-    }
-    .generated-content .logo {
-      display: block;
-      margin: 0 auto 20px auto;
-      width: 60px;
-      height: auto;
-    }
-
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
       .nav-icons { gap: 18px; }
@@ -174,9 +139,6 @@
       .no-print { display: none; }
       body { background: white; color: black; }
       .modal-panel { border: none; box-shadow: none; background: white; }
-      .generated-content { background: white; border: none; box-shadow: none; color: black; padding: 10px; }
-      .generated-content h3 { color: #E2725B; }
-      .generated-content p strong { color: #333; }
     }
   </style>
 </head>
@@ -522,7 +484,6 @@
         'Repairs and maintenance',
         'Advertising',
         'Agency fees',
-        'Construction',
         'Legal expenses',
         'Stationery and office expenses',
         'Security costs',
@@ -547,7 +508,6 @@
         'County approval fees',
         'Nema fees',
         'NCA fees',
-        'Airtime'
         'Consents/land control board cos'
       ];
 
@@ -779,6 +739,11 @@
         const act = b.dataset.act, key = b.dataset.key;
         if (act === 'edit') {
           openEdit(key);
+          const editModal = els.editModal;
+          const rect = b.getBoundingClientRect();
+          editModal.style.top = `${rect.top + window.scrollY}px`;
+          editModal.style.left = `${rect.left + window.scrollX}px`;
+          editModal.style.transform = 'none';
         }
         if (act === 'del') deleteTx(key);
         if (act === 'rcpt') openReceipt(key);
@@ -788,15 +753,12 @@
         const t = transactions.find(tx => tx.key === key);
         if (!t) return;
         const html = `
-          <div class="generated-content">
-            <img src="11.png" class="logo" alt="Logo">
-            <h3>Receipt</h3>
-            <p><strong>Date:</strong> <span>${esc(t.date)}</span></p>
-            <p><strong>Type:</strong> <span>${esc(t.type)}</span></p>
-            <p><strong>Category:</strong> <span>${esc(t.category)}</span></p>
-            <p><strong>Amount:</strong> <span>KES ${Number(t.amount).toLocaleString()}</span></p>
-            <p><strong>Notes:</strong> <span>${esc(t.notes || 'N/A')}</span></p>
-          </div>
+          <h3>Receipt</h3>
+          <p><strong>Date:</strong> ${esc(t.date)}</p>
+          <p><strong>Type:</strong> ${esc(t.type)}</p>
+          <p><strong>Category:</strong> ${esc(t.category)}</p>
+          <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
+          <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
           <div style="text-align:right;margin-top:12px">
             <button id="printReceipt" class="btn btn-ghost">Print</button>
             <button id="closeReceipt" class="btn btn-ghost">Close</button>
@@ -805,7 +767,7 @@
         els.receiptInner.innerHTML = html;
         openModal(els.receiptModal);
         document.getElementById('closeReceipt').addEventListener('click', () => closeModal(els.receiptModal));
-        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.querySelector('.generated-content').outerHTML));
+        document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.innerHTML));
       }
 
       function printReceipt(content) {
@@ -816,14 +778,11 @@
               <title>Print Receipt</title>
               <style>
                 body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
-                .generated-content { text-align: center; max-width: 400px; margin: 0 auto; }
-                h3 { text-align: center; color: #E2725B; }
-                p { margin: 8px 0; display: flex; justify-content: space-between; }
-                p strong { color: #333; }
-                .logo { display: block; margin: 0 auto 20px auto; width: 60px; height: auto; }
+                h3 { text-align: center; }
+                p { margin: 5px 0; }
               </style>
             </head>
-            <body>${content}</body>
+            <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
           </html>
         `);
         printWindow.document.close();
@@ -892,8 +851,7 @@
           const { jsPDF } = window.jspdf || {};
           if (!jsPDF) { alert('PDF library not ready'); return; }
           const doc = new jsPDF();
-          doc.addImage('11.png', 'PNG', 14, 10, 20, 20); // Add logo to PDF
-          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 40, 20);
+          doc.setFontSize(16); doc.text('SELELO BUSINESS PARK - Profit & Loss', 14, 20);
           doc.setFontSize(11); doc.text(`Period: ${m || 'All'}`, 14, 32);
           doc.text(`Income: KES ${inc.toLocaleString()}`, 14, 44);
           doc.text(`Expense: KES ${exp.toLocaleString()}`, 14, 52);
@@ -918,21 +876,11 @@
         const exp = arr.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
         const br = {};
         arr.forEach(t => br[t.category] = (br[t.category] || 0) + Number(t.amount));
-        let html = `
-          <div class="generated-content">
-            <img src="11.png" class="logo" alt="Logo">
-            <h3>Profit & Loss Statement</h3>
-            <p><strong>Period:</strong> <span>${m || 'All'}</span></p>
-            <p><strong>Income:</strong> <span>KES ${inc.toLocaleString()}</span></p>
-            <p><strong>Expense:</strong> <span>KES ${exp.toLocaleString()}</span></p>
-            <p><strong>Net:</strong> <span>KES ${(inc-exp).toLocaleString()}</span></p>
-            <div style="margin-top:8px"><strong>Category Breakdown:</strong></div>
-            <ul style="margin:0;padding-left:20px; text-align: left;">
-        `;
+        let html = `<strong>Period:</strong> ${m || 'All'}<br><strong>Income:</strong> KES ${inc.toLocaleString()}<br><strong>Expense:</strong> KES ${exp.toLocaleString()}<br><strong>Net:</strong> KES ${(inc-exp).toLocaleString()}<div style="margin-top:8px"><strong>Category Breakdown:</strong><ul style="margin:0;padding-left:20px">`;
         for (const k in br) html += `<li>${k}: KES ${br[k].toLocaleString()}</li>`;
-        html += `</ul></div>`;
+        html += '</ul></div>';
         els.plView.innerHTML = html;
-        els.receiptInner.innerHTML = html + `<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div>`;
+        els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
 
@@ -1094,8 +1042,6 @@
           return;
         }
         try {
-          els.aiStatus.textContent = 'Status: Loading WebLLM library...';
-          const webllm = await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm");
           els.aiStatus.textContent = 'Status: Initializing model engine...';
           console.log('Starting model load for:', modelId);
           aiEngine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
