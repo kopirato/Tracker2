@@ -1153,7 +1153,9 @@
       }
 
       els.showPLBtn.addEventListener('click', generatePL);
-      els.downloadPLBtn.addEventListener('click', downloadPL);
+      els.downloadPLBtn.addEventListener('click', async () => {
+        await downloadPL();
+      });
 
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
@@ -1312,6 +1314,11 @@
           console.error('WebGPU not available');
           return;
         }
+        if (typeof webllm === 'undefined') {
+          els.aiMsg.textContent = 'WebLLM library not loaded. Please check the console for errors.';
+          els.aiStatus.textContent = 'Status: Library not loaded';
+          return;
+        }
         try {
           els.aiStatus.textContent = 'Status: Initializing model engine...';
           console.log('Starting model load for:', modelId);
@@ -1376,6 +1383,5 @@
       window.addEventListener('beforeunload', saveLocal);
     });
   </script>
-  <script src="adminDashboard.js"></script>
 </body>
 </html>
