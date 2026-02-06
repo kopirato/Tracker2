@@ -375,7 +375,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm"></script> <!-- WebLLM CDN -->
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -1042,6 +1041,8 @@
           return;
         }
         try {
+          els.aiStatus.textContent = 'Status: Loading WebLLM library...';
+          const webllm = await import("https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm");
           els.aiStatus.textContent = 'Status: Initializing model engine...';
           console.log('Starting model load for:', modelId);
           aiEngine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
