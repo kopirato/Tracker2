@@ -186,6 +186,15 @@
             </svg>
             <span>Business Card</span>
           </a>
+          <a href="carwash.html" class="nav-item">
+            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 9h18v6H3z" />
+              <circle cx="6" cy="15" r="2" />
+              <circle cx="18" cy="15" r="2" />
+              <path d="M7 9l-2-3h-2v3h4zM17 9l2-3h2v3h-4z" />
+            </svg>
+            <span>Car Wash</span>
+          </a>
         </div>
 
         <div class="controls">
@@ -227,6 +236,7 @@
             </div>
 
             <div style="margin-top:10px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..." style="min-height:60px;"></textarea></div>
+            <div style="margin-top:10px"><label>Receipt Image</label><input id="txReceipt" type="file" accept="image/*" required></div>
 
             <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
               <button id="addBtn" class="btn btn-admin" disabled>Add</button>
@@ -344,6 +354,8 @@
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Category</label><select id="editCategory" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></select>
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Notes</label><textarea id="editNotes" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);min-height:60px"></textarea>
+      <label style="font-size:12px;color:var(--muted);margin-top:6px">Receipt Image</label><input id="editReceipt" type="file" accept="image/*" style="width:100%;margin-top:4px">
+      <img id="editCurrentReceipt" src="" alt="Current Receipt" style="max-width:200px;display:none;margin-top:6px;border-radius:8px">
       <div style="text-align:right;margin-top:8px">
         <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
         <button id="editSaveBtn" class="btn btn-admin">Save</button>
@@ -414,6 +426,7 @@
         txCategory: document.getElementById('txCategory'),
         txAmount: document.getElementById('txAmount'),
         txNotes: document.getElementById('txNotes'),
+        txReceipt: document.getElementById('txReceipt'),
         txMsg: document.getElementById('txMsg'),
         txTbody: document.getElementById('txTbody'),
         fMonth: document.getElementById('fMonth'),
@@ -440,6 +453,8 @@
         editCategory: document.getElementById('editCategory'),
         editAmount: document.getElementById('editAmount'),
         editNotes: document.getElementById('editNotes'),
+        editReceipt: document.getElementById('editReceipt'),
+        editCurrentReceipt: document.getElementById('editCurrentReceipt'),
         editCancelBtn: document.getElementById('editCancelBtn'),
         editSaveBtn: document.getElementById('editSaveBtn'),
         receiptModal: document.getElementById('receiptModal'),
@@ -554,6 +569,15 @@
       function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
       function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
 
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(file);
+        });
+      }
+
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
 
       (function applyTheme() {
@@ -604,16 +628,26 @@
         transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       }
 
-      els.addBtn.addEventListener('click', () => {
+      els.addBtn.addEventListener('click', async () => {
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
-        const newTx = { date, type, category, amount, notes };
+        let receipt = '';
+        if (els.txReceipt.files.length) {
+          try {
+            receipt = await readFileAsDataURL(els.txReceipt.files[0]);
+          } catch (e) {
+            alert('Error reading receipt image'); return;
+          }
+        } else {
+          alert('Please upload a receipt image'); return;
+        }
+        const newTx = { date, type, category, amount, notes, receipt };
         if (usingFirebase && txRef) {
           txRef.push(newTx).then(() => {
             notify('Added (synced to cloud)');
-            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txReceipt.value = '';
           }).catch(e => {
             console.error(e);
             newTx.key = Date.now().toString();
@@ -628,11 +662,11 @@
           saveLocal();
           renderTransactions();
           notify('Added locally');
-          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txReceipt.value = '';
         }
       });
 
-      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
+      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txReceipt.value = ''; });
 
       function openEdit(key) {
         if (!isAdmin) { alert('Admin only'); return; }
@@ -640,13 +674,25 @@
         const t = transactions.find(t => t.key === key);
         if (!t) return;
         els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        els.editCurrentReceipt.src = t.receipt || '';
+        els.editCurrentReceipt.style.display = t.receipt ? 'block' : 'none';
+        els.editReceipt.value = '';
         openModal(els.editModal);
       }
       els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
-      els.editSaveBtn.addEventListener('click', () => {
+      els.editSaveBtn.addEventListener('click', async () => {
         if (!isAdmin || !editKey) return;
         const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
+        let receipt = transactions.find(t => t.key === editKey).receipt || '';
+        if (els.editReceipt.files.length) {
+          try {
+            receipt = await readFileAsDataURL(els.editReceipt.files[0]);
+          } catch (e) {
+            alert('Error reading receipt image'); return;
+          }
+        }
+        nd.receipt = receipt;
         if (usingFirebase && txRef) {
           txRef.child(editKey).update(nd).then(() => {
             closeModal(els.editModal); notify('Edited (synced)'); editKey = null;
@@ -724,7 +770,8 @@
             actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
             actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
           }
-          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          const notesDisplay = esc(t.notes || '') + (t.receipt ? ' <span style="color:var(--accent1)">📎</span>' : '');
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${notesDisplay}</td><td>${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
           if (t.type === 'Income') inc += Number(t.amount);
           if (t.type === 'Expense') exp += Number(t.amount);
@@ -754,6 +801,10 @@
       function openReceipt(key) {
         const t = transactions.find(tx => tx.key === key);
         if (!t) return;
+        let receiptImg = '';
+        if (t.receipt) {
+          receiptImg = `<img src="${esc(t.receipt)}" alt="Receipt Image" style="max-width:100%;margin-top:10px;border-radius:8px">`;
+        }
         const html = `
           <h3>Receipt</h3>
           <p><strong>Date:</strong> ${esc(t.date)}</p>
@@ -761,6 +812,7 @@
           <p><strong>Category:</strong> ${esc(t.category)}</p>
           <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
           <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
+          ${receiptImg}
           <div style="text-align:right;margin-top:12px">
             <button id="printReceipt" class="btn btn-ghost">Print</button>
             <button id="closeReceipt" class="btn btn-ghost">Close</button>
@@ -782,6 +834,7 @@
                 body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
                 h3 { text-align: center; }
                 p { margin: 5px 0; }
+                img { max-width: 100%; }
               </style>
             </head>
             <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
@@ -835,8 +888,8 @@
         const val = e.target.value;
         if (val === 'export') {
           if (!transactions.length) { alert('No transactions to export'); return; }
-          let csv = 'Date,Type,Category,Amount,Notes\n';
-          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+          let csv = 'Date,Type,Category,Amount,Notes,Receipt\n';
+          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}","${t.receipt ? 'Yes' : 'No'}"\n`);
           const blob = new Blob([csv], { type:'text/csv' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
