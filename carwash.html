@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kitengela Car Park | Receipt System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f5f9;
+    padding:15px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+
+.logo{
+    width:100%;
+    max-height:130px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+h2,h3{
+    text-align:center;
+    color:#003366;
+}
+
+label{
+    font-weight:bold;
+    margin-top:12px;
+    display:block;
+}
+
+input{
+    width:100%;
+    padding:9px;
+    margin-top:4px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:15px;
+}
+
+button{
+    margin-top:18px;
+    padding:10px 20px;
+    background:#003366;
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    background:#0055aa;
+}
+
+.hidden{
+    display:none;
+}
+
+/* Receipt */
+
+#receipt{
+    display:none;
+    margin-top:30px;
+}
+
+.receipt-box{
+    border:2px solid #000;
+    padding:20px;
+}
+
+.receipt-title{
+    font-weight:bold;
+    font-size:18px;
+    border-bottom:2px solid black;
+    padding-bottom:6px;
+    margin-bottom:12px;
+    text-align:center;
+}
+
+.receipt-row{
+    margin:6px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,td{
+    border:1px solid black;
+    padding:8px;
+    text-align:left;
+}
+
+@media print{
+
+    body *{
+        visibility:hidden;
+    }
+
+    #receipt, #receipt *{
+        visibility:visible;
+    }
+
+    #receipt{
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+    }
+
+    button{
+        display:none;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LOGO -->
+<img src="carwash.jpg" class="logo">
+
+<h2>Driver Information & Vehicle Inspection</h2>
+
+<!-- LOGIN -->
+<div id="loginBox" style="text-align:center;">
+    <button onclick="login()">Login with Google</button>
+</div>
+
+
+<!-- FORM -->
+<div id="formBox" class="hidden">
+
+<label>Driver Name</label>
+<input id="driver" required>
+
+<label>Date</label>
+<input type="date" id="date" required>
+
+<label>Time In</label>
+<input type="time" id="timeIn" required>
+
+<label>Time Out</label>
+<input type="time" id="timeOut" required>
+
+<label>Truck Number</label>
+<input id="truck" required>
+
+<label>Company Name</label>
+<input id="company" required>
+
+<label>Phone Number</label>
+<input id="phone" required>
+
+<label>Email (Optional)</label>
+<input id="email">
+
+<h3>Vehicle Checklist</h3>
+
+<label>Battery</label>
+<input id="battery" placeholder="✓ / OK / Missing">
+
+<label>Wheel Spanner</label>
+<input id="spanner" placeholder="✓ / OK / Missing">
+
+<label>Jack</label>
+<input id="jack" placeholder="✓ / OK / Missing">
+
+<label>Spare Wheel</label>
+<input id="spare" placeholder="✓ / OK / Missing">
+
+<label>Dents / Damages</label>
+<input id="damage" placeholder="None / Describe">
+
+<button onclick="saveData()">Save Record</button>
+
+<button id="receiptBtn" class="hidden" onclick="generateReceipt()">
+Generate Receipt
+</button>
+
+</div>
+
+</div>
+
+
+<!-- RECEIPT -->
+<div id="receipt">
+
+<div class="receipt-box">
+
+<img src="carwash.jpg" class="logo">
+
+<div class="receipt-title">
+Driver Information & Vehicle Inspection Template
+</div>
+
+<div class="receipt-row"><b>Name:</b> <span id="r_driver"></span></div>
+<div class="receipt-row"><b>Date:</b> <span id="r_date"></span></div>
+<div class="receipt-row"><b>Time In:</b> <span id="r_in"></span></div>
+<div class="receipt-row"><b>Time Out:</b> <span id="r_out"></span></div>
+<div class="receipt-row"><b>Truck:</b> <span id="r_truck"></span></div>
+<div class="receipt-row"><b>Company:</b> <span id="r_company"></span></div>
+<div class="receipt-row"><b>Phone:</b> <span id="r_phone"></span></div>
+<div class="receipt-row"><b>Email:</b> <span id="r_email"></span></div>
+
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Present (✓)</th>
+<th>Notes</th>
+</tr>
+
+<tr>
+<td>Battery</td>
+<td id="r_battery"></td>
+<td></td>
+</tr>
+
+<tr>
+<td>Wheel Spanner</td>
+<td id="r_spanner"></td>
+<td></td>
+</tr>
+
+<tr>
+<td>Jack</td>
+<td id="r_jack"></td>
+<td></td>
+</tr>
+
+<tr>
+<td>Spare Wheel</td>
+<td id="r_spare"></td>
+<td></td>
+</tr>
+
+<tr>
+<td>Damages</td>
+<td id="r_damage"></td>
+<td></td>
+</tr>
+
+</table>
+
+<br>
+
+<button onclick="window.print()">Print / Save PDF</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* Firebase Config (Your Project) */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD1IrZScZZOZXEkWBM8WUDhKrnSTM89TIY",
+  authDomain: "selelo-tracker.firebaseapp.com",
+  databaseURL: "https://selelo-tracker-default-rtdb.firebaseio.com",
+  projectId: "selelo-tracker",
+  storageBucket: "selelo-tracker.firebasestorage.app",
+  messagingSenderId: "42660826905",
+  appId: "1:42660826905:web:b3074d71e00e2e0b9fbf88",
+  measurementId: "G-PEV5LDMWB5"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+/* LOGIN */
+
+function login(){
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    auth.signInWithPopup(provider)
+    .then(()=>{
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("formBox").classList.remove("hidden");
+    })
+    .catch(err=>{
+        alert(err.message);
+    });
+
+}
+
+
+/* SAVE DATA */
+
+let savedData = null;
+
+function saveData(){
+
+    let driver = driverInput().value;
+
+    let date = document.getElementById("date").value;
+    let timeIn = document.getElementById("timeIn").value;
+    let timeOut = document.getElementById("timeOut").value;
+    let truck = document.getElementById("truck").value;
+    let company = document.getElementById("company").value;
+    let phone = document.getElementById("phone").value;
+
+
+    if(!driver || !date || !timeIn || !timeOut || !truck || !company || !phone){
+
+        alert("Please fill all required fields");
+        return;
+
+    }
+
+
+    let data = {
+
+        driver,
+        date,
+        timeIn,
+        timeOut,
+        truck,
+        company,
+        phone,
+
+        email: document.getElementById("email").value,
+
+        battery: document.getElementById("battery").value,
+        spanner: document.getElementById("spanner").value,
+        jack: document.getElementById("jack").value,
+        spare: document.getElementById("spare").value,
+        damage: document.getElementById("damage").value,
+
+        user: auth.currentUser.uid,
+
+        created: firebase.firestore.FieldValue.serverTimestamp()
+
+    };
+
+
+    db.collection("carwashRecords").add(data)
+
+    .then(()=>{
+
+        alert("Record Saved Successfully");
+
+        savedData = data;
+
+        document.getElementById("receiptBtn").classList.remove("hidden");
+
+    })
+
+    .catch(err=>{
+        alert(err.message);
+    });
+
+}
+
+
+/* GENERATE RECEIPT */
+
+function generateReceipt(){
+
+    if(!savedData) return;
+
+
+    document.getElementById("r_driver").innerText = savedData.driver;
+    document.getElementById("r_date").innerText = savedData.date;
+    document.getElementById("r_in").innerText = savedData.timeIn;
+    document.getElementById("r_out").innerText = savedData.timeOut;
+    document.getElementById("r_truck").innerText = savedData.truck;
+    document.getElementById("r_company").innerText = savedData.company;
+    document.getElementById("r_phone").innerText = savedData.phone;
+    document.getElementById("r_email").innerText = savedData.email || "-";
+
+
+    document.getElementById("r_battery").innerText = savedData.battery;
+    document.getElementById("r_spanner").innerText = savedData.spanner;
+    document.getElementById("r_jack").innerText = savedData.jack;
+    document.getElementById("r_spare").innerText = savedData.spare;
+    document.getElementById("r_damage").innerText = savedData.damage;
+
+
+    document.getElementById("receipt").style.display = "block";
+
+    window.scrollTo(0, document.body.scrollHeight);
+
+}
+
+
+/* Helper */
+
+function driverInput(){
+    return document.getElementById("driver");
+}
+
+</script>
+
+</body>
+</html>
