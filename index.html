@@ -126,6 +126,13 @@
 
     footer { text-align: center; margin-top: 20px; font-size: 11px; opacity: 0.7; font-weight: 300; }
 
+    .charts canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
     @media (max-width: 480px) {
       .fields { grid-template-columns: 1fr; }
       .nav-icons { gap: 18px; }
@@ -133,6 +140,7 @@
       .logo { width: 44px; height: 44px; }
       h1 { font-size: 18px; }
       .card { padding: 14px; }
+      .charts canvas { height: 100px !important; }
     }
 
     @media print {
@@ -296,9 +304,9 @@
 
           <div id="chartsPanel" class="panel charts" style="margin-top:14px;display:none">
             <h3 style="margin-bottom:10px">Charts</h3>
-            <canvas id="chartIE" height="120"></canvas>
-            <canvas id="chartCat" height="120" style="margin-top:10px"></canvas>
-            <canvas id="chartTrend" height="120" style="margin-top:10px"></canvas>
+            <canvas id="chartIE"></canvas>
+            <canvas id="chartCat" style="margin-top:10px"></canvas>
+            <canvas id="chartTrend" style="margin-top:10px"></canvas>
           </div>
 
           <div class="panel" style="margin-top:14px">
@@ -635,10 +643,16 @@
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
         let receipt = '';
         if (els.txReceipt.files.length) {
+          const file = els.txReceipt.files[0];
+          if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+          }
           try {
-            receipt = await readFileAsDataURL(els.txReceipt.files[0]);
+            receipt = await readFileAsDataURL(file);
           } catch (e) {
-            alert('Error reading receipt image'); return;
+            alert('Error loading receipt image');
+            return;
           }
         } else {
           alert('Please upload a receipt image'); return;
@@ -686,10 +700,16 @@
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
         let receipt = transactions.find(t => t.key === editKey).receipt || '';
         if (els.editReceipt.files.length) {
+          const file = els.editReceipt.files[0];
+          if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+          }
           try {
-            receipt = await readFileAsDataURL(els.editReceipt.files[0]);
+            receipt = await readFileAsDataURL(file);
           } catch (e) {
-            alert('Error reading receipt image'); return;
+            alert('Error loading receipt image');
+            return;
           }
         }
         nd.receipt = receipt;
@@ -852,7 +872,7 @@
         chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
           data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
         const catMap = {};
         transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
@@ -860,7 +880,7 @@
         chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
           type: 'doughnut',
           data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
-          options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
         const monthly = {};
         transactions.forEach(t => {
@@ -879,7 +899,7 @@
               { label: 'Expense', data: months.map(m => monthly[m].Expense || 0), borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.12)', fill:true }
             ]
           },
-          options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
+          options: { responsive:true, maintainAspectRatio: false, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
         });
       }
 
