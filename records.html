@@ -4,171 +4,170 @@
 <meta charset="UTF-8">
 <title>Kitengela Car Park - Records</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --primary-dark: #0a2b4f;
-  --primary-blue: #0077cc;
-  --accent-green: #28a745;
-  --text-dark: #333;
-  --bg-light: #f0f2f6;
-  --white: #fff;
-  --border-color: #ccc;
-  --shadow-color: rgba(0,0,0,0.15);
-  --hover-shadow: rgba(0,119,204,0.2);
+  --navy: #0b2a4a;
+  --blue: #1e88e5;
+  --green: #2e7d32;
+  --red: #c62828;
+  --amber: #f9a825;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --border: #dfe3eb;
+  --text: #243447;
+  --muted: #6b7a90;
+  --shadow: rgba(0,0,0,0.08);
 }
 
 body {
   margin: 0;
-  background: var(--bg-light);
+  background: var(--bg);
   font-family: 'Inter', sans-serif;
-  color: var(--text-dark);
-  line-height: 1.6;
+  color: var(--text);
 }
 
 .navbar {
-  background: linear-gradient(90deg, var(--primary-dark), var(--primary-blue));
-  display: flex;
-  justify-content: space-around;
+  background: linear-gradient(90deg, var(--navy), var(--blue));
   padding: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 12px var(--shadow-color);
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .navbar a {
-  color: var(--white);
+  color: #fff;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-  color: #ffd700;
 }
 
 .app {
-  max-width: 1200px; /* Wider for table */
+  max-width: 1300px;
   margin: 30px auto;
-  background: var(--white);
+  background: var(--card);
   padding: 30px;
   border-radius: 14px;
-  box-shadow: 0 12px 30px var(--shadow-color);
-  transition: box-shadow 0.3s ease;
-}
-
-.app:hover {
-  box-shadow: 0 16px 40px var(--hover-shadow);
+  box-shadow: 0 12px 30px var(--shadow);
 }
 
 h2 {
   text-align: center;
-  color: var(--primary-dark);
-  border-bottom: 3px solid var(--primary-blue);
-  padding-bottom: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  color: var(--navy);
+  margin-bottom: 20px;
 }
 
 #searchInput {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
   margin-bottom: 20px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  box-sizing: border-box;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 12px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px var(--shadow-color);
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 12px;
-  text-align: left;
 }
 
 th {
-  background: linear-gradient(180deg, #f0f4f8, #e0e8f0);
+  background: #eef3fb;
   font-weight: 600;
-  cursor: pointer; /* For sorting */
+  padding: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
 }
 
 tr:hover {
-  background: #f9f9f9;
+  background: #f9fbff;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.ok {
+  background: #e8f5e9;
+  color: var(--green);
+}
+
+.badge.warn {
+  background: #fff8e1;
+  color: var(--amber);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.edit {
+  background: #e3f2fd;
+  color: var(--blue);
+}
+
+.delete {
+  background: #fdecea;
+  color: var(--red);
+}
+
+.view {
+  background: #edf4ff;
+  color: var(--navy);
 }
 
 .details {
   display: none;
-  padding: 10px;
-  background: #f0f4f8;
+  background: #f6f9ff;
 }
 
-.buttons {
-  margin: 30px 0;
-  display: flex;
-  gap: 15px;
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
 }
 
-button {
-  padding: 14px 24px;
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 400px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-content button {
+  width: 100%;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
   border: none;
   border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px var(--hover-shadow);
-}
-
-.export {
-  background: var(--accent-green);
-  color: var(--white);
-}
-
-@media screen and (max-width: 768px) {
-  .app {
-    margin: 15px;
-    padding: 20px;
-    border-radius: 10px;
-  }
-
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  th, td {
-    padding: 8px;
-  }
-
-  .buttons {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-  }
-
-  h2 {
-    font-size: 1.5em;
-  }
 }
 </style>
 </head>
@@ -176,43 +175,46 @@ button:hover {
 <body>
 
 <div class="navbar">
-  <a href="#home">🏠 Home</a>
-  <a href="records.html">📋 Records</a>
-  <a href="reports.html">📊 Reports</a>
+  <a href="#">🏠 Home</a>
+  <a href="#">📋 Records</a>
+  <a href="#">📊 Reports</a>
 </div>
 
 <div class="app">
 <h2>Inspection Records</h2>
 
-<input type="text" id="searchInput" placeholder="Search by driver, truck, company...">
+<input id="searchInput" placeholder="Search driver, truck, company...">
 
 <table id="recordsTable">
-  <thead>
-    <tr>
-      <th onclick="sortTable(0)">Date</th>
-      <th onclick="sortTable(1)">Driver</th>
-      <th onclick="sortTable(2)">Truck</th>
-      <th onclick="sortTable(3)">Company</th>
-      <th>Phone</th>
-      <th>Email</th>
-      <th>Time In</th>
-      <th>Time Out</th>
-      <th>Checklist Summary</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody id="recordsBody"></tbody>
+<thead>
+<tr>
+  <th>Date</th>
+  <th>Driver</th>
+  <th>Truck</th>
+  <th>Company</th>
+  <th>Status</th>
+  <th>Actions</th>
+</tr>
+</thead>
+<tbody id="recordsBody"></tbody>
 </table>
 
-<div class="buttons">
-  <button class="export" onclick="exportToCSV()">📤 Export to CSV</button>
 </div>
 
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <h3>Edit Record</h3>
+    <input id="editDriver" placeholder="Driver">
+    <input id="editTruck" placeholder="Truck">
+    <input id="editCompany" placeholder="Company">
+    <button onclick="saveEdit()">Save Changes</button>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
@@ -226,108 +228,80 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const recordsRef = ref(db, 'inspections');
 
-onValue(recordsRef, (snapshot) => {
-  const data = snapshot.val();
-  const tbody = document.getElementById('recordsBody');
-  tbody.innerHTML = ''; // Clear existing rows
-  if (data) {
-    Object.entries(data).forEach(([id, record]) => {
-      const checklistSummary = record.checklist.map(item => `${item.item}: ${item.present ? 'Present' : 'Missing'} (${item.note || 'N/A'})`).join('<br>');
-      const missingCount = record.checklist.filter(item => !item.present).length;
-      const summaryText = `${record.checklist.length - missingCount}/${record.checklist.length} items OK`;
-      
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${record.date}</td>
-        <td>${record.driver}</td>
-        <td>${record.truck}</td>
-        <td>${record.company}</td>
-        <td>${record.phone}</td>
-        <td>${record.email}</td>
-        <td>${record.timeIn}</td>
-        <td>${record.timeOut}</td>
-        <td>${summaryText}</td>
-        <td><button onclick="toggleDetails('${id}')">View Details</button></td>
-      `;
-      tbody.appendChild(row);
-      
-      const detailsRow = document.createElement('tr');
-      detailsRow.id = `details-${id}`;
-      detailsRow.classList.add('details');
-      detailsRow.innerHTML = `<td colspan="10">${checklistSummary}</td>`;
-      tbody.appendChild(detailsRow);
-    });
-  } else {
-    tbody.innerHTML = '<tr><td colspan="10">No records found.</td></tr>';
-  }
-});
+let currentEditId = null;
 
-// Search functionality
-document.getElementById('searchInput').addEventListener('keyup', function() {
-  const filter = this.value.toLowerCase();
-  const rows = document.querySelectorAll('#recordsTable tbody tr:not(.details)');
-  rows.forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(filter) ? '' : 'none';
+onValue(recordsRef, snap => {
+  const body = document.getElementById('recordsBody');
+  body.innerHTML = '';
+  const data = snap.val();
+  if (!data) return;
+
+  Object.entries(data).forEach(([id, r]) => {
+    const ok = r.checklist.filter(i => i.present).length;
+    const total = r.checklist.length;
+
+    body.innerHTML += `
+      <tr>
+        <td>${r.date}</td>
+        <td>${r.driver}</td>
+        <td>${r.truck}</td>
+        <td>${r.company}</td>
+        <td>
+          <span class="badge ${ok === total ? 'ok' : 'warn'}">
+            ${ok}/${total}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="action-btn view" onclick="toggleDetails('${id}')">View</button>
+          <button class="action-btn edit" onclick="openEdit('${id}','${r.driver}','${r.truck}','${r.company}')">Edit</button>
+          <button class="action-btn delete" onclick="deleteRecord('${id}')">Delete</button>
+        </td>
+      </tr>
+      <tr id="details-${id}" class="details">
+        <td colspan="6">
+          ${r.checklist.map(i => `${i.item}: ${i.present ? '✔' : '✖'} (${i.note || 'N/A'})`).join('<br>')}
+        </td>
+      </tr>
+    `;
   });
 });
 
-// Sorting function
-window.sortTable = (n) => {
-  const table = document.getElementById('recordsTable');
-  let switching = true;
-  let dir = 'asc';
-  let switchcount = 0;
-  while (switching) {
-    switching = false;
-    const rows = table.rows;
-    for (let i = 1; i < (rows.length - 1); i += 2) { // Skip details rows
-      let shouldSwitch = false;
-      const x = rows[i].getElementsByTagName('TD')[n];
-      const y = rows[i + 2] ? rows[i + 2].getElementsByTagName('TD')[n] : null;
-      if (y && ((dir === 'asc' && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) || (dir === 'desc' && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()))) {
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 2], rows[i]);
-      switching = true;
-      switchcount++;
-    } else if (switchcount === 0 && dir === 'asc') {
-      dir = 'desc';
-      switching = true;
-    }
+window.toggleDetails = id => {
+  const row = document.getElementById(`details-${id}`);
+  row.style.display = row.style.display === 'table-row' ? 'none' : 'table-row';
+};
+
+window.openEdit = (id, d, t, c) => {
+  currentEditId = id;
+  editDriver.value = d;
+  editTruck.value = t;
+  editCompany.value = c;
+  editModal.style.display = 'flex';
+};
+
+window.saveEdit = () => {
+  update(ref(db, `inspections/${currentEditId}`), {
+    driver: editDriver.value,
+    truck: editTruck.value,
+    company: editCompany.value
+  });
+  editModal.style.display = 'none';
+};
+
+window.deleteRecord = id => {
+  if (confirm('Delete this record permanently?')) {
+    remove(ref(db, `inspections/${id}`));
   }
 };
 
-// Toggle details
-window.toggleDetails = (id) => {
-  const details = document.getElementById(`details-${id}`);
-  details.style.display = details.style.display === 'table-row' ? 'none' : 'table-row';
-};
-
-// Export to CSV
-window.exportToCSV = () => {
-  const rows = document.querySelectorAll('#recordsTable tr');
-  let csv = [];
-  rows.forEach(row => {
-    if (!row.classList.contains('details')) {
-      const cols = row.querySelectorAll('td, th');
-      let rowData = [];
-      cols.forEach(col => rowData.push(col.innerText));
-      csv.push(rowData.join(','));
-    }
+document.getElementById('searchInput').addEventListener('keyup', e => {
+  const v = e.target.value.toLowerCase();
+  document.querySelectorAll('#recordsBody tr').forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
   });
-  const csvFile = new Blob([csv.join('\n')], {type: 'text/csv'});
-  const a = document.createElement('a');
-  a.download = 'inspections.csv';
-  a.href = window.URL.createObjectURL(csvFile);
-  a.click();
-};
+});
 </script>
 
 </body>
