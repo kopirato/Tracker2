@@ -60,6 +60,17 @@ body {
   border-radius: 14px;
   box-shadow: 0 12px 30px var(--shadow-color);
   transition: box-shadow 0.3s ease;
+  position: relative;
+}
+
+.app.loading::after {
+  content: 'Loading...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: var(--primary-blue);
 }
 
 .app:hover {
@@ -132,6 +143,22 @@ input {
   margin-bottom: 30px;
 }
 
+#reportsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+#reportsTable th, #reportsTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+#reportsTable th {
+  background-color: #f2f2f2;
+}
+
 .buttons {
   display: flex;
   gap: 15px;
@@ -200,8 +227,22 @@ button:hover {
 
 <div class="stats-grid" id="statsGrid"></div>
 
+<table id="reportsTable">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody id="reportsBody"></tbody>
+</table>
+
 <div class="chart-container">
   <canvas id="issuesChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <canvas id="companyChart"></canvas>
 </div>
 
 <div class="chart-container">
@@ -238,126 +279,178 @@ const db = getDatabase(app);
 const recordsRef = ref(db, 'inspections');
 
 let allData = [];
-let issuesChart, timeChart, predictionChart;
+let issuesChart, companyChart, timeChart, predictionChart;
 
 onValue(recordsRef, (snapshot) => {
-  allData = Object.values(snapshot.val() || {});
+  allData = Object.values(snapshot.val() || {}).filter(r => r.date && r.checklist);
   generateReports(); // Initial load
 });
 
-async function trainModel(xs, ys) {
-  const xMean = xs.mean();
-  const xStd = xs.sub(xMean).square().mean().sqrt();
-  const yMean = ys.mean();
-  const yStd = ys.sub(yMean).square().mean().sqrt();
+function createTimeSeriesData(counts, seqLength) {
+  const xs = [];
+  const ys = [];
+  for (let i = seqLength; i < counts.length; i++) {
+    xs.push(counts.slice(i - seqLength, i).map(c => [c]));
+    ys.push([counts[i]]);
+  }
+  return {xs: tf.tensor3d(xs), ys: tf.tensor2d(ys)};
+}
 
-  const xsNorm = xs.sub(xMean).div(xStd.add(tf.scalar(1e-8)));
-  const ysNorm = ys.sub(yMean).div(yStd.add(tf.scalar(1e-8)));
-
+async function trainLSTMModel(xs, ys) {
   const model = tf.sequential();
-  model.add(tf.layers.dense({units: 32, activation: 'relu', inputShape: [1]}));
+  model.add(tf.layers.lstm({units: 50, returnSequences: true, inputShape: [null, 1]}));
+  model.add(tf.layers.dropout({rate: 0.2}));
+  model.add(tf.layers.lstm({units: 50}));
   model.add(tf.layers.dense({units: 1}));
-  model.compile({loss: 'meanSquaredError', optimizer: tf.train.adam(0.01)});
-  
-  await model.fit(xsNorm, ysNorm, {epochs: 500, callbacks: {
-    onEpochEnd: (epoch, log) => {
-      if (epoch % 100 === 0) console.log(`Epoch ${epoch}: loss = ${log.loss}`);
-    }
-  }});
 
-  return {model, xMean: xMean.dataSync()[0], xStd: xStd.dataSync()[0], yMean: yMean.dataSync()[0], yStd: yStd.dataSync()[0]};
+  model.compile({optimizer: tf.train.adam(0.01), loss: 'meanSquaredError'});
+
+  await model.fit(xs, ys, {
+    epochs: 200,
+    validationSplit: 0.2,
+    callbacks: {
+      onEpochEnd: (epoch, log) => {
+        if (epoch % 50 === 0) console.log(`Epoch ${epoch}: loss = ${log.loss}, val_loss = ${log.val_loss}`);
+      }
+    }
+  });
+
+  return model;
 }
 
 window.generateReports = async () => {
-  const fromDate = document.getElementById('fromDate').value;
-  const toDate = document.getElementById('toDate').value;
-  let filteredData = allData;
+  const reportArea = document.getElementById('reportArea');
+  reportArea.classList.add('loading');
+  try {
+    const fromDate = document.getElementById('fromDate').value;
+    const toDate = document.getElementById('toDate').value || '2026-02-08'; // Current date
+    let filteredData = allData;
 
-  if (fromDate) filteredData = filteredData.filter(r => r.date >= fromDate);
-  if (toDate) filteredData = filteredData.filter(r => r.date <= toDate);
+    if (fromDate) filteredData = filteredData.filter(r => r.date >= fromDate);
+    if (toDate) filteredData = filteredData.filter(r => r.date <= toDate);
 
-  // Calculate stats
-  const totalInspections = filteredData.length;
-  let totalDuration = 0;
-  const issues = { Battery: 0, 'Wheel Spanner': 0, Jack: 0, 'Spare Wheel': 0, 'Any Dents / Damages': 0 };
-  const dateCounts = {};
-  
-  filteredData.forEach(record => {
-    if (record.timeIn && record.timeOut) {
-      const inTime = new Date(`2000-01-01T${record.timeIn}`);
-      const outTime = new Date(`2000-01-01T${record.timeOut}`);
-      totalDuration += (outTime - inTime) / (1000 * 60); // minutes
-    }
-    if (record.checklist) {
-      record.checklist.forEach(item => {
-        if (!item.present) issues[item.item] = (issues[item.item] || 0) + 1;
-      });
-    }
-    dateCounts[record.date] = (dateCounts[record.date] || 0) + 1;
-  });
-
-  const avgDuration = totalInspections ? (totalDuration / totalInspections).toFixed(2) : 0;
-
-  // Display stats
-  const statsGrid = document.getElementById('statsGrid');
-  statsGrid.innerHTML = `
-    <div class="stat-card"><h3>${totalInspections}</h3><p>Total Inspections</p></div>
-    <div class="stat-card"><h3>${avgDuration} min</h3><p>Avg Parking Duration</p></div>
-    <div class="stat-card"><h3>${Object.values(issues).reduce((a, b) => a + b, 0)}</h3><p>Total Issues</p></div>
-  `;
-
-  // Issues Bar Chart
-  if (issuesChart) issuesChart.destroy();
-  issuesChart = new Chart(document.getElementById('issuesChart'), {
-    type: 'bar',
-    data: { labels: Object.keys(issues), datasets: [{ label: 'Missing Items', data: Object.values(issues), backgroundColor: '#0077cc' }] },
-    options: { scales: { y: { beginAtZero: true } } }
-  });
-
-  // Inspections Over Time Line Chart
-  const sortedDates = Object.keys(dateCounts).sort();
-  if (timeChart) timeChart.destroy();
-  timeChart = new Chart(document.getElementById('timeChart'), {
-    type: 'line',
-    data: { labels: sortedDates, datasets: [{ label: 'Inspections per Day', data: sortedDates.map(d => dateCounts[d]), borderColor: '#28a745' }] },
-    options: { scales: { y: { beginAtZero: true } } }
-  });
-
-  // Predictive Analytics: Enhanced model with normalization and hidden layer
-  if (sortedDates.length >= 2) {
-    const xs = tf.tensor2d(sortedDates.map((d, i) => [i]), [sortedDates.length, 1]);
-    const ys = tf.tensor2d(sortedDates.map(d => dateCounts[d]), [sortedDates.length, 1]);
-
-    const {model, xMean, xStd, yMean, yStd} = await trainModel(xs, ys);
-
-    const futureDays = 7;
-    const futureX = tf.tensor2d(Array.from({length: futureDays}, (_, i) => [sortedDates.length + i]), [futureDays, 1]);
-    const futureXNorm = futureX.sub(xMean).div(xStd + 1e-8);
-    let predictionsNorm = model.predict(futureXNorm);
-    let predictions = predictionsNorm.mul(yStd + 1e-8).add(yMean).arraySync().map(p => Math.max(0, Math.round(p[0]))); // Ensure non-negative
-
-    const futureDates = [];
-    const lastDate = new Date(sortedDates[sortedDates.length - 1]);
-    for (let i = 1; i <= futureDays; i++) {
-      const nextDate = new Date(lastDate);
-      nextDate.setDate(nextDate.getDate() + i);
-      futureDates.push(nextDate.toISOString().split('T')[0]);
-    }
-
-    if (predictionChart) predictionChart.destroy();
-    predictionChart = new Chart(document.getElementById('predictionChart'), {
-      type: 'line',
-      data: {
-        labels: [...sortedDates, ...futureDates],
-        datasets: [
-          { label: 'Historical Inspections', data: [...sortedDates.map(d => dateCounts[d]), ...Array(futureDays).fill(null)], borderColor: '#28a745' },
-          { label: 'Predicted Inspections', data: [...Array(sortedDates.length).fill(null), ...predictions], borderColor: '#ff7733', borderDash: [5, 5] }
-        ]
-      },
-      options: { scales: { y: { beginAtZero: true } } }
+    // Calculate stats
+    const totalInspections = filteredData.length;
+    let totalDuration = 0;
+    const issues = { Battery: 0, 'Wheel Spanner': 0, Jack: 0, 'Spare Wheel': 0, 'Any Dents / Damages': 0 };
+    const companyCounts = {};
+    const truckIssues = {};
+    const dateCounts = {};
+    
+    filteredData.forEach(record => {
+      if (record.timeIn && record.timeOut) {
+        const inTime = new Date(`2000-01-01T${record.timeIn}`);
+        const outTime = new Date(`2000-01-01T${record.timeOut}`);
+        totalDuration += (outTime - inTime) / (1000 * 60); // minutes
+      }
+      if (record.checklist) {
+        record.checklist.forEach(item => {
+          if (!item.present) {
+            issues[item.item] = (issues[item.item] || 0) + 1;
+            truckIssues[record.truck] = (truckIssues[record.truck] || 0) + 1;
+          }
+        });
+      }
+      companyCounts[record.company] = (companyCounts[record.company] || 0) + 1;
+      dateCounts[record.date] = (dateCounts[record.date] || 0) + 1;
     });
-  } else {
-    document.getElementById('predictionChart').getContext('2d').clearRect(0, 0, document.getElementById('predictionChart').width, document.getElementById('predictionChart').height);
+
+    const avgDuration = totalInspections ? (totalDuration / totalInspections).toFixed(2) : 0;
+    const totalIssues = Object.values(issues).reduce((a, b) => a + b, 0);
+    const topCompany = Object.entries(companyCounts).sort((a, b) => b[1] - a[1])[0] || ['N/A', 0];
+    const riskTrucks = Object.entries(truckIssues).sort((a, b) => b[1] - a[1]).slice(0, 3).map(t => `${t[0]} (${t[1]} issues)`).join(', ');
+
+    // Display stats
+    const statsGrid = document.getElementById('statsGrid');
+    statsGrid.innerHTML = `
+      <div class="stat-card"><h3>${totalInspections}</h3><p>Total Inspections</p></div>
+      <div class="stat-card"><h3>${avgDuration} min</h3><p>Avg Parking Duration</p></div>
+      <div class="stat-card"><h3>${totalIssues}</h3><p>Total Issues</p></div>
+      <div class="stat-card"><h3>${topCompany[1]}</h3><p>Top Company: ${topCompany[0]}</p></div>
+      <div class="stat-card"><h3>${Object.keys(truckIssues).length}</h3><p>Trucks with Issues</p></div>
+    `;
+
+    // Reports Table
+    const reportsBody = document.getElementById('reportsBody');
+    reportsBody.innerHTML = `
+      <tr><td>Top Risk Trucks</td><td>${riskTrucks || 'None'}</td></tr>
+      <tr><td>Compliance Rate</td><td>${totalInspections ? ((totalInspections - Object.keys(truckIssues).length) / totalInspections * 100).toFixed(2) + '%' : 'N/A'}</td></tr>
+      <tr><td>Average Issues per Inspection</td><td>${totalInspections ? (totalIssues / totalInspections).toFixed(2) : '0'}</td></tr>
+    `;
+
+    // Issues Bar Chart
+    if (issuesChart) issuesChart.destroy();
+    issuesChart = new Chart(document.getElementById('issuesChart'), {
+      type: 'bar',
+      data: { labels: Object.keys(issues), datasets: [{ label: 'Missing Items', data: Object.values(issues), backgroundColor: '#0077cc' }] },
+      options: { scales: { y: { beginAtZero: true } }, plugins: { title: { display: true, text: 'Common Vehicle Issues' } } }
+    });
+
+    // Company Pie Chart
+    if (companyChart) companyChart.destroy();
+    companyChart = new Chart(document.getElementById('companyChart'), {
+      type: 'pie',
+      data: { labels: Object.keys(companyCounts), datasets: [{ data: Object.values(companyCounts), backgroundColor: ['#0077cc', '#28a745', '#ff7733', '#6a1b9a', '#ab47bc'] }] },
+      options: { plugins: { title: { display: true, text: 'Inspections by Company' } } }
+    });
+
+    // Inspections Over Time Line Chart
+    const sortedDates = Object.keys(dateCounts).sort();
+    if (timeChart) timeChart.destroy();
+    timeChart = new Chart(document.getElementById('timeChart'), {
+      type: 'line',
+      data: { labels: sortedDates, datasets: [{ label: 'Inspections per Day', data: sortedDates.map(d => dateCounts[d]), borderColor: '#28a745' }] },
+      options: { scales: { y: { beginAtZero: true } }, plugins: { title: { display: true, text: 'Inspection Trends' } } }
+    });
+
+    // Predictive Analytics with LSTM
+    if (sortedDates.length >= 5) { // Need enough data for sequences
+      const seqLength = 3;
+      const countsArray = sortedDates.map(d => dateCounts[d]);
+      const {xs, ys} = createTimeSeriesData(countsArray, seqLength);
+      const model = await trainLSTMModel(xs, ys);
+
+      // Predict future
+      let lastSeq = countsArray.slice(-seqLength).map(c => [c]);
+      const futureDays = 7;
+      const predictions = [];
+      for (let i = 0; i < futureDays; i++) {
+        const predTensor = model.predict(tf.tensor3d([lastSeq]));
+        const pred = await predTensor.dataSync()[0];
+        predictions.push(Math.max(0, Math.round(pred)));
+        lastSeq = [...lastSeq.slice(1), [pred]];
+      }
+
+      const futureDates = [];
+      const lastDate = new Date(sortedDates[sortedDates.length - 1]);
+      for (let i = 1; i <= futureDays; i++) {
+        const nextDate = new Date(lastDate);
+        nextDate.setDate(nextDate.getDate() + i);
+        futureDates.push(nextDate.toISOString().split('T')[0]);
+      }
+
+      if (predictionChart) predictionChart.destroy();
+      predictionChart = new Chart(document.getElementById('predictionChart'), {
+        type: 'line',
+        data: {
+          labels: [...sortedDates, ...futureDates],
+          datasets: [
+            { label: 'Historical Inspections', data: [...countsArray, ...Array(futureDays).fill(null)], borderColor: '#28a745' },
+            { label: 'Predicted Inspections', data: [...Array(countsArray.length).fill(null), ...predictions], borderColor: '#ff7733', borderDash: [5, 5] }
+          ]
+        },
+        options: { scales: { y: { beginAtZero: true } }, plugins: { title: { display: true, text: 'Future Inspection Predictions' } } }
+      });
+    } else {
+      const predictionCtx = document.getElementById('predictionChart').getContext('2d');
+      predictionCtx.clearRect(0, 0, predictionCtx.canvas.width, predictionCtx.canvas.height);
+      predictionCtx.fillText('Insufficient data for predictions', 10, 50);
+    }
+  } catch (error) {
+    console.error(error);
+    alert('Error generating reports: ' + error.message);
+  } finally {
+    reportArea.classList.remove('loading');
   }
 };
 
@@ -375,7 +468,7 @@ window.exportToCSV = () => {
 };
 
 window.exportToPDF = () => {
-  html2pdf(document.getElementById('reportArea'), { filename: 'reports.pdf' });
+  html2pdf(document.getElementById('reportArea'), { filename: 'reports.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 } });
 };
 </script>
 
