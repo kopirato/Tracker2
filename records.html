@@ -2,182 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Kitengela Car Park - Records</title>
+<title>Kitengela Car Park – Records</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --navy: #0b2a4a;
-  --blue: #1e88e5;
-  --green: #2e7d32;
-  --red: #c62828;
-  --amber: #f9a825;
-  --bg: #f4f7fb;
-  --card: #ffffff;
-  --border: #dfe3eb;
-  --text: #243447;
-  --muted: #6b7a90;
-  --shadow: rgba(0,0,0,0.08);
+  --navy:#0b2a4a;
+  --blue:#1e88e5;
+  --green:#2e7d32;
+  --red:#c62828;
+  --amber:#f9a825;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --border:#dfe3eb;
+  --text:#243447;
+  --shadow:rgba(0,0,0,.08);
 }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  font-family: 'Inter', sans-serif;
-  color: var(--text);
+/* ---------- BASE ---------- */
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:Inter,sans-serif;
+  color:var(--text);
 }
 
-.navbar {
-  background: linear-gradient(90deg, var(--navy), var(--blue));
-  padding: 14px;
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  box-shadow: 0 4px 12px var(--shadow);
+/* ---------- NAVBAR ---------- */
+.navbar{
+  background:linear-gradient(90deg,var(--navy),var(--blue));
+  padding:14px 20px;
+  display:flex;
+  justify-content:center;
+  gap:40px;
+  box-shadow:0 4px 12px var(--shadow);
 }
 
-.navbar a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
+.navbar a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  padding:6px 4px;
+  position:relative;
+  opacity:.85;
 }
 
-.app {
-  max-width: 1300px;
-  margin: 30px auto;
-  background: var(--card);
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 12px 30px var(--shadow);
+/* ACTIVE TAB */
+.navbar a.active{
+  opacity:1;
 }
 
-h2 {
-  text-align: center;
-  color: var(--navy);
-  margin-bottom: 20px;
+.navbar a.active::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:100%;
+  height:3px;
+  background:#fff;
+  border-radius:6px;
 }
 
-#searchInput {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  margin-bottom: 20px;
+/* ---------- CARD ---------- */
+.app{
+  max-width:1300px;
+  margin:30px auto;
+  background:var(--card);
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 12px 30px var(--shadow);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+h2{
+  text-align:center;
+  color:var(--navy);
+  margin-bottom:20px;
 }
 
-th {
-  background: #eef3fb;
-  font-weight: 600;
-  padding: 12px;
-  border-bottom: 2px solid var(--border);
+/* ---------- SEARCH ---------- */
+#searchInput{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  margin-bottom:20px;
 }
 
-td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
+/* ---------- TABLE ---------- */
+table{
+  width:100%;
+  border-collapse:collapse;
 }
 
-tr:hover {
-  background: #f9fbff;
+th{
+  background:#eef3fb;
+  font-weight:600;
+  padding:12px;
+  border-bottom:2px solid var(--border);
 }
 
-.badge {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
 }
 
-.badge.ok {
-  background: #e8f5e9;
-  color: var(--green);
+tr:hover{
+  background:#f9fbff;
 }
 
-.badge.warn {
-  background: #fff8e1;
-  color: var(--amber);
+/* ---------- BADGES ---------- */
+.badge{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
 }
 
-.actions {
-  display: flex;
-  gap: 8px;
+.badge.ok{
+  background:#e8f5e9;
+  color:var(--green);
 }
 
-.action-btn {
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
+.badge.warn{
+  background:#fff8e1;
+  color:var(--amber);
 }
 
-.edit {
-  background: #e3f2fd;
-  color: var(--blue);
+/* ---------- ACTIONS ---------- */
+.actions{
+  display:flex;
+  gap:8px;
 }
 
-.delete {
-  background: #fdecea;
-  color: var(--red);
+.action-btn{
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
 }
 
-.view {
-  background: #edf4ff;
-  color: var(--navy);
+.view{background:#edf4ff;color:var(--navy);}
+.edit{background:#e3f2fd;color:var(--blue);}
+.delete{background:#fdecea;color:var(--red);}
+
+/* ---------- DETAILS ---------- */
+.details{
+  display:none;
+  background:#f6f9ff;
 }
 
-.details {
-  display: none;
-  background: #f6f9ff;
+/* ---------- MODAL ---------- */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
 }
 
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: none;
-  align-items: center;
-  justify-content: center;
+.modal-content{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  width:400px;
 }
 
-.modal-content {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  width: 400px;
+.modal-content input{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
 }
 
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.modal-content button {
-  width: 100%;
-  padding: 12px;
-  background: var(--blue);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
+.modal-content button{
+  width:100%;
+  padding:12px;
+  background:var(--blue);
+  color:#fff;
+  border:none;
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- ✅ NAVIGATION FIXED -->
 <div class="navbar">
-  <a href="#">🏠 Home</a>
-  <a href="#">📋 Records</a>
-  <a href="#">📊 Reports</a>
+  <a href="index.html" data-page="index">🏠 Home</a>
+  <a href="records.html" data-page="records">📋 Records</a>
+  <a href="reports.html" data-page="reports">📊 Reports</a>
 </div>
 
 <div class="app">
@@ -198,7 +215,6 @@ tr:hover {
 </thead>
 <tbody id="recordsBody"></tbody>
 </table>
-
 </div>
 
 <!-- EDIT MODAL -->
@@ -213,6 +229,15 @@ tr:hover {
 </div>
 
 <script type="module">
+/* ---------- ACTIVE TAB LOGIC ---------- */
+const page = location.pathname.split('/').pop();
+document.querySelectorAll('.navbar a').forEach(link=>{
+  if(link.getAttribute('href') === page){
+    link.classList.add('active');
+  }
+});
+
+/* ---------- FIREBASE ---------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
@@ -228,31 +253,27 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const recordsRef = ref(db, 'inspections');
+const recordsRef = ref(db,'inspections');
+let currentEditId=null;
 
-let currentEditId = null;
+/* ---------- LOAD RECORDS ---------- */
+onValue(recordsRef,snap=>{
+  const body=document.getElementById('recordsBody');
+  body.innerHTML='';
+  const data=snap.val();
+  if(!data) return;
 
-onValue(recordsRef, snap => {
-  const body = document.getElementById('recordsBody');
-  body.innerHTML = '';
-  const data = snap.val();
-  if (!data) return;
+  Object.entries(data).forEach(([id,r])=>{
+    const ok=r.checklist.filter(i=>i.present).length;
+    const total=r.checklist.length;
 
-  Object.entries(data).forEach(([id, r]) => {
-    const ok = r.checklist.filter(i => i.present).length;
-    const total = r.checklist.length;
-
-    body.innerHTML += `
+    body.innerHTML+=`
       <tr>
         <td>${r.date}</td>
         <td>${r.driver}</td>
         <td>${r.truck}</td>
         <td>${r.company}</td>
-        <td>
-          <span class="badge ${ok === total ? 'ok' : 'warn'}">
-            ${ok}/${total}
-          </span>
-        </td>
+        <td><span class="badge ${ok===total?'ok':'warn'}">${ok}/${total}</span></td>
         <td class="actions">
           <button class="action-btn view" onclick="toggleDetails('${id}')">View</button>
           <button class="action-btn edit" onclick="openEdit('${id}','${r.driver}','${r.truck}','${r.company}')">Edit</button>
@@ -261,45 +282,46 @@ onValue(recordsRef, snap => {
       </tr>
       <tr id="details-${id}" class="details">
         <td colspan="6">
-          ${r.checklist.map(i => `${i.item}: ${i.present ? '✔' : '✖'} (${i.note || 'N/A'})`).join('<br>')}
+          ${r.checklist.map(i=>`${i.item}: ${i.present?'✔':'✖'} (${i.note||'N/A'})`).join('<br>')}
         </td>
-      </tr>
-    `;
+      </tr>`;
   });
 });
 
-window.toggleDetails = id => {
-  const row = document.getElementById(`details-${id}`);
-  row.style.display = row.style.display === 'table-row' ? 'none' : 'table-row';
+/* ---------- ACTIONS ---------- */
+window.toggleDetails=id=>{
+  const row=document.getElementById(`details-${id}`);
+  row.style.display=row.style.display==='table-row'?'none':'table-row';
 };
 
-window.openEdit = (id, d, t, c) => {
-  currentEditId = id;
-  editDriver.value = d;
-  editTruck.value = t;
-  editCompany.value = c;
-  editModal.style.display = 'flex';
+window.openEdit=(id,d,t,c)=>{
+  currentEditId=id;
+  editDriver.value=d;
+  editTruck.value=t;
+  editCompany.value=c;
+  editModal.style.display='flex';
 };
 
-window.saveEdit = () => {
-  update(ref(db, `inspections/${currentEditId}`), {
-    driver: editDriver.value,
-    truck: editTruck.value,
-    company: editCompany.value
+window.saveEdit=()=>{
+  update(ref(db,`inspections/${currentEditId}`),{
+    driver:editDriver.value,
+    truck:editTruck.value,
+    company:editCompany.value
   });
-  editModal.style.display = 'none';
+  editModal.style.display='none';
 };
 
-window.deleteRecord = id => {
-  if (confirm('Delete this record permanently?')) {
-    remove(ref(db, `inspections/${id}`));
+window.deleteRecord=id=>{
+  if(confirm('Delete this record permanently?')){
+    remove(ref(db,`inspections/${id}`));
   }
 };
 
-document.getElementById('searchInput').addEventListener('keyup', e => {
-  const v = e.target.value.toLowerCase();
-  document.querySelectorAll('#recordsBody tr').forEach(r => {
-    r.style.display = r.textContent.toLowerCase().includes(v) ? '' : 'none';
+/* ---------- SEARCH ---------- */
+searchInput.addEventListener('keyup',e=>{
+  const v=e.target.value.toLowerCase();
+  document.querySelectorAll('#recordsBody tr').forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(v)?'':'none';
   });
 });
 </script>
