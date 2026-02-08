@@ -139,6 +139,83 @@ button:hover {
   color: var(--white);
 }
 
+.edit-btn {
+  background: #ffc107;
+  color: #fff;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: #fff;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  margin: 0 2px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.field {
+  flex: 1;
+  min-width: 220px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 950px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.15);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 768px) {
   .app {
     margin: 15px;
@@ -169,6 +246,15 @@ button:hover {
   h2 {
     font-size: 1.5em;
   }
+
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field {
+    min-width: auto;
+  }
 }
 </style>
 </head>
@@ -176,9 +262,9 @@ button:hover {
 <body>
 
 <div class="navbar">
-  <a href="#home">🏠 Home</a>
-  <a href="records.html">📋 Records</a>
-  <a href="reports.html">📊 Reports</a>
+  <a href="index.html"> Home</a>
+  <a href="records.html"> Records</a>
+  <a href="reports.html"> Reports</a>
 </div>
 
 <div class="app">
@@ -205,14 +291,56 @@ button:hover {
 </table>
 
 <div class="buttons">
-  <button class="export" onclick="exportToCSV()">📤 Export to CSV</button>
+  <button class="export" onclick="exportToCSV()"> Export to CSV</button>
 </div>
 
+</div>
+
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Edit Record</h2>
+    <div class="form-row">
+      <div class="field"><label>Driver Name</label><input id="edit-driver"></div>
+    </div>
+
+<div class="form-row">
+  <div class="field"><label>Date</label><input type="date" id="edit-date"></div>
+  <div class="field"><label>Time In</label><input type="time" id="edit-timeIn"></div>
+  <div class="field"><label>Time Out</label><input type="time" id="edit-timeOut"></div>
+</div>
+
+<div class="form-row">
+  <div class="field"><label>Truck Number</label><input id="edit-truck"></div>
+  <div class="field"><label>Company Name</label><input id="edit-company"></div>
+</div>
+
+<div class="form-row">
+  <div class="field"><label>Phone Number</label><input id="edit-phone"></div>
+  <div class="field"><label>Email (Optional)</label><input id="edit-email"></div>
+</div>
+
+<p>Please tick (/) or mark condition where applicable</p>
+
+<table id="editChecklist">
+  <tr><th>Item</th><th>Present (/)</th><th>Condition / Notes</th></tr>
+  <tr><td>Battery</td><td><input type="checkbox" id="edit-battery-present"></td><td><input type="text" id="edit-battery-note"></td></tr>
+  <tr><td>Wheel Spanner</td><td><input type="checkbox" id="edit-wheelspanner-present"></td><td><input type="text" id="edit-wheelspanner-note"></td></tr>
+  <tr><td>Jack</td><td><input type="checkbox" id="edit-jack-present"></td><td><input type="text" id="edit-jack-note"></td></tr>
+  <tr><td>Spare Wheel</td><td><input type="checkbox" id="edit-sparewheel-present"></td><td><input type="text" id="edit-sparewheel-note"></td></tr>
+  <tr><td>Any Dents / Damages</td><td><input type="checkbox" id="edit-dents-present"></td><td><input type="text" id="edit-dents-note"></td></tr>
+</table>
+
+<input type="hidden" id="edit-id">
+
+<div class="buttons">
+  <button onclick="saveEdit()">Save Changes</button>
+</div>  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
@@ -229,13 +357,16 @@ const db = getDatabase(app);
 
 const recordsRef = ref(db, 'inspections');
 
+let recordsData = {};
+
 onValue(recordsRef, (snapshot) => {
-  const data = snapshot.val();
+  recordsData = snapshot.val() || {};
   const tbody = document.getElementById('recordsBody');
   tbody.innerHTML = ''; // Clear existing rows
-  if (data) {
-    Object.entries(data).forEach(([id, record]) => {
-      const checklistSummary = record.checklist.map(item => `${item.item}: ${item.present ? 'Present' : 'Missing'} (${item.note || 'N/A'})`).join('<br>');
+  if (recordsData) {
+    Object.entries(recordsData).forEach(([id, record]) => {
+      const checklistSummary = record.checklist.map(item => `${item.item}: ${item.present ? 'Present' : 'Missing'} (${item.note || 'N/A'})`).join('
+');
       const missingCount = record.checklist.filter(item => !item.present).length;
       const summaryText = `${record.checklist.length - missingCount}/${record.checklist.length} items OK`;
       
@@ -250,7 +381,11 @@ onValue(recordsRef, (snapshot) => {
         <td>${record.timeIn}</td>
         <td>${record.timeOut}</td>
         <td>${summaryText}</td>
-        <td><button onclick="toggleDetails('${id}')">View Details</button></td>
+        <td>
+          <button class="action-btn" onclick="toggleDetails('${id}')">View</button>
+          <button class="action-btn edit-btn" onclick="editRecord('${id}')">Edit</button>
+          <button class="action-btn delete-btn" onclick="deleteRecord('${id}')">Delete</button>
+        </td>
       `;
       tbody.appendChild(row);
       
@@ -272,6 +407,11 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
   rows.forEach(row => {
     const text = row.textContent.toLowerCase();
     row.style.display = text.includes(filter) ? '' : 'none';
+    // Also hide/show details if main row is hidden
+    const nextRow = row.nextElementSibling;
+    if (nextRow && nextRow.classList.contains('details')) {
+      nextRow.style.display = row.style.display === 'none' ? 'none' : nextRow.style.display;
+    }
   });
 });
 
@@ -295,6 +435,7 @@ window.sortTable = (n) => {
     }
     if (shouldSwitch) {
       rows[i].parentNode.insertBefore(rows[i + 2], rows[i]);
+      rows[i].parentNode.insertBefore(rows[i + 3], rows[i + 1]);
       switching = true;
       switchcount++;
     } else if (switchcount === 0 && dir === 'asc') {
@@ -308,6 +449,88 @@ window.sortTable = (n) => {
 window.toggleDetails = (id) => {
   const details = document.getElementById(`details-${id}`);
   details.style.display = details.style.display === 'table-row' ? 'none' : 'table-row';
+};
+
+// Edit record
+window.editRecord = (id) => {
+  const record = recordsData[id];
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-driver').value = record.driver;
+  document.getElementById('edit-date').value = record.date;
+  document.getElementById('edit-timeIn').value = record.timeIn;
+  document.getElementById('edit-timeOut').value = record.timeOut;
+  document.getElementById('edit-truck').value = record.truck;
+  document.getElementById('edit-company').value = record.company;
+  document.getElementById('edit-phone').value = record.phone;
+  document.getElementById('edit-email').value = record.email;
+
+  record.checklist.forEach(item => {
+    let prefix;
+    switch(item.item) {
+      case 'Battery':
+        prefix = 'battery';
+        break;
+      case 'Wheel Spanner':
+        prefix = 'wheelspanner';
+        break;
+      case 'Jack':
+        prefix = 'jack';
+        break;
+      case 'Spare Wheel':
+        prefix = 'sparewheel';
+        break;
+      case 'Any Dents / Damages':
+        prefix = 'dents';
+        break;
+    }
+    document.getElementById(`edit-${prefix}-present`).checked = item.present;
+    document.getElementById(`edit-${prefix}-note`).value = item.note || '';
+  });
+
+  document.getElementById('editModal').style.display = 'block';
+};
+
+// Save edit
+window.saveEdit = () => {
+  const id = document.getElementById('edit-id').value;
+  const updatedRecord = {
+    driver: document.getElementById('edit-driver').value,
+    date: document.getElementById('edit-date').value,
+    timeIn: document.getElementById('edit-timeIn').value,
+    timeOut: document.getElementById('edit-timeOut').value,
+    truck: document.getElementById('edit-truck').value,
+    company: document.getElementById('edit-company').value,
+    phone: document.getElementById('edit-phone').value,
+    email: document.getElementById('edit-email').value,
+    checklist: [
+      {item: 'Battery', present: document.getElementById('edit-battery-present').checked, note: document.getElementById('edit-battery-note').value},
+      {item: 'Wheel Spanner', present: document.getElementById('edit-wheelspanner-present').checked, note: document.getElementById('edit-wheelspanner-note').value},
+      {item: 'Jack', present: document.getElementById('edit-jack-present').checked, note: document.getElementById('edit-jack-note').value},
+      {item: 'Spare Wheel', present: document.getElementById('edit-sparewheel-present').checked, note: document.getElementById('edit-sparewheel-note').value},
+      {item: 'Any Dents / Damages', present: document.getElementById('edit-dents-present').checked, note: document.getElementById('edit-dents-note').value}
+    ]
+  };
+
+  update(ref(db, 'inspections/' + id), updatedRecord)
+    .then(() => {
+      alert('Updated successfully');
+      closeModal();
+    })
+    .catch(err => alert('Error: ' + err.message));
+};
+
+// Delete record
+window.deleteRecord = (id) => {
+  if (confirm('Are you sure you want to delete this record?')) {
+    remove(ref(db, 'inspections/' + id))
+      .then(() => alert('Deleted successfully'))
+      .catch(err => alert('Error: ' + err.message));
+  }
+};
+
+// Close modal
+window.closeModal = () => {
+  document.getElementById('editModal').style.display = 'none';
 };
 
 // Export to CSV
@@ -332,3 +555,4 @@ window.exportToCSV = () => {
 
 </body>
 </html>
+
