@@ -149,6 +149,7 @@ table input[type="checkbox"] {
   display: flex;
   gap: 15px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 button {
@@ -200,6 +201,65 @@ p {
   font-size: 14px;
   color: #666;
   margin-bottom: 12px;
+}
+
+@media screen and (max-width: 768px) {
+  .app {
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field {
+    min-width: auto;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .navbar a {
+    margin: 5px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+
+  label {
+    font-size: 13px;
+  }
+
+  input {
+    padding: 8px;
+  }
 }
 
 @media print {
