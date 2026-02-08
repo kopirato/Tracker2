@@ -17,73 +17,78 @@ h2{text-align:center;color:#0a2b4f;border-bottom:3px solid #0077cc;padding-botto
 .form-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
 .field{flex:1;min-width:220px}
 label{font-weight:600;font-size:14px}
-input{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc}
+input{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;box-sizing:border-box;}
 table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border:1px solid #ddd;padding:10px;text-align:center}
+th,td{border:1px solid #ddd;padding:10px;text-align:left}
 th{background:#f0f4f8}
+th:nth-child(2), td:nth-child(2) {text-align:center}
+table input[type="text"] {border:none;background:transparent;}
 .buttons{margin:30px 0;display:flex;gap:15px;justify-content:center}
 button{padding:14px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer}
 .save{background:#0077cc;color:#fff}
 .download{background:#28a745;color:#fff}
 .print{background:#444;color:#fff}
-@media print {.buttons,.navbar{display:none}}
+@media print {.buttons,.navbar{display:none} .app {box-shadow:none;margin:0;padding:0} input {border:none !important;background:transparent !important;appearance:none;-webkit-appearance:none;} input[type="checkbox"] {appearance:none;-webkit-appearance:none;width:15px;height:15px;border:1px solid #ddd;} input[type="checkbox"]:checked:before {content:'✓';display:block;text-align:center;line-height:15px;font-size:12px;}}
 </style>
 </head>
 
 <body>
 
 <div class="navbar">
-  <a href="index.html">🏠 Home</a>
-  <a href="records.html">📋 Records</a>
-  <a href="reports.html">📊 Reports</a>
+  <a href="index.html"> Home</a>
+  <a href="records.html"> Records</a>
+  <a href="reports.html"> Reports</a>
 </div>
 
 <div class="app" id="formArea">
+<img src="carwash.jpg" alt="Kitengela Car Park" style="width:100%;height:auto;display:block;margin-bottom:20px;">
 
-<h2>Driver Information & Vehicle Inspection</h2>
+<h2>Driver Information & Vehicle Inspection Template</h2>
 
 <div class="form-row">
-  <div class="field"><label>Driver Name</label><input id="driver"></div>
+  <div class="field"><label>Driver Name</label><input id="driver" value="Xyz"></div>
 </div>
 
 <div class="form-row">
-  <div class="field"><label>Date</label><input type="date" id="date"></div>
-  <div class="field"><label>Time In</label><input type="time" id="timeIn"></div>
-  <div class="field"><label>Time Out</label><input type="time" id="timeOut"></div>
+  <div class="field"><label>Date</label><input type="date" id="date" value="2026-02-06"></div>
+  <div class="field"><label>Time In</label><input type="time" id="timeIn" value="00:01"></div>
+  <div class="field"><label>Time Out</label><input type="time" id="timeOut" value="11:01"></div>
 </div>
 
 <div class="form-row">
-  <div class="field"><label>Truck Number</label><input id="truck"></div>
-  <div class="field"><label>Company Name</label><input id="company"></div>
+  <div class="field"><label>Truck Number</label><input id="truck" value="KCD214R"></div>
+  <div class="field"><label>Company Name</label><input id="company" value="Xcv"></div>
 </div>
 
 <div class="form-row">
-  <div class="field"><label>Phone Number</label><input id="phone"></div>
-  <div class="field"><label>Email</label><input id="email"></div>
+  <div class="field"><label>Phone Number</label><input id="phone" value="0743000000"></div>
+  <div class="field"><label>Email (Optional)</label><input id="email" value="Ccccs@mail.com"></div>
 </div>
+
+<p>Please tick (/) or mark condition where applicable</p>
 
 <table id="checklist">
-<tr><th>Item</th><th>Present</th><th>Condition</th></tr>
-<tr><td>Battery</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Wheel Spanner</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Jack</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Spare Wheel</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Dents / Damages</td><td><input type="checkbox"></td><td><input></td></tr>
+<tr><th>Item</th><th>Present (/)</th><th>Condition / Notes</th></tr>
+<tr><td>Battery</td><td><input type="checkbox" checked></td><td><input type="text"></td></tr>
+<tr><td>Wheel Spanner</td><td><input type="checkbox" checked></td><td><input type="text"></td></tr>
+<tr><td>Jack</td><td><input type="checkbox" checked></td><td><input type="text"></td></tr>
+<tr><td>Spare Wheel</td><td><input type="checkbox" checked></td><td><input type="text"></td></tr>
+<tr><td>Any Dents / Damages</td><td><input type="checkbox" checked></td><td><input type="text"></td></tr>
 </table>
 
 </div>
 
 <div class="buttons">
-<button class="save" onclick="saveData()">💾 Save</button>
-<button class="download" onclick="downloadImage()">📥 Image</button>
-<button class="print" onclick="window.print()">🖨️ Print</button>
+<button class="save" onclick="saveData()"> Save</button>
+<button class="download" onclick="downloadImage()"> Image</button>
+<button class="print" onclick="window.print()"> Print</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-/* ✅ NEW FIREBASE PROJECT */
+/*  NEW FIREBASE PROJECT */
 const firebaseConfig = {
   apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
   authDomain: "parking-b279f.firebaseapp.com",
@@ -98,6 +103,14 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.saveData = () => {
+  const driver = document.getElementById('driver');
+  const date = document.getElementById('date');
+  const timeIn = document.getElementById('timeIn');
+  const timeOut = document.getElementById('timeOut');
+  const truck = document.getElementById('truck');
+  const company = document.getElementById('company');
+  const phone = document.getElementById('phone');
+  const email = document.getElementById('email');
   const rows = [...document.querySelectorAll("#checklist tr")].slice(1);
   const checklist = rows.map(r => ({
     item: r.cells[0].innerText,
@@ -119,8 +132,8 @@ window.saveData = () => {
   };
 
   push(ref(db,"inspections"), record)
-    .then(()=>alert("✅ Saved successfully"))
-    .catch(err=>alert("❌ " + err.message));
+    .then(()=>alert(" Saved successfully"))
+    .catch(err=>alert(" " + err.message));
 };
 
 window.downloadImage = () => {
@@ -135,3 +148,4 @@ window.downloadImage = () => {
 
 </body>
 </html>
+
