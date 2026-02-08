@@ -2,136 +2,255 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Kitengela Car Park - Inspection Form</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Information & Vehicle Inspection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;background:#f0f2f6;font-family:Inter,sans-serif;color:#333}
-.navbar{background:linear-gradient(90deg,#0a2b4f,#0077cc);display:flex;justify-content:space-around;padding:14px;position:sticky;top:0}
-.navbar a{color:#fff;text-decoration:none;font-weight:600}
-.app{max-width:950px;margin:30px auto;background:#fff;padding:30px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.15)}
-h2{text-align:center;color:#0a2b4f;border-bottom:3px solid #0077cc;padding-bottom:10px}
-.form-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
-.field{flex:1;min-width:220px}
-label{font-weight:600;font-size:14px}
-input{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border:1px solid #ddd;padding:10px;text-align:center}
-th{background:#f0f4f8}
-.buttons{margin:30px 0;display:flex;gap:15px;justify-content:center}
-button{padding:14px 24px;border:none;border-radius:10px;font-weight:600;cursor:pointer}
-.save{background:#0077cc;color:#fff}
-.download{background:#28a745;color:#fff}
-.print{background:#444;color:#fff}
-@media print {.buttons,.navbar{display:none}}
+body{
+  margin:0;
+  background:#eaeaea;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#000;
+}
+
+/* MAIN DOCUMENT */
+.app{
+  width:900px;
+  margin:30px auto;
+  background:#fff;
+  padding:20px 24px 30px;
+  border:1px solid #bbb;
+}
+
+/* HEADER IMAGE */
+.header img{
+  width:100%;
+  height:140px;
+  object-fit:contain;
+  margin-bottom:12px;
+}
+
+/* TITLE */
+h2{
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+  margin:10px 0 20px;
+  padding-bottom:8px;
+  border-bottom:2px solid #1f3b63;
+  color:#1f3b63;
+}
+
+/* FORM */
+label{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:4px;
+  display:block;
+}
+
+input{
+  width:100%;
+  padding:8px 10px;
+  font-size:14px;
+  border:1px solid #bbb;
+  border-radius:4px;
+  background:#f5f5f5;
+}
+
+/* GRID */
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;
+  margin-bottom:14px;
+}
+
+.form-row.two{
+  grid-template-columns:1fr 1fr;
+}
+
+.form-row.one{
+  grid-template-columns:1fr;
+}
+
+/* CHECKLIST */
+.section-title{
+  margin-top:20px;
+  font-size:18px;
+  font-weight:700;
+}
+
+.note{
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  border:2px solid #444;
+}
+
+th, td{
+  border:1px solid #444;
+  padding:10px;
+  font-size:14px;
+}
+
+th{
+  background:#f2f2f2;
+  font-weight:700;
+  text-align:center;
+}
+
+td:first-child{ width:35%; }
+td:nth-child(2){ width:15%; text-align:center; }
+td:nth-child(3){ width:50%; }
+
+td input[type="checkbox"]{
+  width:18px;
+  height:18px;
+  accent-color:#000;
+}
+
+td input[type="text"]{
+  border:none;
+  background:transparent;
+  width:100%;
+  outline:none;
+}
+
+/* SIGNATURE AREA */
+.signature{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+}
+
+.sig-line{
+  border-top:1px solid #000;
+  padding-top:6px;
+  font-size:14px;
+}
+
+/* PRINT PERFECT */
+@media print{
+  body{background:#fff}
+  .app{border:none;margin:0}
+}
 </style>
 </head>
 
 <body>
 
-<div class="navbar">
-  <a href="index.html">🏠 Home</a>
-  <a href="records.html">📋 Records</a>
-  <a href="reports.html">📊 Reports</a>
-</div>
-
 <div class="app" id="formArea">
 
-<h2>Driver Information & Vehicle Inspection</h2>
+  <!-- HEADER IMAGE -->
+  <div class="header">
+    <img src="carwash.jpg" alt="Car Wash Header">
+  </div>
 
-<div class="form-row">
-  <div class="field"><label>Driver Name</label><input id="driver"></div>
+  <!-- TITLE -->
+  <h2>Driver Information & Vehicle Inspection Template</h2>
+
+  <!-- DRIVER -->
+  <div class="form-row one">
+    <div>
+      <label>Driver Name</label>
+      <input>
+    </div>
+  </div>
+
+  <!-- DATE / TIME -->
+  <div class="form-row">
+    <div>
+      <label>Date</label>
+      <input type="date">
+    </div>
+    <div>
+      <label>Time In</label>
+      <input type="time">
+    </div>
+    <div>
+      <label>Time Out</label>
+      <input type="time">
+    </div>
+  </div>
+
+  <!-- VEHICLE -->
+  <div class="form-row two">
+    <div>
+      <label>Truck Number</label>
+      <input>
+    </div>
+    <div>
+      <label>Company Name</label>
+      <input>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="form-row two">
+    <div>
+      <label>Phone Number</label>
+      <input>
+    </div>
+    <div>
+      <label>Email (Optional)</label>
+      <input>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="section-title">Vehicle Checklist</div>
+  <div class="note">Please tick (✓) or indicate condition</div>
+
+  <table>
+    <tr>
+      <th>Item</th>
+      <th>Present (✓)</th>
+      <th>Condition / Notes</th>
+    </tr>
+    <tr>
+      <td>Battery</td>
+      <td><input type="checkbox"></td>
+      <td><input type="text"></td>
+    </tr>
+    <tr>
+      <td>Wheel Spanner</td>
+      <td><input type="checkbox"></td>
+      <td><input type="text"></td>
+    </tr>
+    <tr>
+      <td>Jack</td>
+      <td><input type="checkbox"></td>
+      <td><input type="text"></td>
+    </tr>
+    <tr>
+      <td>Spare Wheel</td>
+      <td><input type="checkbox"></td>
+      <td><input type="text"></td>
+    </tr>
+    <tr>
+      <td>Dents / Damages</td>
+      <td><input type="checkbox"></td>
+      <td><input type="text"></td>
+    </tr>
+  </table>
+
+  <!-- SIGNATURES -->
+  <div class="signature">
+    <div class="sig-line">Driver Signature</div>
+    <div class="sig-line">Inspector Signature</div>
+  </div>
+
 </div>
-
-<div class="form-row">
-  <div class="field"><label>Date</label><input type="date" id="date"></div>
-  <div class="field"><label>Time In</label><input type="time" id="timeIn"></div>
-  <div class="field"><label>Time Out</label><input type="time" id="timeOut"></div>
-</div>
-
-<div class="form-row">
-  <div class="field"><label>Truck Number</label><input id="truck"></div>
-  <div class="field"><label>Company Name</label><input id="company"></div>
-</div>
-
-<div class="form-row">
-  <div class="field"><label>Phone Number</label><input id="phone"></div>
-  <div class="field"><label>Email</label><input id="email"></div>
-</div>
-
-<table id="checklist">
-<tr><th>Item</th><th>Present</th><th>Condition</th></tr>
-<tr><td>Battery</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Wheel Spanner</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Jack</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Spare Wheel</td><td><input type="checkbox"></td><td><input></td></tr>
-<tr><td>Dents / Damages</td><td><input type="checkbox"></td><td><input></td></tr>
-</table>
-
-</div>
-
-<div class="buttons">
-<button class="save" onclick="saveData()">💾 Save</button>
-<button class="download" onclick="downloadImage()">📥 Image</button>
-<button class="print" onclick="window.print()">🖨️ Print</button>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
-/* ✅ NEW FIREBASE PROJECT */
-const firebaseConfig = {
-  apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
-  authDomain: "parking-b279f.firebaseapp.com",
-  databaseURL: "https://parking-b279f-default-rtdb.firebaseio.com",
-  projectId: "parking-b279f",
-  storageBucket: "parking-b279f.firebasestorage.app",
-  messagingSenderId: "718698334788",
-  appId: "1:718698334788:web:549a3fc934233daa838a11"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.saveData = () => {
-  const rows = [...document.querySelectorAll("#checklist tr")].slice(1);
-  const checklist = rows.map(r => ({
-    item: r.cells[0].innerText,
-    present: r.cells[1].querySelector("input").checked,
-    note: r.cells[2].querySelector("input").value
-  }));
-
-  const record = {
-    driver: driver.value,
-    date: date.value,
-    timeIn: timeIn.value,
-    timeOut: timeOut.value,
-    truck: truck.value,
-    company: company.value,
-    phone: phone.value,
-    email: email.value,
-    checklist,
-    createdAt: Date.now()
-  };
-
-  push(ref(db,"inspections"), record)
-    .then(()=>alert("✅ Saved successfully"))
-    .catch(err=>alert("❌ " + err.message));
-};
-
-window.downloadImage = () => {
-  html2canvas(formArea,{scale:2}).then(c=>{
-    const a=document.createElement("a");
-    a.download="inspection.png";
-    a.href=c.toDataURL();
-    a.click();
-  });
-};
-</script>
 
 </body>
 </html>
+
