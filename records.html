@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kitengela Car Park - Records</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary-dark: #0a2b4f;
+  --primary-blue: #0077cc;
+  --accent-green: #28a745;
+  --text-dark: #333;
+  --bg-light: #f0f2f6;
+  --white: #fff;
+  --border-color: #ccc;
+  --shadow-color: rgba(0,0,0,0.15);
+  --hover-shadow: rgba(0,119,204,0.2);
+}
+
+body {
+  margin: 0;
+  background: var(--bg-light);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.navbar {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary-blue));
+  display: flex;
+  justify-content: space-around;
+  padding: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.navbar a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #ffd700;
+}
+
+.app {
+  max-width: 1200px; /* Wider for table */
+  margin: 30px auto;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px var(--shadow-color);
+  transition: box-shadow 0.3s ease;
+}
+
+.app:hover {
+  box-shadow: 0 16px 40px var(--hover-shadow);
+}
+
+h2 {
+  text-align: center;
+  color: var(--primary-dark);
+  border-bottom: 3px solid var(--primary-blue);
+  padding-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background: linear-gradient(180deg, #f0f4f8, #e0e8f0);
+  font-weight: 600;
+  cursor: pointer; /* For sorting */
+}
+
+tr:hover {
+  background: #f9f9f9;
+}
+
+.details {
+  display: none;
+  padding: 10px;
+  background: #f0f4f8;
+}
+
+.buttons {
+  margin: 30px 0;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--hover-shadow);
+}
+
+.export {
+  background: var(--accent-green);
+  color: var(--white);
+}
+
+@media screen and (max-width: 768px) {
+  .app {
+    margin: 15px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <a href="index.html">🏠 Home</a>
+  <a href="records.html">📋 Records</a>
+  <a href="reports.html">📊 Reports</a>
+</div>
+
+<div class="app">
+<h2>Inspection Records</h2>
+
+<input type="text" id="searchInput" placeholder="Search by driver, truck, company...">
+
+<table id="recordsTable">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">Date</th>
+      <th onclick="sortTable(1)">Driver</th>
+      <th onclick="sortTable(2)">Truck</th>
+      <th onclick="sortTable(3)">Company</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Time In</th>
+      <th>Time Out</th>
+      <th>Checklist Summary</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="recordsBody"></tbody>
+</table>
+
+<div class="buttons">
+  <button class="export" onclick="exportToCSV()">📤 Export to CSV</button>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
+  authDomain: "parking-b279f.firebaseapp.com",
+  databaseURL: "https://parking-b279f-default-rtdb.firebaseio.com",
+  projectId: "parking-b279f",
+  storageBucket: "parking-b279f.firebasestorage.app",
+  messagingSenderId: "718698334788",
+  appId: "1:718698334788:web:549a3fc934233daa838a11"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const recordsRef = ref(db, 'inspections');
+
+onValue(recordsRef, (snapshot) => {
+  const data = snapshot.val();
+  const tbody = document.getElementById('recordsBody');
+  tbody.innerHTML = ''; // Clear existing rows
+  if (data) {
+    Object.entries(data).forEach(([id, record]) => {
+      const checklistSummary = record.checklist.map(item => `${item.item}: ${item.present ? 'Present' : 'Missing'} (${item.note || 'N/A'})`).join('<br>');
+      const missingCount = record.checklist.filter(item => !item.present).length;
+      const summaryText = `${record.checklist.length - missingCount}/${record.checklist.length} items OK`;
+      
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${record.date}</td>
+        <td>${record.driver}</td>
+        <td>${record.truck}</td>
+        <td>${record.company}</td>
+        <td>${record.phone}</td>
+        <td>${record.email}</td>
+        <td>${record.timeIn}</td>
+        <td>${record.timeOut}</td>
+        <td>${summaryText}</td>
+        <td><button onclick="toggleDetails('${id}')">View Details</button></td>
+      `;
+      tbody.appendChild(row);
+      
+      const detailsRow = document.createElement('tr');
+      detailsRow.id = `details-${id}`;
+      detailsRow.classList.add('details');
+      detailsRow.innerHTML = `<td colspan="10">${checklistSummary}</td>`;
+      tbody.appendChild(detailsRow);
+    });
+  } else {
+    tbody.innerHTML = '<tr><td colspan="10">No records found.</td></tr>';
+  }
+});
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', function() {
+  const filter = this.value.toLowerCase();
+  const rows = document.querySelectorAll('#recordsTable tbody tr:not(.details)');
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(filter) ? '' : 'none';
+  });
+});
+
+// Sorting function
+window.sortTable = (n) => {
+  const table = document.getElementById('recordsTable');
+  let switching = true;
+  let dir = 'asc';
+  let switchcount = 0;
+  while (switching) {
+    switching = false;
+    const rows = table.rows;
+    for (let i = 1; i < (rows.length - 1); i += 2) { // Skip details rows
+      let shouldSwitch = false;
+      const x = rows[i].getElementsByTagName('TD')[n];
+      const y = rows[i + 2] ? rows[i + 2].getElementsByTagName('TD')[n] : null;
+      if (y && ((dir === 'asc' && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) || (dir === 'desc' && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()))) {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 2], rows[i]);
+      switching = true;
+      switchcount++;
+    } else if (switchcount === 0 && dir === 'asc') {
+      dir = 'desc';
+      switching = true;
+    }
+  }
+};
+
+// Toggle details
+window.toggleDetails = (id) => {
+  const details = document.getElementById(`details-${id}`);
+  details.style.display = details.style.display === 'table-row' ? 'none' : 'table-row';
+};
+
+// Export to CSV
+window.exportToCSV = () => {
+  const rows = document.querySelectorAll('#recordsTable tr');
+  let csv = [];
+  rows.forEach(row => {
+    if (!row.classList.contains('details')) {
+      const cols = row.querySelectorAll('td, th');
+      let rowData = [];
+      cols.forEach(col => rowData.push(col.innerText));
+      csv.push(rowData.join(','));
+    }
+  });
+  const csvFile = new Blob([csv.join('\n')], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.download = 'inspections.csv';
+  a.href = window.URL.createObjectURL(csvFile);
+  a.click();
+};
+</script>
+
+</body>
+</html>
