@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kitengela Car Park - Reports</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+
+<style>
+:root {
+  --primary-dark: #0a2b4f;
+  --primary-blue: #0077cc;
+  --accent-green: #28a745;
+  --text-dark: #333;
+  --bg-light: #f0f2f6;
+  --white: #fff;
+  --border-color: #ccc;
+  --shadow-color: rgba(0,0,0,0.15);
+  --hover-shadow: rgba(0,119,204,0.2);
+}
+
+body {
+  margin: 0;
+  background: var(--bg-light);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.navbar {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary-blue));
+  display: flex;
+  justify-content: space-around;
+  padding: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.navbar a {
+  color: var(--white);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #ffd700;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 30px auto;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px var(--shadow-color);
+  transition: box-shadow 0.3s ease;
+}
+
+.app:hover {
+  box-shadow: 0 16px 40px var(--hover-shadow);
+}
+
+h2 {
+  text-align: center;
+  color: var(--primary-dark);
+  border-bottom: 3px solid var(--primary-blue);
+  padding-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.field {
+  flex: 1;
+  min-width: 200px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #f0f4f8;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.stat-card h3 {
+  font-size: 24px;
+  color: var(--primary-blue);
+  margin-bottom: 5px;
+}
+
+.stat-card p {
+  font-size: 14px;
+  color: #666;
+}
+
+.chart-container {
+  margin-bottom: 30px;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px var(--hover-shadow);
+}
+
+.export-csv {
+  background: var(--accent-green);
+  color: var(--white);
+}
+
+.export-pdf {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+@media screen and (max-width: 768px) {
+  .app {
+    margin: 15px;
+    padding: 20px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <a href="index.html"> Home</a>
+  <a href="records.html"> Records</a>
+  <a href="reports.html"> Reports</a>
+</div>
+
+<div class="app" id="reportArea">
+
+<h2>Inspection Reports</h2>
+
+<div class="filter-row">
+  <div class="field"><label>From Date</label><input type="date" id="fromDate"></div>
+  <div class="field"><label>To Date</label><input type="date" id="toDate"></div>
+  <button onclick="generateReports()" style="background: #444; color: #fff;">Generate</button>
+</div>
+
+<div class="stats-grid" id="statsGrid"></div>
+
+<div class="chart-container">
+  <canvas id="issuesChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <canvas id="timeChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <canvas id="predictionChart"></canvas>
+</div>
+
+<div class="buttons">
+  <button class="export-csv" onclick="exportToCSV()"> Export CSV</button>
+  <button class="export-pdf" onclick="exportToPDF()"> Export PDF</button>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB1_XDySLab5nhIcM-EhaV59ewtbjGOmQs",
+  authDomain: "parking-b279f.firebaseapp.com",
+  databaseURL: "https://parking-b279f-default-rtdb.firebaseio.com",
+  projectId: "parking-b279f",
+  storageBucket: "parking-b279f.firebasestorage.app",
+  messagingSenderId: "718698334788",
+  appId: "1:718698334788:web:549a3fc934233daa838a11"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const recordsRef = ref(db, 'inspections');
+
+let allData = [];
+let issuesChart, timeChart, predictionChart;
+
+onValue(recordsRef, (snapshot) => {
+  allData = Object.values(snapshot.val() || {});
+  generateReports(); // Initial load
+});
+
+async function trainModel(xs, ys) {
+  const xMean = xs.mean();
+  const xStd = xs.sub(xMean).square().mean().sqrt();
+  const yMean = ys.mean();
+  const yStd = ys.sub(yMean).square().mean().sqrt();
+
+  const xsNorm = xs.sub(xMean).div(xStd.add(tf.scalar(1e-8)));
+  const ysNorm = ys.sub(yMean).div(yStd.add(tf.scalar(1e-8)));
+
+  const model = tf.sequential();
+  model.add(tf.layers.dense({units: 32, activation: 'relu', inputShape: [1]}));
+  model.add(tf.layers.dense({units: 1}));
+  model.compile({loss: 'meanSquaredError', optimizer: tf.train.adam(0.01)});
+  
+  await model.fit(xsNorm, ysNorm, {epochs: 500, callbacks: {
+    onEpochEnd: (epoch, log) => {
+      if (epoch % 100 === 0) console.log(`Epoch ${epoch}: loss = ${log.loss}`);
+    }
+  }});
+
+  return {model, xMean: xMean.dataSync()[0], xStd: xStd.dataSync()[0], yMean: yMean.dataSync()[0], yStd: yStd.dataSync()[0]};
+}
+
+window.generateReports = async () => {
+  const fromDate = document.getElementById('fromDate').value;
+  const toDate = document.getElementById('toDate').value;
+  let filteredData = allData;
+
+  if (fromDate) filteredData = filteredData.filter(r => r.date >= fromDate);
+  if (toDate) filteredData = filteredData.filter(r => r.date <= toDate);
+
+  // Calculate stats
+  const totalInspections = filteredData.length;
+  let totalDuration = 0;
+  const issues = { Battery: 0, 'Wheel Spanner': 0, Jack: 0, 'Spare Wheel': 0, 'Any Dents / Damages': 0 };
+  const dateCounts = {};
+  
+  filteredData.forEach(record => {
+    if (record.timeIn && record.timeOut) {
+      const inTime = new Date(`2000-01-01T${record.timeIn}`);
+      const outTime = new Date(`2000-01-01T${record.timeOut}`);
+      totalDuration += (outTime - inTime) / (1000 * 60); // minutes
+    }
+    if (record.checklist) {
+      record.checklist.forEach(item => {
+        if (!item.present) issues[item.item] = (issues[item.item] || 0) + 1;
+      });
+    }
+    dateCounts[record.date] = (dateCounts[record.date] || 0) + 1;
+  });
+
+  const avgDuration = totalInspections ? (totalDuration / totalInspections).toFixed(2) : 0;
+
+  // Display stats
+  const statsGrid = document.getElementById('statsGrid');
+  statsGrid.innerHTML = `
+    <div class="stat-card"><h3>${totalInspections}</h3><p>Total Inspections</p></div>
+    <div class="stat-card"><h3>${avgDuration} min</h3><p>Avg Parking Duration</p></div>
+    <div class="stat-card"><h3>${Object.values(issues).reduce((a, b) => a + b, 0)}</h3><p>Total Issues</p></div>
+  `;
+
+  // Issues Bar Chart
+  if (issuesChart) issuesChart.destroy();
+  issuesChart = new Chart(document.getElementById('issuesChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(issues), datasets: [{ label: 'Missing Items', data: Object.values(issues), backgroundColor: '#0077cc' }] },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+
+  // Inspections Over Time Line Chart
+  const sortedDates = Object.keys(dateCounts).sort();
+  if (timeChart) timeChart.destroy();
+  timeChart = new Chart(document.getElementById('timeChart'), {
+    type: 'line',
+    data: { labels: sortedDates, datasets: [{ label: 'Inspections per Day', data: sortedDates.map(d => dateCounts[d]), borderColor: '#28a745' }] },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+
+  // Predictive Analytics: Enhanced model with normalization and hidden layer
+  if (sortedDates.length >= 2) {
+    const xs = tf.tensor2d(sortedDates.map((d, i) => [i]), [sortedDates.length, 1]);
+    const ys = tf.tensor2d(sortedDates.map(d => dateCounts[d]), [sortedDates.length, 1]);
+
+    const {model, xMean, xStd, yMean, yStd} = await trainModel(xs, ys);
+
+    const futureDays = 7;
+    const futureX = tf.tensor2d(Array.from({length: futureDays}, (_, i) => [sortedDates.length + i]), [futureDays, 1]);
+    const futureXNorm = futureX.sub(xMean).div(xStd + 1e-8);
+    let predictionsNorm = model.predict(futureXNorm);
+    let predictions = predictionsNorm.mul(yStd + 1e-8).add(yMean).arraySync().map(p => Math.max(0, Math.round(p[0]))); // Ensure non-negative
+
+    const futureDates = [];
+    const lastDate = new Date(sortedDates[sortedDates.length - 1]);
+    for (let i = 1; i <= futureDays; i++) {
+      const nextDate = new Date(lastDate);
+      nextDate.setDate(nextDate.getDate() + i);
+      futureDates.push(nextDate.toISOString().split('T')[0]);
+    }
+
+    if (predictionChart) predictionChart.destroy();
+    predictionChart = new Chart(document.getElementById('predictionChart'), {
+      type: 'line',
+      data: {
+        labels: [...sortedDates, ...futureDates],
+        datasets: [
+          { label: 'Historical Inspections', data: [...sortedDates.map(d => dateCounts[d]), ...Array(futureDays).fill(null)], borderColor: '#28a745' },
+          { label: 'Predicted Inspections', data: [...Array(sortedDates.length).fill(null), ...predictions], borderColor: '#ff7733', borderDash: [5, 5] }
+        ]
+      },
+      options: { scales: { y: { beginAtZero: true } } }
+    });
+  } else {
+    document.getElementById('predictionChart').getContext('2d').clearRect(0, 0, document.getElementById('predictionChart').width, document.getElementById('predictionChart').height);
+  }
+};
+
+window.exportToCSV = () => {
+  let csv = ['Date,Driver,Truck,Company,Phone,Email,Time In,Time Out,Checklist'];
+  allData.forEach(r => {
+    const checklist = r.checklist ? r.checklist.map(i => `${i.item}:${i.present ? 'Present' : 'Missing'}:${i.note || ''}`).join('; ') : '';
+    csv.push(`${r.date},${r.driver},${r.truck},${r.company},${r.phone},${r.email},${r.timeIn},${r.timeOut},"${checklist}"`);
+  });
+  const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'reports.csv';
+  a.click();
+};
+
+window.exportToPDF = () => {
+  html2pdf(document.getElementById('reportArea'), { filename: 'reports.pdf' });
+};
+</script>
+
+</body>
+</html>
+
