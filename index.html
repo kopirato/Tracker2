@@ -107,7 +107,7 @@
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 2px rgba(226,114,91,0.2); }
 
     .table-wrap { margin-top: 10px; overflow: auto; max-height: 50vh; border-radius: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 550px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; } /* Increased min-width for new columns */
     th, td { padding: 9px 6px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); }
     th { font-weight: 500; font-size: 10px; opacity: 0.8; position: sticky; top: 0; background: rgba(255,255,255,0.03); }
 
@@ -140,9 +140,22 @@
       body { background: white; color: black; }
       .modal-panel { border: none; box-shadow: none; background: white; }
     }
+
+    /* New styles for KRA features */
+    .kra-notice {
+      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(220,53,69,0.9); color: white; padding: 8px; text-align: center; font-size: 12px; z-index: 100;
+    }
+    .kra-notice button { background: transparent; color: white; border: none; cursor: pointer; font-size: 14px; margin-left: 10px; }
+    .etims-missing, .pin-missing { background: rgba(217,83,79,0.15); color: var(--danger); }
   </style>
 </head>
 <body>
+
+  <!-- KRA Compliance Banner -->
+  <div id="kra-notice" class="kra-notice">
+    This tool assists record-keeping only. All tax filings, eTIMS invoicing & payments must be done via official iTax / eRITS / eTIMS platforms. Keep records for ≥5 years.
+    <button onclick="this.parentElement.style.display='none'; localStorage.setItem('hidKRANotice','true')">×</button>
+  </div>
 
   <!-- Welcome Splash -->
   <div id="welcome">
@@ -171,7 +184,7 @@
             <span>Transactions</span>
           </a>
 
-         <a href="parking.html" class="nav-item">
+          <a href="parking.html" class="nav-item">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
               <line x1="3" y1="6" x2="21" y2="6"/>
@@ -204,11 +217,12 @@
         </div>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Quick Actions - Added KRA export -->
       <div style="display:flex;justify-content:center;margin-bottom:16px">
         <select id="quickActions" class="btn btn-ghost" style="width: auto; padding: 9px 16px;">
           <option>Quick Actions</option>
           <option value="export">Export CSV</option>
+          <option value="exportKRA">Export KRA-Ready CSV</option>
           <option value="genPL">Generate P&L</option>
           <option value="downloadPL">Download P&L</option>
         </select>
@@ -233,6 +247,8 @@
               <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
               <div class="field"><label>Category</label><select id="txCategory"></select></div>
               <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+              <div class="field"><label>eTIMS Ref / Receipt No</label><input id="txEtimsRef" type="text" placeholder="KRASRN000000225/1"></div>
+              <div class="field"><label>Counterparty PIN</label><input id="txPin" type="text" placeholder="A012345678B"></div>
             </div>
 
             <div style="margin-top:10px"><label>Notes</label><textarea id="txNotes" placeholder="Optional notes..." style="min-height:60px;"></textarea></div>
@@ -271,11 +287,13 @@
               </select>
               <button id="applyFilter" class="btn btn-ghost" style="padding:8px 12px">Apply</button>
               <button id="resetFilter" class="btn btn-ghost" style="padding:8px 12px">Reset</button>
+              <button id="filterMissingEtims" class="btn btn-ghost" style="padding:8px 12px">Missing eTIMS</button>
+              <button id="filterMissingPin" class="btn btn-ghost" style="padding:8px 12px">Missing PIN</button>
             </div>
 
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Notes</th><th>Action</th></tr></thead>
+                <thead><tr><th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>eTIMS Ref</th><th>Counterparty PIN</th><th>Notes</th><th>Action</th></tr></thead>
                 <tbody id="txTbody"></tbody>
               </table>
             </div>
@@ -352,6 +370,8 @@
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Type</label><select id="editType" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"><option>Income</option><option>Expense</option></select>
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Category</label><select id="editCategory" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></select>
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
+      <label style="font-size:12px;color:var(--muted);margin-top:6px">eTIMS Ref / Receipt No</label><input id="editEtimsRef" type="text" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
+      <label style="font-size:12px;color:var(--muted);margin-top:6px">Counterparty PIN</label><input id="editPin" type="text" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Notes</label><textarea id="editNotes" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);min-height:60px"></textarea>
       <div style="text-align:right;margin-top:8px">
         <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
@@ -368,6 +388,7 @@
   <div id="payrollModal" class="modal">
     <div class="modal-panel">
       <h3>Payroll Calculator (Kenya 2026)</h3>
+      <p class="sub" style="color:var(--danger);font-size:11px">Note: This is an estimate only. Final PAYE, NSSF, SHIF & Housing Levy must be filed via iTax. Employer must remit by 9th of following month.</p>
       <div class="field"><label>Employee Name</label><input id="payrollName" type="text" placeholder="Employee Name"></div>
       <div class="field"><label>Gross Salary (KES)</label><input id="payrollGross" type="number" min="0" step="0.01" placeholder="Gross Salary"></div>
       <button id="calculatePayroll" class="btn btn-admin">Calculate</button>
@@ -413,6 +434,8 @@
       let editKey = null;
       let chartIE, chartCat, chartTrend;
       let usingFirebase = !!txRef;
+      let fMissingEtims = false;
+      let fMissingPin = false;
 
       const els = {
         adminBtn: document.getElementById('adminBtn'),
@@ -423,6 +446,8 @@
         txCategory: document.getElementById('txCategory'),
         txAmount: document.getElementById('txAmount'),
         txNotes: document.getElementById('txNotes'),
+        txEtimsRef: document.getElementById('txEtimsRef'),
+        txPin: document.getElementById('txPin'),
         txMsg: document.getElementById('txMsg'),
         txTbody: document.getElementById('txTbody'),
         fMonth: document.getElementById('fMonth'),
@@ -434,6 +459,8 @@
         fSort: document.getElementById('fSort'),
         applyFilter: document.getElementById('applyFilter'),
         resetFilter: document.getElementById('resetFilter'),
+        filterMissingEtims: document.getElementById('filterMissingEtims'),
+        filterMissingPin: document.getElementById('filterMissingPin'),
         statIncome: document.getElementById('statIncome'),
         statExpense: document.getElementById('statExpense'),
         statBalance: document.getElementById('statBalance'),
@@ -449,6 +476,8 @@
         editCategory: document.getElementById('editCategory'),
         editAmount: document.getElementById('editAmount'),
         editNotes: document.getElementById('editNotes'),
+        editEtimsRef: document.getElementById('editEtimsRef'),
+        editPin: document.getElementById('editPin'),
         editCancelBtn: document.getElementById('editCancelBtn'),
         editSaveBtn: document.getElementById('editSaveBtn'),
         receiptModal: document.getElementById('receiptModal'),
@@ -479,16 +508,28 @@
       };
 
       const incomeCategories = [
-        'Room Rental',
+        'Room Rental – Residential',
+        'Room Rental – Commercial',
         'Parking Fees',
         'Sales of Construction Materials',
-        'Construction Services',
+        'Construction Services / Works',
         'Co-Working Space Rental',
-        'Event Hosting',
+        'Event Hall / Space Hosting',
         'Sales',
         'Other Income'
       ];
       const expenseCategories = [
+        'Salaries and Wages (PAYE liable)',
+        'NSSF – Employer Contribution',
+        'SHIF – Employer Contribution',
+        'Housing Levy – Employer',
+        'Repairs & Maintenance – Building',
+        'Electricity & Water',
+        'Security Services',
+        'County Rates & Land Rent',
+        'NCA / NEMA / County Approval Fees',
+        'Loan Interest & Bank Charges',
+        'Depreciation (Buildings & Equipment)',
         'Office rent', 
         'Airtime',
         'Construction Materials', 
@@ -497,15 +538,9 @@
         'Agency fees',
         'Legal expenses',
         'Stationery and office expenses',
-        'Security costs',
-        'Electricity',
-        'Office Water',
-        'Salaries and wages',
-        'Audit fees',
         'Telephone expenses',
         'Internet',
         'Traveling and car expenses',
-        'Depreciation',
         'Loan monthly installment',
         'Other expenses',
         'Legal fees(Term Loan)',
@@ -516,10 +551,6 @@
         'Credit protection insurance',
         'Valuation fees',
         'Architect fees',
-        'County approval fees',
-        'Nema fees',
-        'NCA fees',
-        'Construction',
         'Consents/land control board cos'
       ];
 
@@ -543,7 +574,7 @@
       function checkForPayroll() {
         const type = els.txType.value;
         const category = els.txCategory.value;
-        els.payrollBtn.style.display = (type === 'Expense' && category === 'Salaries and wages') ? 'block' : 'none';
+        els.payrollBtn.style.display = (type === 'Expense' && category === 'Salaries and Wages (PAYE liable)') ? 'block' : 'none';
       }
 
       updateCategories(els.txCategory, els.txType.value);
@@ -618,12 +649,14 @@
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
         const amount = parseFloat(els.txAmount.value), notes = els.txNotes.value || '';
+        const etimsRef = els.txEtimsRef.value || '';
+        const pin = els.txPin.value || '';
         if (!date || isNaN(amount) || amount <= 0) { alert('Enter valid date and amount'); return; }
-        const newTx = { date, type, category, amount, notes };
+        const newTx = { date, type, category, amount, notes, etimsRef, pin };
         if (usingFirebase && txRef) {
           txRef.push(newTx).then(() => {
             notify('Added (synced to cloud)');
-            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+            els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = '';
           }).catch(e => {
             console.error(e);
             newTx.key = Date.now().toString();
@@ -638,24 +671,24 @@
           saveLocal();
           renderTransactions();
           notify('Added locally');
-          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = '';
+          els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = '';
         }
       });
 
-      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; });
+      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = ''; });
 
       function openEdit(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         editKey = key;
         const t = transactions.find(t => t.key === key);
         if (!t) return;
-        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || '';
+        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || ''; els.editEtimsRef.value = t.etimsRef || ''; els.editPin.value = t.pin || '';
         openModal(els.editModal);
       }
       els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
       els.editSaveBtn.addEventListener('click', () => {
         if (!isAdmin || !editKey) return;
-        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '' };
+        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '', etimsRef: els.editEtimsRef.value || '', pin: els.editPin.value || '' };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
         if (usingFirebase && txRef) {
           txRef.child(editKey).update(nd).then(() => {
@@ -699,6 +732,17 @@
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => {
         els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; els.fSort.value = '';
+        fMissingEtims = false; fMissingPin = false;
+        renderTransactions();
+      });
+
+      els.filterMissingEtims.addEventListener('click', () => {
+        fMissingEtims = !fMissingEtims;
+        renderTransactions();
+      });
+
+      els.filterMissingPin.addEventListener('click', () => {
+        fMissingPin = !fMissingPin;
         renderTransactions();
       });
 
@@ -710,6 +754,8 @@
         if (t.amount < min || t.amount > max) return false;
         const nf = (els.fNotes.value || '').toLowerCase();
         if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
+        if (fMissingEtims && t.etimsRef) return false;
+        if (fMissingPin && t.pin) return false;
         return true;
       }
 
@@ -718,7 +764,7 @@
         if (sort === 'date_asc') return arr.sort((a, b) => new Date(a.date) - new Date(b.date));
         if (sort === 'date_desc') return arr.sort((a, b) => new Date(b.date) - new Date(a.date));
         if (sort === 'amount_asc') return arr.sort((a, b) => a.amount - b.amount);
-        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - a.amount);
+        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - b.amount);
         return arr;
       }
 
@@ -734,7 +780,9 @@
             actions.unshift(`<button class="action-btn" data-act="edit" data-key="${t.key}">Edit</button>`);
             actions.push(`<button class="delete-btn" data-act="del" data-key="${t.key}">Delete</button>`);
           }
-          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
+          const etimsClass = t.etimsRef ? '' : 'etims-missing';
+          const pinClass = t.pin ? '' : 'pin-missing';
+          tr.innerHTML = `<td>${esc(t.date)}</td><td>${esc(t.type)}</td><td>${esc(t.category)}</td><td>KES ${Number(t.amount).toLocaleString()}</td><td class="${etimsClass}">${esc(t.etimsRef || '')}</td><td class="${pinClass}">${esc(t.pin || '')}</td><td>${esc(t.notes || '')}</td><td>${actions.join(' ')}</td>`;
           els.txTbody.appendChild(tr);
           if (t.type === 'Income') inc += Number(t.amount);
           if (t.type === 'Expense') exp += Number(t.amount);
@@ -770,6 +818,8 @@
           <p><strong>Type:</strong> ${esc(t.type)}</p>
           <p><strong>Category:</strong> ${esc(t.category)}</p>
           <p><strong>Amount:</strong> KES ${Number(t.amount).toLocaleString()}</p>
+          <p><strong>eTIMS Ref:</strong> ${esc(t.etimsRef || 'N/A')}</p>
+          <p><strong>Counterparty PIN:</strong> ${esc(t.pin || 'N/A')}</p>
           <p><strong>Notes:</strong> ${esc(t.notes || 'N/A')}</p>
           <div style="text-align:right;margin-top:12px">
             <button id="printReceipt" class="btn btn-ghost">Print</button>
@@ -845,12 +895,21 @@
         const val = e.target.value;
         if (val === 'export') {
           if (!transactions.length) { alert('No transactions to export'); return; }
-          let csv = 'Date,Type,Category,Amount,Notes\n';
-          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}"\n`);
+          let csv = 'Date,Type,Category,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
+          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}", "${t.etimsRef || ''}", "${t.pin || ''}"\n`);
           const blob = new Blob([csv], { type:'text/csv' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
           notify('CSV exported', 'var(--good)');
+        }
+        if (val === 'exportKRA') {
+          if (!transactions.length) { alert('No transactions to export'); return; }
+          let csv = 'Date,Type,Category,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
+          transactions.forEach(t => csv += `"${t.date}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}", "${t.etimsRef || ''}", "${t.pin || ''}"\n`);
+          const blob = new Blob([csv], { type:'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = 'selelo_kra_ready_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+          notify('KRA-ready CSV exported', 'var(--good)');
         }
         if (val === 'genPL') {
           generatePL();
@@ -1033,7 +1092,7 @@
         const name = els.payrollName.value.trim();
         const result = calculatePayroll(gross);
         els.txAmount.value = result.netPay.toFixed(2); // Set amount to net pay (paid to employee)
-        els.txNotes.value = `Employee: ${name || 'N/A'}\nGross: KES ${gross.toLocaleString()}\nNet Pay: KES ${result.netPay.toLocaleString()}\nDeductions: PAYE ${result.paye.toLocaleString()}, NSSF Emp ${result.nssfEmployee.toLocaleString()}, SHIF ${result.shif.toLocaleString()}, Housing Emp ${result.housingEmployee.toLocaleString()}\nEmployer Costs: NSSF ${result.nssfEmployer.toLocaleString()}, Housing ${result.housingEmployer.toLocaleString()}\nTotal Total Cost: KES ${result.totalCost.toLocaleString()}`;
+        els.txNotes.value = `Employee: ${name || 'N/A'}\nGross: KES ${gross.toLocaleString()}\nNet Pay: KES ${result.netPay.toLocaleString()}\nDeductions: PAYE ${result.paye.toLocaleString()}, NSSF Emp ${result.nssfEmployee.toLocaleString()}, SHIF ${result.shif.toLocaleString()}, Housing Emp ${result.housingEmployee.toLocaleString()}\nEmployer Costs: NSSF ${result.nssfEmployer.toLocaleString()}, Housing ${result.housingEmployer.toLocaleString()}\nTotal Cost: KES ${result.totalCost.toLocaleString()}`;
         closeModal(els.payrollModal);
         notify('Payroll applied to transaction (Net Pay as amount)', 'var(--good)');
       });
@@ -1112,6 +1171,11 @@
         els.aiPrompt.value = prompt; // Show for user
         askAi(prompt);
       });
+
+      // Show KRA notice if not hidden
+      if (localStorage.getItem('hidKRANotice') !== 'true') {
+        document.getElementById('kra-notice').style.display = 'block';
+      }
 
       renderTransactions();
       window.addEventListener('beforeunload', saveLocal);
