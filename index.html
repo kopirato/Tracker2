@@ -39,7 +39,6 @@
       backdrop-filter: blur(2px);
       z-index: 1;
     }
-    /* Welcome Splash - Simplified */
     #welcome {
       position: fixed; inset: 0; z-index: 9999;
       background: radial-gradient(circle at center, rgba(226,114,91,0.15), transparent 80%);
@@ -65,7 +64,6 @@
     .logo:hover { transform: scale(1.05); }
     h1 { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
     .sub { font-size: 12px; opacity: 0.8; font-weight: 300; }
-    /* Simplified Nav */
     .nav-icons {
       display: flex; justify-content: center; gap: 24px; padding: 10px 0;
       background: rgba(255,255,255,0.03); border-radius: 14px;
@@ -100,7 +98,7 @@
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent1); box-shadow: 0 0 0 2px rgba(226,114,91,0.2); }
     .table-wrap { margin-top: 10px; overflow: auto; max-height: 50vh; border-radius: 10px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; } /* Increased min-width for new columns */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; }
     th, td { padding: 9px 6px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); }
     th { font-weight: 500; font-size: 10px; opacity: 0.8; position: sticky; top: 0; background: rgba(255,255,255,0.03); }
     .action-btn, .delete-btn { padding: 5px 8px; border-radius: 6px; font-size: 11px; margin-right: 3px; }
@@ -128,7 +126,6 @@
       body { background: white; color: black; }
       .modal-panel { border: none; box-shadow: none; background: white; }
     }
-    /* New styles for KRA features */
     .kra-notice {
       position: fixed; bottom: 0; left: 0; right: 0; background: rgba(220,53,69,0.9); color: white; padding: 8px; text-align: center; font-size: 12px; z-index: 100;
     }
@@ -137,16 +134,16 @@
   </style>
 </head>
 <body>
-  <!-- KRA Compliance Banner -->
   <div id="kra-notice" class="kra-notice">
     This tool assists record-keeping only. All tax filings, eTIMS invoicing & payments must be done via official iTax / eRITS / eTIMS platforms. Keep records for ≥5 years.
     <button onclick="this.parentElement.style.display='none'; localStorage.setItem('hidKRANotice','true')">×</button>
   </div>
-  <!-- Welcome Splash -->
+
   <div id="welcome">
     <h1>WELCOME TO THE BIZHUB</h1>
     <p>SELELO BUSINESS PARK</p>
   </div>
+
   <div class="shell">
     <main class="card">
       <div class="top">
@@ -157,7 +154,7 @@
             <div class="sub">The BizHub</div>
           </div>
         </div>
-        <!-- Premium Navigation -->
+
         <div class="nav-icons">
           <a href="#transactions" class="nav-item">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -190,13 +187,14 @@
             <span>Business Card</span>
           </a>
         </div>
+
         <div class="controls">
           <button id="adminBtn" class="btn btn-admin">Admin Login</button>
           <button id="themeBtn" class="btn btn-theme">Theme</button>
           <button id="installBtn" class="btn btn-admin" style="display:none">Install App</button>
         </div>
       </div>
-      <!-- Quick Actions - Added KRA export -->
+
       <div style="display:flex;justify-content:center;margin-bottom:16px">
         <select id="quickActions" class="btn btn-ghost" style="width: auto; padding: 9px 16px;">
           <option>Quick Actions</option>
@@ -206,8 +204,9 @@
           <option value="downloadPL">Download P&L</option>
         </select>
       </div>
-      <!-- Anchor for smooth scroll -->
+
       <a id="transactions"></a>
+
       <div class="grid">
         <section>
           <div id="addPanel" class="panel">
@@ -234,6 +233,7 @@
               <div id="txMsg" style="color:var(--good);font-size:12px"></div>
             </div>
           </div>
+
           <div class="panel" style="margin-top:16px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
               <h3 style="margin:0;font-size:15px">Transactions</h3>
@@ -270,6 +270,7 @@
             </div>
           </div>
         </section>
+
         <aside>
           <div class="panel dashboard">
             <h3 style="font-size:15px;margin-bottom:10px">Overview</h3>
@@ -280,12 +281,14 @@
             </div>
             <div id="budgetAlert" class="sub" style="margin-top:6px;color:var(--danger)"></div>
           </div>
+
           <div id="chartsPanel" class="panel charts" style="margin-top:14px;display:none">
             <h3 style="margin-bottom:10px">Charts</h3>
             <canvas id="chartIE" height="120"></canvas>
             <canvas id="chartCat" height="120" style="margin-top:10px"></canvas>
             <canvas id="chartTrend" height="120" style="margin-top:10px"></canvas>
           </div>
+
           <div class="panel" style="margin-top:14px">
             <h3 style="font-size:15px;margin-bottom:8px">Profit & Loss</h3>
             <label for="reportMonth" class="sub" style="display:block;margin-bottom:4px">Month (optional)</label>
@@ -296,10 +299,11 @@
             </div>
             <div id="plView" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
           </div>
-          <!-- New AI Assistant Panel with WebLLM -->
+
+          <!-- Original AI Assistant Panel -->
           <div class="panel" style="margin-top:14px">
             <h3 style="font-size:15px;margin-bottom:8px">AI Assistant (Powered by WebLLM)</h3>
-            <p class="sub" style="margin-bottom:8px">Ask questions or get insights on your transactions. Runs locally in your browser (WebGPU required; no API key needed). Model loads on first use—be patient!</p>
+            <p class="sub" style="margin-bottom:8px">Ask questions or get insights on your transactions. Runs locally in your browser (WebGPU required; no API key needed).</p>
             <div id="aiStatus" style="font-size:12px;color:var(--muted);margin-bottom:8px">Status: Checking WebGPU...</div>
             <textarea id="aiPrompt" placeholder="e.g., Analyze my transactions for trends..." style="width:100%;min-height:80px;margin-top:8px;"></textarea>
             <div style="display:flex;gap:6px;margin-top:8px">
@@ -310,12 +314,34 @@
             <div id="aiResponse" style="margin-top:10px;font-size:12px;color:var(--text);max-height:200px;overflow:auto;"></div>
             <div id="aiMsg" style="color:var(--danger);font-size:12px;margin-top:4px"></div>
           </div>
+
+          <!-- ─────────────────────────────────────────────── -->
+          <!--             NEW AI DATA ANALYST SECTION            -->
+          <!-- ─────────────────────────────────────────────── -->
+          <div class="panel" style="margin-top:14px">
+            <h3 style="font-size:15px;margin-bottom:8px">AI Data Analyst</h3>
+            <p class="sub" style="margin-bottom:8px">Analyze transactions — trends, tax insights, anomalies. Runs locally (WebGPU required).</p>
+            <div id="dataAiStatus" style="font-size:12px;color:var(--muted);margin-bottom:8px">Status: Waiting for model...</div>
+            <textarea id="dataAiPrompt" placeholder="e.g., What are my top 3 expense categories this year? Any suspicious transactions?" style="width:100%;min-height:90px;margin-top:8px;"></textarea>
+            <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap">
+              <button id="dataAiAnalyzeBtn" class="btn btn-admin" disabled>Analyze</button>
+              <button id="dataAiSummaryBtn" class="btn btn-ghost" disabled>Full Summary</button>
+              <button id="dataAiTaxInsightsBtn" class="btn btn-ghost" disabled>Tax / eTIMS Insights</button>
+              <button id="dataAiAnomaliesBtn" class="btn btn-ghost" disabled>Find Anomalies</button>
+              <button id="dataAiTopCategoriesBtn" class="btn btn-ghost" disabled>Top Categories</button>
+            </div>
+            <div id="dataAiResponse" style="margin-top:12px;font-size:13px;color:var(--text);max-height:240px;overflow:auto;border:1px solid rgba(255,255,255,0.12);padding:10px;border-radius:8px;background:rgba(0,0,0,0.2)"></div>
+            <div id="dataAiMsg" style="color:var(--danger);font-size:12px;margin-top:6px"></div>
+          </div>
+
         </aside>
       </div>
+
       <footer>Developed by David Kopirato | 0742147197, 0745151968</footer>
     </main>
   </div>
-  <!-- Modals - Simplified Styles -->
+
+  <!-- Modals -->
   <div id="adminModal" class="modal">
     <div class="modal-panel">
       <h3>Admin Access</h3>
@@ -327,6 +353,7 @@
       </div>
     </div>
   </div>
+
   <div id="editModal" class="modal">
     <div class="modal-panel">
       <h3>Edit Transaction</h3>
@@ -343,14 +370,15 @@
       </div>
     </div>
   </div>
+
   <div id="receiptModal" class="modal">
     <div class="modal-panel" id="receiptInner"></div>
   </div>
-  <!-- Payroll Modal -->
+
   <div id="payrollModal" class="modal">
     <div class="modal-panel">
       <h3>Payroll Calculator (Kenya 2026)</h3>
-      <p class="sub" style="color:var(--danger);font-size:11px">Note: This is an estimate only. Final PAYE, NSSF, SHIF & Housing Levy must be filed via iTax. Employer must remit by 9th of following month.</p>
+      <p class="sub" style="color:var(--danger);font-size:11px">Note: This is an estimate only. Final PAYE, NSSF, SHIF & Housing Levy must be filed via iTax.</p>
       <div class="field"><label>Employee Name</label><input id="payrollName" type="text" placeholder="Employee Name"></div>
       <div class="field"><label>Gross Salary (KES)</label><input id="payrollGross" type="number" min="0" step="0.01" placeholder="Gross Salary"></div>
       <button id="calculatePayroll" class="btn btn-admin">Calculate</button>
@@ -361,12 +389,14 @@
       </div>
     </div>
   </div>
+
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm"></script> <!-- WebLLM CDN -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const firebaseConfig = {
@@ -379,14 +409,13 @@
       };
       try { if (!window.firebase.apps?.length) firebase.initializeApp(firebaseConfig); } catch (e) {}
       let txRef;
-      try {
-        const db = firebase.database();
-        txRef = db.ref('transactions');
-      } catch (e) { console.warn('Firebase DB unavailable', e); }
-      const KEY_TX = "selelo_tx_local";
+      try { const db = firebase.database(); txRef = db.ref('transactions'); } catch (e) { console.warn('Firebase unavailable', e); }
+
+      const KEY_TX    = "selelo_tx_local";
       const KEY_ADMIN = "selelo_admin_final";
       const KEY_THEME = "selelo_theme_final";
       const ADMIN_PASSWORDS = ["0742147197","0721235005"];
+
       let transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       let isAdmin = localStorage.getItem(KEY_ADMIN) === "true";
       let editKey = null;
@@ -394,6 +423,7 @@
       let usingFirebase = !!txRef;
       let fMissingEtims = false;
       let fMissingPin = false;
+
       const els = {
         adminBtn: document.getElementById('adminBtn'),
         addBtn: document.getElementById('addBtn'),
@@ -454,107 +484,114 @@
         payrollResult: document.getElementById('payrollResult'),
         payrollCancel: document.getElementById('payrollCancel'),
         payrollApply: document.getElementById('payrollApply'),
-        // AI Elements
+        // Original AI
         aiStatus: document.getElementById('aiStatus'),
         aiPrompt: document.getElementById('aiPrompt'),
         askAiBtn: document.getElementById('askAiBtn'),
         aiSummaryBtn: document.getElementById('aiSummaryBtn'),
         aiSuggestionsBtn: document.getElementById('aiSuggestionsBtn'),
         aiResponse: document.getElementById('aiResponse'),
-        aiMsg: document.getElementById('aiMsg')
+        aiMsg: document.getElementById('aiMsg'),
+        // New AI Data Analyst
+        dataAiStatus: document.getElementById('dataAiStatus'),
+        dataAiPrompt: document.getElementById('dataAiPrompt'),
+        dataAiAnalyzeBtn: document.getElementById('dataAiAnalyzeBtn'),
+        dataAiSummaryBtn: document.getElementById('dataAiSummaryBtn'),
+        dataAiTaxInsightsBtn: document.getElementById('dataAiTaxInsightsBtn'),
+        dataAiAnomaliesBtn: document.getElementById('dataAiAnomaliesBtn'),
+        dataAiTopCategoriesBtn: document.getElementById('dataAiTopCategoriesBtn'),
+        dataAiResponse: document.getElementById('dataAiResponse'),
+        dataAiMsg: document.getElementById('dataAiMsg')
       };
+
       const incomeCategories = [
-        'Room Rental – Residential',
-        'Room Rental – Commercial',
-        'Parking Fees',
-        'Sales of Construction Materials',
-        'Construction Services / Works',
-        'Co-Working Space Rental',
-        'Event Hall / Space Hosting',
-        'Sales',
-        'Other Income'
+        'Room Rental – Residential','Room Rental – Commercial','Parking Fees',
+        'Sales of Construction Materials','Construction Services / Works',
+        'Co-Working Space Rental','Event Hall / Space Hosting','Sales','Other Income'
       ];
+
       const expenseCategories = [
-        'Salaries and Wages (PAYE liable)',
-        'NSSF – Employer Contribution',
-        'SHIF – Employer Contribution',
-        'Housing Levy – Employer',
-        'Repairs & Maintenance – Building',
-        'Electricity & Water',
-        'Security Services',
-        'County Rates & Land Rent',
-        'NCA / NEMA / County Approval Fees',
-        'Loan Interest & Bank Charges',
-        'Depreciation (Buildings & Equipment)',
-        'Office rent',
-        'Airtime',
-        'Construction Materials',
-        'Repairs and maintenance',
-        'Advertising',
-        'Agency fees',
-        'Legal expenses',
-        'Stationery and office expenses',
-        'Telephone expenses',
-        'Internet',
-        'Traveling and car expenses',
-        'Loan monthly installment',
-        'Other expenses',
-        'Legal fees(Term Loan)',
-        'Bank charges and interest',
-        'Car Tracker charges',
-        'Loan interest',
-        'Contractors all risk insurance',
-        'Credit protection insurance',
-        'Valuation fees',
-        'Architect fees',
-        'Consents/land control board cos'
+        'Salaries and Wages (PAYE liable)','NSSF – Employer Contribution',
+        'SHIF – Employer Contribution','Housing Levy – Employer',
+        'Repairs & Maintenance – Building','Electricity & Water','Security Services',
+        'County Rates & Land Rent','NCA / NEMA / County Approval Fees',
+        'Loan Interest & Bank Charges','Depreciation (Buildings & Equipment)',
+        'Office rent','Airtime','Construction Materials','Repairs and maintenance',
+        'Advertising','Agency fees','Legal expenses','Stationery and office expenses',
+        'Telephone expenses','Internet','Traveling and car expenses',
+        'Loan monthly installment','Other expenses','Legal fees(Term Loan)',
+        'Bank charges and interest','Car Tracker charges','Loan interest',
+        'Contractors all risk insurance','Credit protection insurance',
+        'Valuation fees','Architect fees','Consents/land control board cos'
       ];
+
       function updateCategories(select, type) {
         select.innerHTML = '';
         const cats = type === 'Expense' ? expenseCategories : incomeCategories;
         cats.forEach(cat => {
           const opt = document.createElement('option');
-          opt.value = cat;
-          opt.textContent = cat;
-          select.appendChild(opt);
+          opt.value = cat; opt.textContent = cat; select.appendChild(opt);
         });
       }
+
       els.txType.addEventListener('change', () => {
         updateCategories(els.txCategory, els.txType.value);
         checkForPayroll();
       });
+
       els.txCategory.addEventListener('change', checkForPayroll);
+
       function checkForPayroll() {
         const type = els.txType.value;
-        const category = els.txCategory.value;
-        els.payrollBtn.style.display = (type === 'Expense' && category === 'Salaries and Wages (PAYE liable)') ? 'block' : 'none';
+        const cat = els.txCategory.value;
+        els.payrollBtn.style.display = (type === 'Expense' && cat === 'Salaries and Wages (PAYE liable)') ? 'block' : 'none';
       }
+
       updateCategories(els.txCategory, els.txType.value);
       updateCategories(els.editCategory, els.editType.value);
+
       const allCategories = [...new Set([...incomeCategories, ...expenseCategories])].sort();
       allCategories.forEach(cat => {
         const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        els.fCategory.appendChild(opt);
+        opt.value = cat; opt.textContent = cat; els.fCategory.appendChild(opt);
       });
+
       function saveLocal() { localStorage.setItem(KEY_TX, JSON.stringify(transactions)); }
-      function setAdmin(v) { isAdmin = !!v; localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false"); applyAdminUI(); els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login'; }
+
+      function setAdmin(v) {
+        isAdmin = !!v;
+        localStorage.setItem(KEY_ADMIN, isAdmin ? "true" : "false");
+        applyAdminUI();
+        els.adminBtn.textContent = isAdmin ? 'Admin (Sign out)' : 'Admin Login';
+      }
+
       function openModal(el) { el.classList.add('show'); el.style.display = 'flex'; }
       function closeModal(el) { el.classList.remove('show'); el.style.display = 'none'; }
-      function esc(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
-      function notify(msg, color = 'var(--good)') { els.txMsg.style.color = color; els.txMsg.textContent = msg; setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000); }
+
+      function esc(s) {
+        return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+      }
+
+      function notify(msg, color = 'var(--good)') {
+        els.txMsg.style.color = color;
+        els.txMsg.textContent = msg;
+        setTimeout(() => { if (els.txMsg.textContent === msg) els.txMsg.textContent = ''; }, 3000);
+      }
+
       document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m); }));
+
       (function applyTheme() {
         const t = localStorage.getItem(KEY_THEME) || 'dark';
         if (t === 'light') document.body.style.filter = 'brightness(1.06) saturate(1.05)';
       })();
+
       document.getElementById('themeBtn').addEventListener('click', () => {
         const cur = localStorage.getItem(KEY_THEME) || 'dark';
         const next = cur === 'dark' ? 'light' : 'dark';
         localStorage.setItem(KEY_THEME, next);
         document.body.style.filter = next === 'light' ? 'brightness(1.06) saturate(1.05)' : '';
       });
+
       function applyAdminUI() {
         if (isAdmin) {
           els.addPanel.classList.add('admin-active');
@@ -568,9 +605,11 @@
         els.addBtn.disabled = !isAdmin;
         renderTransactions();
       }
+
       applyAdminUI();
+
       if (usingFirebase && txRef) {
-        txRef.on('value', (snapshot) => {
+        txRef.on('value', snapshot => {
           const data = snapshot.val();
           if (data) {
             transactions = Object.keys(data).map(key => ({ key, ...data[key] }));
@@ -579,7 +618,7 @@
             transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
           }
           renderTransactions();
-        }, (err) => {
+        }, err => {
           console.error('Firebase read error', err);
           usingFirebase = false;
           transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
@@ -590,6 +629,7 @@
         usingFirebase = false;
         transactions = JSON.parse(localStorage.getItem(KEY_TX) || "[]");
       }
+
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) { alert('Admin only'); return; }
         const date = els.txDate.value, type = els.txType.value, category = els.txCategory.value;
@@ -619,19 +659,40 @@
           els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = '';
         }
       });
-      els.clearBtn.addEventListener('click', () => { els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = ''; });
+
+      els.clearBtn.addEventListener('click', () => {
+        els.txDate.value = ''; els.txAmount.value = ''; els.txNotes.value = ''; els.txEtimsRef.value = ''; els.txPin.value = '';
+      });
+
       function openEdit(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         editKey = key;
         const t = transactions.find(t => t.key === key);
         if (!t) return;
-        els.editDate.value = t.date; els.editType.value = t.type; updateCategories(els.editCategory, t.type); els.editCategory.value = t.category; els.editAmount.value = t.amount; els.editNotes.value = t.notes || ''; els.editEtimsRef.value = t.etimsRef || ''; els.editPin.value = t.pin || '';
+        els.editDate.value = t.date;
+        els.editType.value = t.type;
+        updateCategories(els.editCategory, t.type);
+        els.editCategory.value = t.category;
+        els.editAmount.value = t.amount;
+        els.editNotes.value = t.notes || '';
+        els.editEtimsRef.value = t.etimsRef || '';
+        els.editPin.value = t.pin || '';
         openModal(els.editModal);
       }
+
       els.editCancelBtn.addEventListener('click', () => { closeModal(els.editModal); editKey = null; });
+
       els.editSaveBtn.addEventListener('click', () => {
         if (!isAdmin || !editKey) return;
-        const nd = { date: els.editDate.value, type: els.editType.value, category: els.editCategory.value, amount: parseFloat(els.editAmount.value), notes: els.editNotes.value || '', etimsRef: els.editEtimsRef.value || '', pin: els.editPin.value || '' };
+        const nd = {
+          date: els.editDate.value,
+          type: els.editType.value,
+          category: els.editCategory.value,
+          amount: parseFloat(els.editAmount.value),
+          notes: els.editNotes.value || '',
+          etimsRef: els.editEtimsRef.value || '',
+          pin: els.editPin.value || ''
+        };
         if (!nd.date || isNaN(nd.amount) || nd.amount <= 0) { alert('Invalid data'); return; }
         if (usingFirebase && txRef) {
           txRef.child(editKey).update(nd).then(() => {
@@ -653,6 +714,7 @@
           editKey = null;
         }
       });
+
       function deleteTx(key) {
         if (!isAdmin) { alert('Admin only'); return; }
         if (!confirm('Delete this transaction?')) return;
@@ -670,25 +732,24 @@
           notify('Deleted', 'var(--danger)');
         }
       }
+
       els.applyFilter.addEventListener('click', renderTransactions);
       els.resetFilter.addEventListener('click', () => {
-        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = ''; els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; els.fSort.value = '';
+        els.fMonth.value = ''; els.fType.value = ''; els.fCategory.value = '';
+        els.fMin.value = ''; els.fMax.value = ''; els.fNotes.value = ''; els.fSort.value = '';
         fMissingEtims = false; fMissingPin = false;
         renderTransactions();
       });
-      els.filterMissingEtims.addEventListener('click', () => {
-        fMissingEtims = !fMissingEtims;
-        renderTransactions();
-      });
-      els.filterMissingPin.addEventListener('click', () => {
-        fMissingPin = !fMissingPin;
-        renderTransactions();
-      });
+
+      els.filterMissingEtims.addEventListener('click', () => { fMissingEtims = !fMissingEtims; renderTransactions(); });
+      els.filterMissingPin.addEventListener('click', () => { fMissingPin = !fMissingPin; renderTransactions(); });
+
       function passesFilters(t) {
         if (els.fMonth.value && !t.date.startsWith(els.fMonth.value)) return false;
         if (els.fType.value && t.type !== els.fType.value) return false;
         if (els.fCategory.value && t.category !== els.fCategory.value) return false;
-        const min = parseFloat(els.fMin.value) || -Infinity, max = parseFloat(els.fMax.value) || Infinity;
+        const min = parseFloat(els.fMin.value) || -Infinity;
+        const max = parseFloat(els.fMax.value) || Infinity;
         if (t.amount < min || t.amount > max) return false;
         const nf = (els.fNotes.value || '').toLowerCase();
         if (nf && !((t.notes || '').toLowerCase().includes(nf))) return false;
@@ -696,14 +757,16 @@
         if (fMissingPin && t.pin) return false;
         return true;
       }
+
       function sortTransactions(arr) {
         const sort = els.fSort.value;
-        if (sort === 'date_asc') return arr.sort((a, b) => new Date(a.date) - new Date(b.date));
-        if (sort === 'date_desc') return arr.sort((a, b) => new Date(b.date) - new Date(a.date));
-        if (sort === 'amount_asc') return arr.sort((a, b) => a.amount - b.amount);
-        if (sort === 'amount_desc') return arr.sort((a, b) => b.amount - a.amount);
+        if (sort === 'date_asc') return arr.sort((a,b) => new Date(a.date) - new Date(b.date));
+        if (sort === 'date_desc') return arr.sort((a,b) => new Date(b.date) - new Date(a.date));
+        if (sort === 'amount_asc') return arr.sort((a,b) => a.amount - b.amount);
+        if (sort === 'amount_desc') return arr.sort((a,b) => b.amount - a.amount);
         return arr;
       }
+
       function renderTransactions() {
         els.txTbody.innerHTML = '';
         let inc = 0, exp = 0;
@@ -728,6 +791,7 @@
         els.statBalance.textContent = (inc - exp).toLocaleString();
         if (isAdmin) renderCharts();
       }
+
       els.txTbody.addEventListener('click', e => {
         const b = e.target.closest('button[data-act]');
         if (!b) return;
@@ -743,6 +807,7 @@
         if (act === 'del') deleteTx(key);
         if (act === 'rcpt') openReceipt(key);
       });
+
       function openReceipt(key) {
         const t = transactions.find(tx => tx.key === key);
         if (!t) return;
@@ -765,37 +830,32 @@
         document.getElementById('closeReceipt').addEventListener('click', () => closeModal(els.receiptModal));
         document.getElementById('printReceipt').addEventListener('click', () => printReceipt(els.receiptInner.innerHTML));
       }
+
       function printReceipt(content) {
         const printWindow = window.open('', '_blank');
         printWindow.document.write(`
           <html>
-            <head>
-              <title>Print Receipt</title>
-              <style>
-                body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; }
-                h3 { text-align: center; }
-                p { margin: 5px 0; }
-              </style>
-            </head>
+            <head><title>Print Receipt</title><style>body { font-family: Inter, sans-serif; color: black; background: white; padding: 20px; } h3 { text-align: center; } p { margin: 5px 0; }</style></head>
             <body>${content.replace(/<button.*?<\/button>/g, '')}</body>
           </html>
         `);
         printWindow.document.close();
         printWindow.print();
       }
+
       function renderCharts() {
         if (!window.Chart) return;
-        const inc = transactions.filter(t => t.type === 'Income').reduce((a, b) => a + Number(b.amount), 0);
-        const exp = transactions.filter(t => t.type === 'Expense').reduce((a, b) => a + Number(b.amount), 0);
-        try { if (chartIE) chartIE.destroy(); } catch (e) {}
+        const inc = transactions.filter(t => t.type === 'Income').reduce((a,b)=>a+Number(b.amount),0);
+        const exp = transactions.filter(t => t.type === 'Expense').reduce((a,b)=>a+Number(b.amount),0);
+        try { if (chartIE) chartIE.destroy(); } catch(e){}
         chartIE = new Chart(document.getElementById('chartIE').getContext('2d'), {
           type: 'doughnut',
-          data: { labels: ['Income', 'Expense'], datasets: [{ data: [inc, exp], backgroundColor: ['#4ade80', '#ff6b6b'] }] },
+          data: { labels: ['Income','Expense'], datasets: [{ data: [inc,exp], backgroundColor: ['#4ade80','#ff6b6b'] }] },
           options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
         const catMap = {};
-        transactions.forEach(t => catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount));
-        try { if (chartCat) chartCat.destroy(); } catch (e) {}
+        transactions.forEach(t => catMap[t.category] = (catMap[t.category]||0) + Number(t.amount));
+        try { if (chartCat) chartCat.destroy(); } catch(e){}
         chartCat = new Chart(document.getElementById('chartCat').getContext('2d'), {
           type: 'doughnut',
           data: { labels: Object.keys(catMap), datasets: [{ data: Object.values(catMap), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0'] }] },
@@ -808,7 +868,7 @@
           monthly[m][t.type] += Number(t.amount);
         });
         const months = Object.keys(monthly).sort();
-        try { if (chartTrend) chartTrend.destroy(); } catch (e) {}
+        try { if (chartTrend) chartTrend.destroy(); } catch(e){}
         chartTrend = new Chart(document.getElementById('chartTrend').getContext('2d'), {
           type: 'line',
           data: {
@@ -821,36 +881,31 @@
           options: { responsive:true, tension:0.3, plugins:{ legend:{ position:'bottom' } } }
         });
       }
-      // Quick Actions Handler
-      els.quickActions.addEventListener('change', (e) => {
+
+      function formatExportDate(dateStr) {
+        if (!dateStr) return '';
+        const parts = dateStr.split('-');
+        if (parts.length !== 3) return dateStr;
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+
+      els.quickActions.addEventListener('change', e => {
         const val = e.target.value;
-        if (val === 'export') {
+        if (val === 'export' || val === 'exportKRA') {
           if (!transactions.length) { alert('No transactions to export'); return; }
           let csv = 'Date,Type,Category,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
           transactions.forEach(t => {
-            const formattedDate = t.date ? t.date.split('-').reverse().join('/') : '';
-            csv += `"${formattedDate}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}","${t.etimsRef || ''}","${t.pin || ''}"\n`;
+            csv += `"${formatExportDate(t.date)}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g,'""')}","${t.etimsRef || ''}","${t.pin || ''}"\n`;
           });
-          const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+          const blob = new Blob([csv], { type: 'text/csv' });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = 'selelo_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-          notify('CSV exported (DD/MM/YYYY dates)', 'var(--good)');
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = val === 'export' ? 'selelo_transactions.csv' : 'selelo_kra_ready_transactions.csv';
+          document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+          notify(val === 'export' ? 'CSV exported' : 'KRA-ready CSV exported', 'var(--good)');
         }
-        if (val === 'exportKRA') {
-          if (!transactions.length) { alert('No transactions to export'); return; }
-          let csv = 'Date,Type,Category,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
-          transactions.forEach(t => {
-            const formattedDate = t.date ? t.date.split('-').reverse().join('/') : '';
-            csv += `"${formattedDate}","${t.type}","${t.category}","${t.amount}","${(t.notes || '').replace(/"/g, '""')}","${t.etimsRef || ''}","${t.pin || ''}"\n`;
-          });
-          const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = 'selelo_kra_ready_transactions.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-          notify('KRA-ready CSV exported (DD/MM/YYYY dates)', 'var(--good)');
-        }
-        if (val === 'genPL') {
-          generatePL();
-        }
+        if (val === 'genPL') generatePL();
         if (val === 'downloadPL') {
           const m = els.reportMonth.value;
           const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
@@ -876,6 +931,7 @@
         }
         e.target.value = '';
       });
+
       function generatePL() {
         const m = els.reportMonth.value;
         const arr = m ? transactions.filter(t => t.date.startsWith(m)) : transactions;
@@ -890,6 +946,7 @@
         els.receiptInner.innerHTML = `<div style="padding:20px;background:var(--glass);border-radius:16px">${html}<div style="text-align:right;margin-top:16px"><button id="closePL" class="btn btn-ghost">Close</button></div></div>`;
         setTimeout(()=> document.getElementById('closePL')?.addEventListener('click', ()=> closeModal(els.receiptModal)),50);
       }
+
       els.adminBtn.addEventListener('click', () => {
         if (isAdmin) {
           if (!confirm('Sign out admin?')) return;
@@ -901,7 +958,9 @@
         openModal(els.adminModal);
         setTimeout(() => els.adminPassword.focus(), 120);
       });
+
       els.adminCancel.addEventListener('click', () => closeModal(els.adminModal));
+
       els.adminConfirm.addEventListener('click', () => {
         const p = (els.adminPassword.value || '').trim();
         if (!ADMIN_PASSWORDS.includes(p)) { alert('Incorrect admin password'); return; }
@@ -909,13 +968,18 @@
         setAdmin(true);
         notify('Admin session active', 'var(--good)');
       });
-      els.adminPassword.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); } });
+
+      els.adminPassword.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter') { ev.preventDefault(); els.adminConfirm.click(); }
+      });
+
       let deferredPrompt = null;
-      window.addEventListener('beforeinstallprompt', (e) => {
+      window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault();
         deferredPrompt = e;
         els.installBtn.style.display = 'block';
       });
+
       els.installBtn.addEventListener('click', async () => {
         if (!deferredPrompt) return;
         deferredPrompt.prompt();
@@ -923,65 +987,52 @@
         deferredPrompt = null;
         els.installBtn.style.display = 'none';
       });
+
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(reg => {
-          console.log('SW registered:', reg.scope);
-        }).catch(err => console.warn('SW registration failed:', err));
+        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registered:', reg.scope)).catch(err => console.warn('SW failed:', err));
       }
-      // Payroll Functions (Kenya 2026)
+
+      // Payroll logic (unchanged)
       function calculatePAYE(gross) {
-        let taxable = gross; // Assume no other deductions for simplicity; in reality, subtract NSSF employee, etc.
+        let taxable = gross;
         let paye = 0;
-        if (taxable > 800000) {
-          paye += (taxable - 800000) * 0.35;
-          taxable = 800000;
-        }
-        if (taxable > 500000) {
-          paye += (taxable - 500000) * 0.325;
-          taxable = 500000;
-        }
-        if (taxable > 32333) {
-          paye += (taxable - 32333) * 0.3;
-          taxable = 32333;
-        }
-        if (taxable > 24000) {
-          paye += (taxable - 24000) * 0.25;
-          taxable = 24000;
-        }
+        if (taxable > 800000) { paye += (taxable - 800000) * 0.35; taxable = 800000; }
+        if (taxable > 500000) { paye += (taxable - 500000) * 0.325; taxable = 500000; }
+        if (taxable > 32333) { paye += (taxable - 32333) * 0.3; taxable = 32333; }
+        if (taxable > 24000) { paye += (taxable - 24000) * 0.25; taxable = 24000; }
         paye += taxable * 0.1;
-        paye -= 2400; // Personal relief
+        paye -= 2400;
         return Math.max(paye, 0);
       }
+
       function calculateNSSF(gross) {
-        const lel = 9000;
-        const uel = 108000;
-        const rate = 0.06;
+        const lel = 9000, uel = 108000, rate = 0.06;
         const tier1 = Math.min(gross, lel) * rate;
         const tier2 = Math.min(Math.max(gross - lel, 0), uel - lel) * rate;
         const employee = tier1 + tier2;
-        const employer = employee;
-        return { employee, employer };
+        return { employee, employer: employee };
       }
-      function calculateSHIF(gross) {
-        return Math.max(gross * 0.0275, 300);
-      }
+
+      function calculateSHIF(gross) { return Math.max(gross * 0.0275, 300); }
+
       function calculateHousingLevy(gross) {
         const rate = 0.015;
         const employee = gross * rate;
-        const employer = employee;
-        return { employee, employer };
+        return { employee, employer: employee };
       }
+
       function calculatePayroll(gross) {
         const nssf = calculateNSSF(gross);
         const shif = calculateSHIF(gross);
         const housing = calculateHousingLevy(gross);
-        const paye = calculatePAYE(gross - nssf.employee); // Taxable after NSSF employee
+        const paye = calculatePAYE(gross - nssf.employee);
         const employeeDeductions = paye + nssf.employee + shif + housing.employee;
         const netPay = gross - employeeDeductions;
         const employerContributions = nssf.employer + housing.employer;
         const totalCost = gross + employerContributions;
         return { gross, netPay, totalCost, paye, nssfEmployee: nssf.employee, nssfEmployer: nssf.employer, shif, housingEmployee: housing.employee, housingEmployer: housing.employer };
       }
+
       els.payrollBtn.addEventListener('click', () => {
         els.payrollGross.value = els.txAmount.value || '';
         els.payrollName.value = '';
@@ -989,7 +1040,9 @@
         els.payrollApply.disabled = true;
         openModal(els.payrollModal);
       });
+
       els.payrollCancel.addEventListener('click', () => closeModal(els.payrollModal));
+
       els.calculatePayroll.addEventListener('click', () => {
         const gross = parseFloat(els.payrollGross.value);
         if (isNaN(gross) || gross <= 0) { alert('Enter valid gross salary'); return; }
@@ -1009,50 +1062,79 @@
         els.payrollResult.innerHTML = html;
         els.payrollApply.disabled = false;
       });
+
       els.payrollApply.addEventListener('click', () => {
         const gross = parseFloat(els.payrollGross.value);
         const name = els.payrollName.value.trim();
         const result = calculatePayroll(gross);
-        els.txAmount.value = result.netPay.toFixed(2); // Set amount to net pay (paid to employee)
+        els.txAmount.value = result.netPay.toFixed(2);
         els.txNotes.value = `Employee: ${name || 'N/A'}\nGross: KES ${gross.toLocaleString()}\nNet Pay: KES ${result.netPay.toLocaleString()}\nDeductions: PAYE ${result.paye.toLocaleString()}, NSSF Emp ${result.nssfEmployee.toLocaleString()}, SHIF ${result.shif.toLocaleString()}, Housing Emp ${result.housingEmployee.toLocaleString()}\nEmployer Costs: NSSF ${result.nssfEmployer.toLocaleString()}, Housing ${result.housingEmployer.toLocaleString()}\nTotal Cost: KES ${result.totalCost.toLocaleString()}`;
         closeModal(els.payrollModal);
         notify('Payroll applied to transaction (Net Pay as amount)', 'var(--good)');
       });
-      // WebLLM Integration (AI Assistant)
+
+      // ───────────────────────────────────────────────
+      //                WebLLM - Shared Engine
+      // ───────────────────────────────────────────────
       let aiEngine = null;
-      const modelId = 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC'; // Smaller model for faster loading and better compatibility
+      const modelId = 'TinyLlama-1.1B-Chat-v1.0-q4f32_1-MLC';
+
       const initProgressCallback = (progress) => {
-        els.aiStatus.textContent = `Status: ${progress.text} (${Math.round(progress.progress * 100)}%)`;
-        console.log('Model loading progress:', progress);
+        const text = progress.text + ` (${Math.round(progress.progress * 100)}%)`;
+        els.aiStatus.textContent = `Status: ${text}`;
+        els.dataAiStatus.textContent = `Status: ${text}`;
       };
+
       async function loadAiModel() {
         if (!navigator.gpu) {
-          els.aiMsg.textContent = 'WebGPU not supported. Please use latest Chrome or Edge with WebGPU enabled (check chrome://flags).';
+          const msg = 'WebGPU not supported. Use latest Chrome/Edge with WebGPU enabled.';
+          els.aiMsg.textContent = msg;
+          els.dataAiMsg.textContent = msg;
           els.aiStatus.textContent = 'Status: Unsupported browser';
+          els.dataAiStatus.textContent = 'Status: Unsupported browser';
           console.error('WebGPU not available');
           return;
         }
+
         try {
-          els.aiStatus.textContent = 'Status: Initializing model engine...';
-          console.log('Starting model load for:', modelId);
+          els.aiStatus.textContent = 'Status: Initializing model...';
+          els.dataAiStatus.textContent = 'Status: Initializing model...';
+          console.log('Loading model:', modelId);
           aiEngine = await webllm.CreateMLCEngine(modelId, { initProgressCallback });
           els.aiStatus.textContent = 'Status: Model ready!';
+          els.dataAiStatus.textContent = 'Status: Model ready • Data Analyst active';
           els.aiMsg.textContent = '';
-          // Enable buttons once ready
+          els.dataAiMsg.textContent = '';
+
+          // Enable ALL AI buttons
           els.askAiBtn.disabled = false;
           els.aiSummaryBtn.disabled = false;
           els.aiSuggestionsBtn.disabled = false;
+          els.dataAiAnalyzeBtn.disabled = false;
+          els.dataAiSummaryBtn.disabled = false;
+          els.dataAiTaxInsightsBtn.disabled = false;
+          els.dataAiAnomaliesBtn.disabled = false;
+          els.dataAiTopCategoriesBtn.disabled = false;
+
           console.log('Model loaded successfully');
         } catch (e) {
           console.error('Model load error:', e);
-          els.aiMsg.textContent = 'Error loading model: ' + e.message + '. Check console for details. Try reloading or checking GPU flags.';
+          const errMsg = 'Error loading model: ' + e.message + '. Check console / GPU flags.';
+          els.aiMsg.textContent = errMsg;
+          els.dataAiMsg.textContent = errMsg;
           els.aiStatus.textContent = 'Status: Failed to load';
+          els.dataAiStatus.textContent = 'Status: Failed to load';
         }
       }
-      loadAiModel(); // Load on page start
+
+      loadAiModel();
+
+      // ───────────────────────────────────────────────
+      //           Original General-Purpose AI
+      // ───────────────────────────────────────────────
       async function askAi(prompt) {
         if (!aiEngine) {
-          els.aiMsg.textContent = 'Model not ready yet—please wait or reload the page.';
+          els.aiMsg.textContent = 'Model not ready yet — please wait or reload.';
           return;
         }
         els.aiResponse.textContent = 'Generating response...';
@@ -1066,30 +1148,108 @@
           els.aiResponse.textContent = reply.choices[0].message.content.trim();
         } catch (e) {
           console.error('AI query error:', e);
-          els.aiMsg.textContent = 'Error generating response: ' + e.message;
+          els.aiMsg.textContent = 'Error: ' + e.message;
         }
       }
+
       els.askAiBtn.addEventListener('click', () => {
         const prompt = els.aiPrompt.value.trim();
-        if (!prompt) return;
-        askAi(prompt);
+        if (prompt) askAi(prompt);
       });
+
       els.aiSummaryBtn.addEventListener('click', () => {
-        const txData = JSON.stringify(transactions.slice(0, 50)); // Limit for perf
-        const prompt = `Summarize these business transactions for trends, key insights, and potential issues: ${txData}`;
-        els.aiPrompt.value = prompt; // Show for user
+        const data = JSON.stringify(transactions.slice(0,50));
+        const prompt = `Summarize these business transactions for trends, key insights, and potential issues: ${data}`;
+        els.aiPrompt.value = prompt;
         askAi(prompt);
       });
+
       els.aiSuggestionsBtn.addEventListener('click', () => {
-        const txData = JSON.stringify(transactions.slice(0, 50)); // Limit for perf
-        const prompt = `Based on these transactions: ${txData}, provide suggestions to improve profitability, reduce expenses, or optimize operations for Selelo Business Park.`;
-        els.aiPrompt.value = prompt; // Show for user
+        const data = JSON.stringify(transactions.slice(0,50));
+        const prompt = `Based on these transactions: ${data}, provide suggestions to improve profitability, reduce expenses, or optimize operations for Selelo Business Park.`;
+        els.aiPrompt.value = prompt;
         askAi(prompt);
       });
-      // Show KRA notice if not hidden
+
+      // ───────────────────────────────────────────────
+      //           Dedicated AI Data Analyst
+      // ───────────────────────────────────────────────
+      function showDataAiError(msg) {
+        els.dataAiMsg.textContent = msg;
+        els.dataAiResponse.textContent = '';
+      }
+
+      function clearDataAiMessages() {
+        els.dataAiMsg.textContent = '';
+        els.dataAiResponse.textContent = 'Generating analysis...';
+      }
+
+      async function runDataAnalysis(userPrompt = '', prefix = '') {
+        if (!aiEngine) {
+          showDataAiError('AI model not loaded yet. Please wait...');
+          return;
+        }
+
+        clearDataAiMessages();
+
+        try {
+          const dataSnippet = JSON.stringify(transactions.slice(0, 120)); // limit size
+
+          const fullPrompt = prefix
+            ? `${prefix}\n\nTransaction data (recent entries - JSON):\n${dataSnippet}\n\nAnswer concisely, professionally, use KES, focus on numbers and patterns.`
+            : `${userPrompt}\n\nTransaction data (recent entries - JSON):\n${dataSnippet}\n\nAnswer concisely and professionally.`;
+
+          const messages = [
+            {
+              role: 'system',
+              content: 'You are a financial & tax data analyst for a Kenyan SME (Selelo Business Park). Focus on income/expense patterns, categories, eTIMS refs, PIN compliance, possible VAT/PAYE issues. Be precise, use tables when helpful, detect anomalies.'
+            },
+            { role: 'user', content: fullPrompt }
+          ];
+
+          const reply = await aiEngine.chat.completions.create({
+            messages,
+            temperature: 0.65,
+            max_tokens: 680
+          });
+
+          els.dataAiResponse.textContent = reply.choices[0].message.content.trim();
+        } catch (err) {
+          console.error(err);
+          showDataAiError('Analysis error: ' + err.message);
+        }
+      }
+
+      els.dataAiAnalyzeBtn.addEventListener('click', () => {
+        const prompt = els.dataAiPrompt.value.trim();
+        if (prompt) runDataAnalysis(prompt);
+      });
+
+      els.dataAiSummaryBtn.addEventListener('click', () => {
+        els.dataAiPrompt.value = 'Give me a full financial summary of the business';
+        runDataAnalysis('', 'Provide a concise overall financial summary: total income, total expenses, net result, monthly trends, most frequent categories.');
+      });
+
+      els.dataAiTaxInsightsBtn.addEventListener('click', () => {
+        els.dataAiPrompt.value = 'Tax and eTIMS compliance insights';
+        runDataAnalysis('', 'Analyze for KRA / tax compliance: % of sales with eTIMS ref, missing PINs on large transactions, categories that may require VAT, red flags for audit.');
+      });
+
+      els.dataAiAnomaliesBtn.addEventListener('click', () => {
+        els.dataAiPrompt.value = 'Show any anomalies or suspicious transactions';
+        runDataAnalysis('', 'Identify anomalies or potentially suspicious entries: unusually high amounts, round numbers without explanation, missing eTIMS refs on income, duplicates, irregular patterns.');
+      });
+
+      els.dataAiTopCategoriesBtn.addEventListener('click', () => {
+        els.dataAiPrompt.value = 'Top income and expense categories';
+        runDataAnalysis('', 'List top 5 income categories and top 5 expense categories by total value. Include approximate % of total income / total expenses.');
+      });
+
+      // Show KRA notice if not dismissed
       if (localStorage.getItem('hidKRANotice') !== 'true') {
         document.getElementById('kra-notice').style.display = 'block';
       }
+
       renderTransactions();
       window.addEventListener('beforeunload', saveLocal);
     });
