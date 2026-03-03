@@ -301,7 +301,6 @@
             <div id="plView" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
           </div>
 
-          <!-- General AI Assistant -->
           <div class="panel" style="margin-top:14px">
             <h3 style="font-size:15px;margin-bottom:8px">AI Assistant</h3>
             <p class="sub" style="margin-bottom:8px">General questions & insights. Local WebLLM (needs WebGPU).</p>
@@ -316,7 +315,6 @@
             <div id="aiMsg" style="color:var(--danger);font-size:12px;margin-top:4px"></div>
           </div>
 
-          <!-- Data Analyst AI -->
           <div class="panel" style="margin-top:14px">
             <h3 style="font-size:15px;margin-bottom:8px">AI Data Analyst</h3>
             <p class="sub" style="margin-bottom:8px">Transaction analysis, tax insights, anomalies. Local WebLLM.</p>
@@ -502,7 +500,6 @@
         payrollResult: document.getElementById('payrollResult'),
         payrollCancel: document.getElementById('payrollCancel'),
         payrollApply: document.getElementById('payrollApply'),
-        // AI - General
         aiStatus: document.getElementById('aiStatus'),
         aiPrompt: document.getElementById('aiPrompt'),
         askAiBtn: document.getElementById('askAiBtn'),
@@ -510,7 +507,6 @@
         aiSuggestionsBtn: document.getElementById('aiSuggestionsBtn'),
         aiResponse: document.getElementById('aiResponse'),
         aiMsg: document.getElementById('aiMsg'),
-        // AI - Data Analyst
         dataAiStatus: document.getElementById('dataAiStatus'),
         dataAiPrompt: document.getElementById('dataAiPrompt'),
         dataAiAnalyzeBtn: document.getElementById('dataAiAnalyzeBtn'),
@@ -522,26 +518,58 @@
         dataAiMsg: document.getElementById('dataAiMsg')
       };
 
-      // Categories
+      // ─── CATEGORIES (UPDATED) ────────────────────────────────────────
+
       const incomeCategories = [
-        'Room Rental – Residential','Loan' , 'Room Rental – Commercial', 'Parking Fees',
-        'Sales of Construction Materials', 'Construction Services / Works',
-        'Co-Working Space Rental', 'Event Hall / Space Hosting', 'Sales', 'Other Income'
+        'Room Rental – Residential',
+        'Loan',
+        'Room Rental – Commercial',
+        'Parking Fees',
+        'Sales of Construction Materials',
+        'Construction Services / Works',
+        'Co-Working Space Rental',
+        'Event Hall / Space Hosting',
+        'Sales',
+        'Other Income'
       ];
 
       const expenseCategories = [
-        'Salaries and Wages (PAYE liable)', 'NSSF – Employer Contribution',
-        'SHIF – Employer Contribution', 'Housing Levy – Employer',
-        'Repairs & Maintenance – Building', 'Electricity & Water', 'Security Services',
-        'County Rates & Land Rent', 'NCA / NEMA / County Approval Fees',
-        'Loan Interest & Bank Charges', 'Depreciation (Buildings & Equipment)',
-        'Office rent', 'Airtime', 'Construction Materials', 'Repairs and maintenance',
-        'Advertising', 'Agency fees', 'Legal expenses', 'Stationery and office expenses',
-        'Telephone expenses', 'Internet', 'Traveling and car expenses',
-        'Loan monthly installment', 'Other expenses', 'Legal fees(Term Loan)',
-        'Bank charges and interest', 'Car Tracker charges', 'Loan interest',
-        'Contractors all risk insurance', 'Credit protection insurance',
-        'Valuation fees', 'Architect fees', 'Consents/land control board cos','casual wages','Miscellaneous Expenses'
+        'Salaries and Wages (PAYE liable)',
+        'NSSF – Employer Contribution',
+        'SHIF – Employer Contribution',
+        'Housing Levy – Employer',
+        'Repairs & Maintenance – Building',
+        'Electricity & Water',
+        'Security Services',
+        'County Rates & Land Rent',
+        'NCA / NEMA / County Approval Fees',
+        'Loan Interest & Bank Charges',
+        'Depreciation (Buildings & Equipment)',
+        'Office rent',
+        'Airtime',
+        'Construction Materials',
+        'Repairs and maintenance',
+        'Advertising',
+        'Agency fees',
+        'Legal expenses',
+        'Stationery and office expenses',
+        'Telephone expenses',
+        'Internet',
+        'Traveling and car expenses',
+        'Loan monthly installment',
+        'Other expenses',
+        'Legal fees(Term Loan)',
+        'Bank charges and interest',
+        'Car Tracker charges',
+        'Loan interest',
+        'Contractors all risk insurance',
+        'Credit protection insurance',
+        'Valuation fees',
+        'Architect fees',
+        'Consents/land control board cos',
+        'Casual wages',
+        'Miscellaneous Expenses',
+        'Concreting'
       ];
 
       function updateCategories(select, type) {
@@ -563,14 +591,15 @@
       els.txCategory.addEventListener('change', checkForPayroll);
 
       function checkForPayroll() {
-        const isPayroll = els.txType.value === 'Expense' && els.txCategory.value === 'Salaries and Wages (PAYE liable)';
+        const isPayroll = els.txType.value === 'Expense' && 
+                          els.txCategory.value === 'Salaries and Wages (PAYE liable)';
         els.payrollBtn.style.display = isPayroll ? 'block' : 'none';
       }
 
       updateCategories(els.txCategory, els.txType.value);
-      updateCategories(els.editCategory, 'Income'); // default
+      updateCategories(els.editCategory, 'Income'); // default for edit modal
 
-      // All categories for filter
+      // Populate filter dropdown with all categories
       [...new Set([...incomeCategories, ...expenseCategories])].sort().forEach(cat => {
         const opt = document.createElement('option');
         opt.value = cat;
@@ -1334,7 +1363,6 @@
           els.aiMsg.textContent = '';
           els.dataAiMsg.textContent = '';
 
-          // Enable buttons
           els.askAiBtn.disabled = false;
           els.aiSummaryBtn.disabled = false;
           els.aiSuggestionsBtn.disabled = false;
@@ -1467,4 +1495,4 @@
     });
   </script>
 </body>
-</html>
+</html>l
