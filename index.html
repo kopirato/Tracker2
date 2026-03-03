@@ -222,6 +222,17 @@
               <div class="field"><label>Date</label><input id="txDate" type="date"></div>
               <div class="field"><label>Type</label><select id="txType"><option>Income</option><option>Expense</option></select></div>
               <div class="field"><label>Category</label><select id="txCategory"></select></div>
+
+              <div id="constructionFields" style="display:none; grid-column: 1 / -1; margin-top: 8px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">
+                <div style="display: grid; gap: 10px; grid-template-columns: 1fr 1fr;">
+                  <div class="field"><label>Sub-category</label><select id="txSubCategory"></select></div>
+                  <div class="field"><label>Quantity</label><input id="txQuantity" type="number" min="0" step="0.001" placeholder="e.g. 50"></div>
+                  <div class="field"><label>Unit Price (KES)</label><input id="txUnitPrice" type="number" min="0" step="0.01" placeholder="0.00"></div>
+                  <div class="field"><label>Supplier Name</label><input id="txSupplier" type="text" placeholder="e.g. Bamburi Cement"></div>
+                  <div class="field"><label>Transport Cost (KES)</label><input id="txTransport" type="number" min="0" step="0.01" placeholder="0.00"></div>
+                </div>
+              </div>
+
               <div class="field"><label>Amount</label><input id="txAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
               <div class="field"><label>eTIMS Ref / Receipt No</label><input id="txEtimsRef" type="text" placeholder="KRASRN000000225/1"></div>
               <div class="field"><label>Counterparty PIN</label><input id="txPin" type="text" placeholder="A012345678B"></div>
@@ -351,16 +362,27 @@
   </div>
 
   <div id="editModal" class="modal">
-    <div class="modal-panel">
+    <div class="modal-panel" style="max-width:420px">
       <h3>Edit Transaction</h3>
       <label style="font-size:12px;color:var(--muted)">Date</label><input id="editDate" type="date" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Type</label><select id="editType" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"><option>Income</option><option>Expense</option></select>
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Category</label><select id="editCategory" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></select>
+
+      <div id="editConstructionFields" style="display:none; margin-top:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:10px;">
+        <div style="display:grid; gap:10px; grid-template-columns:1fr 1fr;">
+          <div><label style="font-size:12px;color:var(--muted)">Sub-category</label><select id="editSubCategory" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></select></div>
+          <div><label style="font-size:12px;color:var(--muted)">Quantity</label><input id="editQuantity" type="number" step="0.001" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></div>
+          <div><label style="font-size:12px;color:var(--muted)">Unit Price (KES)</label><input id="editUnitPrice" type="number" step="0.01" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></div>
+          <div><label style="font-size:12px;color:var(--muted)">Supplier Name</label><input id="editSupplier" type="text" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></div>
+          <div><label style="font-size:12px;color:var(--muted)">Transport Cost (KES)</label><input id="editTransport" type="number" step="0.01" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)"></div>
+        </div>
+      </div>
+
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Amount</label><input id="editAmount" type="number" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">eTIMS Ref / Receipt No</label><input id="editEtimsRef" type="text" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Counterparty PIN</label><input id="editPin" type="text" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text)">
       <label style="font-size:12px;color:var(--muted);margin-top:6px">Notes</label><textarea id="editNotes" style="width:100%;padding:8px;border-radius:8px;margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);min-height:60px"></textarea>
-      <div style="text-align:right;margin-top:8px">
+      <div style="text-align:right;margin-top:12px">
         <button id="editCancelBtn" class="btn btn-ghost">Cancel</button>
         <button id="editSaveBtn" class="btn btn-admin">Save</button>
       </div>
@@ -447,6 +469,11 @@
         txDate: document.getElementById('txDate'),
         txType: document.getElementById('txType'),
         txCategory: document.getElementById('txCategory'),
+        txSubCategory: document.getElementById('txSubCategory'),
+        txQuantity: document.getElementById('txQuantity'),
+        txUnitPrice: document.getElementById('txUnitPrice'),
+        txSupplier: document.getElementById('txSupplier'),
+        txTransport: document.getElementById('txTransport'),
         txAmount: document.getElementById('txAmount'),
         txNotes: document.getElementById('txNotes'),
         txEtimsRef: document.getElementById('txEtimsRef'),
@@ -477,6 +504,11 @@
         editDate: document.getElementById('editDate'),
         editType: document.getElementById('editType'),
         editCategory: document.getElementById('editCategory'),
+        editSubCategory: document.getElementById('editSubCategory'),
+        editQuantity: document.getElementById('editQuantity'),
+        editUnitPrice: document.getElementById('editUnitPrice'),
+        editSupplier: document.getElementById('editSupplier'),
+        editTransport: document.getElementById('editTransport'),
         editAmount: document.getElementById('editAmount'),
         editNotes: document.getElementById('editNotes'),
         editEtimsRef: document.getElementById('editEtimsRef'),
@@ -518,7 +550,7 @@
         dataAiMsg: document.getElementById('dataAiMsg')
       };
 
-      // ─── CATEGORIES (UPDATED) ────────────────────────────────────────
+      // ─── CATEGORIES ─────────────────────────────────────────────────
 
       const incomeCategories = [
         'Room Rental – Residential',
@@ -572,6 +604,22 @@
         'Concreting'
       ];
 
+      const constructionSubCategories = [
+        'Cement',
+        'Sand',
+        'Ballast',
+        'Hardcore',
+        'Steel bars (rebars)',
+        'Binding wire',
+        'Nails',
+        'Timber (formwork)',
+        'Bricks / Blocks',
+        'Roofing materials',
+        'Plumbing materials',
+        'Electrical materials',
+        'Paint'
+      ];
+
       function updateCategories(select, type) {
         select.innerHTML = '';
         const cats = type === 'Expense' ? expenseCategories : incomeCategories;
@@ -583,27 +631,51 @@
         });
       }
 
+      function toggleConstructionFields(isEdit = false) {
+        const prefix = isEdit ? 'edit' : 'tx';
+        const typeEl = document.getElementById(prefix + 'Type');
+        const catEl  = document.getElementById(prefix + 'Category');
+        const fieldsEl = document.getElementById(isEdit ? 'editConstructionFields' : 'constructionFields');
+
+        const show = typeEl?.value === 'Expense' && catEl?.value === 'Construction Materials';
+        if (fieldsEl) fieldsEl.style.display = show ? 'block' : 'none';
+
+        if (show && !isEdit) {
+          const sub = els.txSubCategory;
+          if (sub) {
+            sub.innerHTML = '<option value="">Select material</option>';
+            constructionSubCategories.forEach(item => {
+              const o = document.createElement('option');
+              o.value = o.textContent = item;
+              sub.appendChild(o);
+            });
+          }
+        }
+      }
+
       els.txType.addEventListener('change', () => {
         updateCategories(els.txCategory, els.txType.value);
+        toggleConstructionFields();
         checkForPayroll();
       });
 
-      els.txCategory.addEventListener('change', checkForPayroll);
+      els.txCategory.addEventListener('change', () => {
+        toggleConstructionFields();
+        checkForPayroll();
+      });
 
       function checkForPayroll() {
-        const isPayroll = els.txType.value === 'Expense' && 
-                          els.txCategory.value === 'Salaries and Wages (PAYE liable)';
+        const isPayroll = els.txType.value === 'Expense' && els.txCategory.value === 'Salaries and Wages (PAYE liable)';
         els.payrollBtn.style.display = isPayroll ? 'block' : 'none';
       }
 
       updateCategories(els.txCategory, els.txType.value);
-      updateCategories(els.editCategory, 'Income'); // default for edit modal
+      updateCategories(els.editCategory, 'Income');
+      toggleConstructionFields();
 
-      // Populate filter dropdown with all categories
       [...new Set([...incomeCategories, ...expenseCategories])].sort().forEach(cat => {
         const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
+        opt.value = opt.textContent = cat;
         els.fCategory.appendChild(opt);
       });
 
@@ -680,7 +752,7 @@
       applyAdminUI();
 
       // ────────────────────────────────────────────────
-      // DATA SYNC (Firebase + Local)
+      // DATA SYNC
       // ────────────────────────────────────────────────
 
       if (usingFirebase && txRef) {
@@ -701,11 +773,12 @@
       }
 
       // ────────────────────────────────────────────────
-      // CRUD OPERATIONS
+      // CRUD
       // ────────────────────────────────────────────────
 
       els.addBtn.addEventListener('click', () => {
         if (!isAdmin) return alert('Admin only');
+
         const date = els.txDate.value.trim();
         const type = els.txType.value;
         const category = els.txCategory.value;
@@ -719,6 +792,15 @@
         }
 
         const record = { date, type, category, amount, notes, etimsRef, pin };
+
+        const isConstruction = type === 'Expense' && category === 'Construction Materials';
+        if (isConstruction) {
+          record.subCategory = els.txSubCategory.value.trim();
+          record.quantity    = parseFloat(els.txQuantity.value) || 0;
+          record.unitPrice   = parseFloat(els.txUnitPrice.value) || 0;
+          record.supplier    = els.txSupplier.value.trim();
+          record.transport   = parseFloat(els.txTransport.value) || 0;
+        }
 
         if (usingFirebase && txRef) {
           txRef.push(record)
@@ -746,10 +828,18 @@
 
       function clearAddForm() {
         els.txDate.value = '';
+        els.txType.value = 'Income';
+        updateCategories(els.txCategory, 'Income');
         els.txAmount.value = '';
         els.txNotes.value = '';
         els.txEtimsRef.value = '';
         els.txPin.value = '';
+        els.txSubCategory.value = '';
+        els.txQuantity.value = '';
+        els.txUnitPrice.value = '';
+        els.txSupplier.value = '';
+        els.txTransport.value = '';
+        toggleConstructionFields();
       }
 
       els.clearBtn.addEventListener('click', clearAddForm);
@@ -769,6 +859,16 @@
         els.editEtimsRef.value = tx.etimsRef || '';
         els.editPin.value = tx.pin || '';
 
+        const isConstruction = tx.type === 'Expense' && tx.category === 'Construction Materials';
+        if (isConstruction) {
+          els.editSubCategory.value = tx.subCategory || '';
+          els.editQuantity.value = tx.quantity || '';
+          els.editUnitPrice.value = tx.unitPrice || '';
+          els.editSupplier.value = tx.supplier || '';
+          els.editTransport.value = tx.transport || '';
+        }
+
+        toggleConstructionFields(true);
         openModal(els.editModal);
       }
 
@@ -792,6 +892,15 @@
 
         if (!updated.date || isNaN(updated.amount) || updated.amount <= 0) {
           return alert('Valid date and amount > 0 required');
+        }
+
+        const isConstruction = updated.type === 'Expense' && updated.category === 'Construction Materials';
+        if (isConstruction) {
+          updated.subCategory = els.editSubCategory.value.trim();
+          updated.quantity    = parseFloat(els.editQuantity.value) || 0;
+          updated.unitPrice   = parseFloat(els.editUnitPrice.value) || 0;
+          updated.supplier    = els.editSupplier.value.trim();
+          updated.transport   = parseFloat(els.editTransport.value) || 0;
         }
 
         if (usingFirebase && txRef) {
@@ -923,10 +1032,15 @@
           const etimsCls = tx.etimsRef ? '' : 'etims-missing';
           const pinCls   = tx.pin     ? '' : 'pin-missing';
 
+          let categoryDisplay = esc(tx.category);
+          if (tx.subCategory) {
+            categoryDisplay += `<br><small style="opacity:0.7">→ ${esc(tx.subCategory)}</small>`;
+          }
+
           row.innerHTML = `
             <td>${esc(tx.date)}</td>
             <td>${esc(tx.type)}</td>
-            <td>${esc(tx.category)}</td>
+            <td>${categoryDisplay}</td>
             <td>KES ${Number(tx.amount).toLocaleString()}</td>
             <td class="${etimsCls}">${esc(tx.etimsRef || '')}</td>
             <td class="${pinCls}">${esc(tx.pin || '')}</td>
@@ -963,11 +1077,23 @@
         const tx = transactions.find(t => t.key === key);
         if (!tx) return;
 
+        let extra = '';
+        if (tx.category === 'Construction Materials' && tx.subCategory) {
+          extra = `
+            <p><strong>Material:</strong> ${esc(tx.subCategory)}</p>
+            <p><strong>Quantity:</strong> ${tx.quantity || '—'}</p>
+            <p><strong>Unit Price:</strong> KES ${Number(tx.unitPrice || 0).toLocaleString()}</p>
+            <p><strong>Supplier:</strong> ${esc(tx.supplier || '—')}</p>
+            <p><strong>Transport:</strong> KES ${Number(tx.transport || 0).toLocaleString()}</p>
+          `;
+        }
+
         const html = `
           <h3>Receipt</h3>
           <p><strong>Date:</strong> ${esc(tx.date)}</p>
           <p><strong>Type:</strong> ${esc(tx.type)}</p>
           <p><strong>Category:</strong> ${esc(tx.category)}</p>
+          ${extra}
           <p><strong>Amount:</strong> KES ${Number(tx.amount).toLocaleString()}</p>
           <p><strong>eTIMS Ref:</strong> ${esc(tx.etimsRef || 'N/A')}</p>
           <p><strong>Counterparty PIN:</strong> ${esc(tx.pin || 'N/A')}</p>
@@ -1017,7 +1143,11 @@
 
         const catTotals = {};
         transactions.forEach(t => {
-          catTotals[t.category] = (catTotals[t.category] || 0) + Number(t.amount);
+          let key = t.category;
+          if (t.category === 'Construction Materials' && t.subCategory) {
+            key += ` → ${t.subCategory}`;
+          }
+          catTotals[key] = (catTotals[key] || 0) + Number(t.amount);
         });
 
         try { if (chartCat) chartCat.destroy(); } catch(e) {}
@@ -1025,7 +1155,7 @@
           type: 'doughnut',
           data: {
             labels: Object.keys(catTotals),
-            datasets: [{ data: Object.values(catTotals), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0','#4ade80','#ff6b6b'] }]
+            datasets: [{ data: Object.values(catTotals), backgroundColor: ['#E2725B','#D4A574','#ffd166','#03c4a1','#ff9aa2','#a0e7a0','#4ade80','#ff6b6b','#7dd3fc','#f472b6','#6ee7b7','#fbbf24'] }]
           },
           options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
@@ -1054,7 +1184,7 @@
       }
 
       // ────────────────────────────────────────────────
-      // CSV EXPORT – DD/MM/YYYY FORMAT
+      // CSV EXPORT
       // ────────────────────────────────────────────────
 
       function formatDateForCSV(isoDate) {
@@ -1070,10 +1200,10 @@
         if (action === 'export' || action === 'exportKRA') {
           if (!transactions.length) return alert('No transactions to export');
 
-          let csv = 'Date,Type,Category,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
+          let csv = 'Date,Type,Category,Sub-category,Quantity,Unit Price,Supplier,Transport Cost,Amount,Notes,eTIMS Ref,Counterparty PIN\n';
 
           transactions.forEach(t => {
-            csv += `"${formatDateForCSV(t.date)}","${t.type.replace(/"/g,'""')}","${t.category.replace(/"/g,'""')}",${t.amount},"${(t.notes||'').replace(/"/g,'""')}","${(t.etimsRef||'').replace(/"/g,'""')}","${(t.pin||'').replace(/"/g,'""')}"\n`;
+            csv += `"${formatDateForCSV(t.date)}","${t.type.replace(/"/g,'""')}","${t.category.replace(/"/g,'""')}","${(t.subCategory||'').replace(/"/g,'""')}",${t.quantity||''},${t.unitPrice||''},"${(t.supplier||'').replace(/"/g,'""')}",${t.transport||''},${t.amount},"${(t.notes||'').replace(/"/g,'""')}","${(t.etimsRef||'').replace(/"/g,'""')}","${(t.pin||'').replace(/"/g,'""')}"\n`;
           });
 
           const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1114,7 +1244,11 @@
 
           let y = 72;
           const byCat = {};
-          filtered.forEach(t => byCat[t.category] = (byCat[t.category] || 0) + Number(t.amount));
+          filtered.forEach(t => {
+            let key = t.category;
+            if (t.category === 'Construction Materials' && t.subCategory) key += ` → ${t.subCategory}`;
+            byCat[key] = (byCat[key] || 0) + Number(t.amount);
+          });
 
           doc.text('Category Breakdown:', 14, y); y += 10;
           Object.entries(byCat).sort((a,b)=>b[1]-a[1]).forEach(([cat, amt]) => {
@@ -1137,7 +1271,11 @@
         const exp = data.filter(t => t.type === 'Expense').reduce((s,t)=>s+Number(t.amount),0);
 
         const cat = {};
-        data.forEach(t => cat[t.category] = (cat[t.category] || 0) + Number(t.amount));
+        data.forEach(t => {
+          let key = t.category;
+          if (t.category === 'Construction Materials' && t.subCategory) key += ` → ${t.subCategory}`;
+          cat[key] = (cat[key] || 0) + Number(t.amount);
+        });
 
         let html = `
           <strong>Period:</strong> ${month || 'All'}<br>
@@ -1495,4 +1633,4 @@
     });
   </script>
 </body>
-</html>l
+</html>
